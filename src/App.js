@@ -1,13 +1,28 @@
 import logo from './logo.svg';
 import './App.css';
+import apiService from './services/apiService'
+import { useEffect,useState } from 'react';
 
 function App() {
+
+
+const [date,setDate]=useState();
+
+useEffect(()=>{
+  const fetchData=async()=>{
+    const date=await apiService.getDate();
+    setDate(date);
+  }
+  fetchData();
+})
+
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+        {date}
         </p>
         <a
           className="App-link"
