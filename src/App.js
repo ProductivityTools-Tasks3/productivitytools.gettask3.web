@@ -3,6 +3,8 @@ import './App.css';
 import apiService from './services/apiService'
 import { useEffect,useState } from 'react';
 
+import StructureTree from './Components/StructureTree'
+
 function App() {
 
 
@@ -32,6 +34,7 @@ useEffect(()=>{
         >
          To ja
         </a>
+        <StructureTree>fd</StructureTree>
       </header>
     </div>
   );
