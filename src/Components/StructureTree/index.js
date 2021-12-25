@@ -18,8 +18,8 @@ export default function StructureTree() {
     return (<div>
         <div>pawel</div>
         <div>{list.name}</div>
-        <div>{list.elements.map(element => {
-            return (<p>{element.name}</p>)
+        <div>{list && list.elements && list.elements.Length>0 && list.elements.map(element => {
+            return (<div>{element.name}</div>)
         })
         }</div>
     </div>)
