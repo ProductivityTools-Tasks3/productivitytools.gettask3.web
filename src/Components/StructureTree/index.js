@@ -13,10 +13,14 @@ export default function StructureTree() {
             setList(r);
         }
         fetchData();
-    });
+    }, []);
 
     return (<div>
         <div>pawel</div>
-        <div>{list}</div>
+        <div>{list.name}</div>
+        <div>{list.elements.map(element => {
+            return (<p>{element.name}</p>)
+        })
+        }</div>
     </div>)
 }
