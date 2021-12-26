@@ -1,3 +1,7 @@
+
+export const clientScope = 'openid profile ProductivityTools.Meetings.API';
+
+
 const dev={
     clientId:"devtasks3web",
     PATH_BASE :'https://localhost:8001/api/',
