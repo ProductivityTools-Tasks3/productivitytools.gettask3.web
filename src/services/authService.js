@@ -21,4 +21,8 @@ export class AuthService {
     getUser = () => {
         return this.userManager.getUser();
     }
+
+    login=()=>{
+        return this.userManager.signinRedirect();
+    }
 }

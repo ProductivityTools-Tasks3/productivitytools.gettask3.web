@@ -20,10 +20,12 @@ export default function StructureTree() {
         }
     }, []);
 
-    const login = () => { };
+    const login = () => {
+        authService.login();
+     };
 
     return (<div>
-        <button onClick={login}></button>
+        <button onClick={login}>Login</button>
         <div>pawel</div>
         <div>{list.name}</div>
         <div>{list && list.elements && list.elements.Length > 0 && list.elements.map(element => {
