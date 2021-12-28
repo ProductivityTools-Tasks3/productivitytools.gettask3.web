@@ -6,7 +6,7 @@ export class AuthService {
         const settings = {
             authority: config.stsAuthority,
             client_id: config.clientId,
-            redirect_uri: `${config.clientRoot}signing-callback.html`,
+            redirect_uri: `${config.clientRoot}signin-callback.html`,
             silent_redirect_uri: `${config.clientRoot}silent-renew.html`,
             post_logout_redirect_uri: `${config.clientRoot}`,
             response_type: 'id_token token',
@@ -25,4 +25,6 @@ export class AuthService {
     login=()=>{
         return this.userManager.signinRedirect();
     }
+
+    
 }

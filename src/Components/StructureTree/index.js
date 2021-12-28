@@ -10,24 +10,24 @@ export default function StructureTree() {
     const [list, setList] = useState([]);
 
     useEffect(() => {
+        debugger;
         const fetchData = async () => {
             const r = await apiService.GetTree();
             console.log(r);
             setList(r);
         }
-        if (userAutenticated) {
-            fetchData();
-        }
+        fetchData();
+
     }, []);
 
     const login = () => {
         authService.login();
-     };
+    };
 
     return (<div>
         <button onClick={login}>Login</button>
         <div>pawel</div>
-        <div>{list.name}</div>
+        <div>{list && list.name}</div>
         <div>{list && list.elements && list.elements.Length > 0 && list.elements.map(element => {
             return (<div>{element.name}</div>)
         })
