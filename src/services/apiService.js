@@ -23,10 +23,9 @@ async function GetTree() {
 async function callAuthorizedEndpoint(call) {
     let authService = new AuthService();
     return await authService.getUser().then(async user => {
-        debugger;
         if (user && user.access_token) {
             const header = {
-                headers: { Authorization: `Bearer ${user.acccess_token}` }
+                headers: { Authorization: `Bearer ${user.access_token}` }
             };
             try {
                 const result = await call(header);

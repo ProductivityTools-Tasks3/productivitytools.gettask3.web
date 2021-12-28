@@ -26,5 +26,9 @@ export class AuthService {
         return this.userManager.signinRedirect();
     }
 
+    logout=()=>{
+        return this.userManager.logout();
+    }
+
     
 }
