@@ -1,8 +1,10 @@
 
 import React, { Component, useEffect, useState } from 'react'
-import TreeView from '@mui/lab/TreeView';
 import apiService from '../../services/apiService';
 import { AuthService } from '../../services/authService';
+import TreeView from '@material-ui/lab/TreeView';
+import TreeItem from '@material-ui/lab/TreeItem';
+import Collapse from '@material-ui/core/Collapse';
 
 export default function StructureTree() {
 
@@ -38,7 +40,10 @@ export default function StructureTree() {
             return (<div>{element.name}</div>)
         })
         }
-        <TreeView></TreeView>
+        <TreeView>
+        <TreeItem label="fda">dd</TreeItem>
+        <TreeItem label="fda">dd2</TreeItem>
+        </TreeView>
         </div>
 
     </div>)
