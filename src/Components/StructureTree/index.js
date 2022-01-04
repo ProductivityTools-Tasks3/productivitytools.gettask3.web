@@ -1,5 +1,6 @@
 
 import React, { Component, useEffect, useState } from 'react'
+import TreeView from '@mui/lab/TreeView';
 import apiService from '../../services/apiService';
 import { AuthService } from '../../services/authService';
 
@@ -23,7 +24,7 @@ export default function StructureTree() {
         authService.login();
     };
 
-    
+
     const logout = () => {
         authService.logout();
     };
@@ -36,6 +37,9 @@ export default function StructureTree() {
         <div>{list && list.elements && list.elements.Length > 0 && list.elements.map(element => {
             return (<div>{element.name}</div>)
         })
-        }</div>
+        }
+        <TreeView></TreeView>
+        </div>
+
     </div>)
 }
