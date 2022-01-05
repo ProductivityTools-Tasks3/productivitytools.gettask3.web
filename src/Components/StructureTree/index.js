@@ -89,6 +89,7 @@ export default function StructureTree(props) {
                 onNodeToggle={handleToggle}
                 expanded={expanded}
                 onNodeToggle={handleToggle}
+                className="tree"
 
             >
                 <TreeItem key="22" nodeId="22" label="22"></TreeItem>
