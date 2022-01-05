@@ -6,11 +6,20 @@ import TreeView from '@material-ui/lab/TreeView';
 import TreeItem from '@material-ui/lab/TreeItem';
 import Collapse from '@material-ui/core/Collapse';
 
+
+function PlusSquare(props) {
+    return (
+     <span>+</span>
+    );
+  }
+
 export default function StructureTree() {
 
     let authService = new AuthService();
     const [userAutenticated, setUserAuthenticated] = useState(false);
     const [list, setList] = useState([]);
+    const [expanded, setExpanded] = useState([]);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -31,6 +40,12 @@ export default function StructureTree() {
         authService.logout();
     };
 
+    const handleToggle = (event, nodeIds) => {
+        console.log('handletoggle');
+        console.log(nodeIds);
+        setExpanded(nodeIds);
+      };
+
     return (<div>
         <button onClick={login}>Login</button>
         <button onClick={logout}>Logout</button>
@@ -40,10 +55,17 @@ export default function StructureTree() {
             return (<div>{element.name}</div>)
         })
         }
-        <TreeView>
-        <TreeItem label="fda">dd</TreeItem>
-        <TreeItem label="fda">dd2</TreeItem>
-        </TreeView>
+            <TreeView
+            defaultExpandIcon={<PlusSquare />}
+            expanded={expanded}
+            onNodeToggle={handleToggle}
+
+            >
+                <TreeItem key="1" nodeId='11' label="fda1">
+                    <TreeItem key="2"  nodeId='22' label="fda2">dd2</TreeItem>
+                </TreeItem>
+                <TreeItem key="3" nodeId='33' label="fda3">dd2</TreeItem>
+            </TreeView>
         </div>
 
     </div>)
