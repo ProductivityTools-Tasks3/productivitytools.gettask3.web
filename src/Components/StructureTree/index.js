@@ -11,6 +11,20 @@ function PlusSquare(props) {
     );
 }
 
+
+function MinusSquare(props) {
+    return (
+        <span>+</span>
+    );
+}
+
+
+function CloseSquare(props) {
+    return (
+        <span>.</span>
+    );
+}
+
 export default function StructureTree(props) {
 
     const [list, setList] = useState([]);
@@ -69,7 +83,10 @@ export default function StructureTree(props) {
             </div>
             <p>treeview below</p>
             <TreeView
+                defaultCollapseIcon={<MinusSquare />}
                 defaultExpandIcon={<PlusSquare />}
+                defaultEndIcon={<CloseSquare />}
+                onNodeToggle={handleToggle}
                 expanded={expanded}
                 onNodeToggle={handleToggle}
 
