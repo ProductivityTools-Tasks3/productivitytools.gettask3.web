@@ -13,7 +13,7 @@ async function GetTree() {
         const response = await axios.post('http://localhost:5513/api/Task/TodayList', data, header);
         return response.data;
     }
-    return callAuthorizedEndpoint(call);
+    return await callAuthorizedEndpoint(call);
 
     // const data = { ElementId: null, Path: '' }
     // const response = await axios.post('http://localhost:5513/api/Task/TodayList', data);
@@ -37,6 +37,10 @@ async function callAuthorizedEndpoint(call) {
                     console.log("more code needed");
                 }
             }
+        }
+        else{
+            console.log("user not in the storage, cannot perform authorized call, trying normal call");
+            return await call();
         }
     })
 }
