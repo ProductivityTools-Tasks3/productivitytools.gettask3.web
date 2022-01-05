@@ -13,11 +13,10 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <DateCheck/>
-        <Home/>
-        <StructureTree/>
+        <DateCheck />
       </header>
+      <Home />
+      <StructureTree />
     </div>
   );
 }
