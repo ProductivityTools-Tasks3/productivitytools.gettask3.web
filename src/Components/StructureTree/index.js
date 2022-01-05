@@ -11,7 +11,7 @@ function PlusSquare(props) {
     );
 }
 
-export default function StructureTree() {
+export default function StructureTree(props) {
 
     const [list, setList] = useState([]);
     const [expanded, setExpanded] = useState([]);
@@ -34,6 +34,31 @@ export default function StructureTree() {
         setExpanded(nodeIds);
     };
 
+    function getLabel(x) {
+        let l = x.name + " [Id:" + x.id + "]";
+        return l;
+    }
+
+    const treeClick = (e, treeId) => {
+        e.stopPropagation();
+        props.setSelectedTreeNode(treeId);
+    }
+
+
+    function GetNode(nodes) {
+        if (nodes !== undefined) {
+            return (nodes.map(x => {
+                return (
+                    <TreeItem nodeId={x.elementId.toString()} key={x.elementId} label={x.name}>
+                        {GetNode(x.elements)}
+                    </TreeItem>
+                )
+            })
+            )
+        }
+    }
+
+
     return (
         <div>
             <div>pawel</div>
@@ -49,10 +74,10 @@ export default function StructureTree() {
                 onNodeToggle={handleToggle}
 
             >
-                <TreeItem key="1" nodeId='11' label="fda1">
-                    <TreeItem key="2" nodeId='22' label="fda2">dd2</TreeItem>
-                </TreeItem>
-                <TreeItem key="3" nodeId='33' label="fda3">dd2</TreeItem>
+                <TreeItem key="22" nodeId="22" label="22"></TreeItem>
+                {list && list.elements && list.elements.map(x => {
+                    return (<TreeItem key={x.elementId} nodeId={x.elementId.toString()} label={x.name}>{GetNode(x.elements)}</TreeItem>)
+                })}
             </TreeView>
 
 
