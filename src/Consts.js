@@ -10,7 +10,7 @@ const dev = {
 
 
 const prod = {
-    clientId: "devtasks3web",
+    clientId: "prodtasks3web",
     PATH_BASE: 'https://apigettask3.productivitytools.tech:8040/api/',
     stsAuthority: 'https://identityserver.productivitytools.tech:8010/',
     clientRoot: 'https://task3web.z13.web.core.windows.net/',

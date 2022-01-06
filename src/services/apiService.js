@@ -1,8 +1,9 @@
 import axios from 'axios'
+import { config } from 'Consts';
 import { AuthService } from './authService.js'
 
 async function getDate() {
-    const response = await axios.post('http://localhost:5513/api/Task/Date')
+    const response = await axios.post(`${config.PATH_BASE}Task/Date`)
     return response.data;
 }
 
@@ -10,7 +11,7 @@ async function GetTree() {
 
     let call = async (header) => {
         const data = { ElementId: null, Path: '' }
-        const response = await axios.post('http://localhost:5513/api/Task/TodayList', data, header);
+        const response = await axios.post(`${config.PATH_BASE}/Task/TodayList`, data, header);
         return response.data;
     }
     return await callAuthorizedEndpoint(call);
