@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { config } from 'Consts';
+import { config } from '../Consts';
 import { AuthService } from './authService.js'
 
 async function getDate() {
