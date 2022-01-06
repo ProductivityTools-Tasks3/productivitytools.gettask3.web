@@ -1,8 +1,11 @@
 
-import React, { Component, useEffect, useState } from 'react'
+import React, { Component, useEffect, useState, useRef } from 'react'
 import TreeView from '@material-ui/lab/TreeView';
 import TreeItem from '@material-ui/lab/TreeItem';
 import Collapse from '@material-ui/core/Collapse';
+
+import ContextMenu from '../ContextMenu';
+
 import apiService from '../../services/apiService';
 
 function PlusSquare(props) {
@@ -29,7 +32,7 @@ export default function StructureTree(props) {
 
     const [list, setList] = useState([]);
     const [expanded, setExpanded] = useState([]);
-
+    const containerRef = useRef(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -73,14 +76,23 @@ export default function StructureTree(props) {
     }
 
 
+    const menuItems = [
+        {
+            text: 'Add new journal item',
+            onclick: (treeId) => { props.setSelectedTreeNode(treeId); console.log(`Item one from container  ${treeId} clicked`); }
+        },
+        {
+            text: 'Add new tree item',
+            onclick: (treeId) => { props.setSelectedTreeNode(treeId); }
+        },
+        {
+            text: 'Delete',
+            onclick: (treeId) => { props.setSelectedTreeNode(treeId); }
+        }
+    ];
+
     return (
-        <div>
-            <div>pawel</div>
-            <div>{list && list.name}</div>
-            <div>{list && list.elements && list.elements.Length > 0 && list.elements.map(element => {
-                return (<div>{element.name}</div>)
-            })}
-            </div>
+        <div ref={containerRef}>
             <p>treeview below</p>
             <TreeView
                 defaultCollapseIcon={<MinusSquare />}
@@ -97,7 +109,7 @@ export default function StructureTree(props) {
                     return (<TreeItem key={x.elementId} nodeId={x.elementId.toString()} label={x.name}>{GetNode(x.elements)}</TreeItem>)
                 })}
             </TreeView>
-
+            <ContextMenu parentRef={containerRef} items={menuItems} />
 
         </div>)
 }
