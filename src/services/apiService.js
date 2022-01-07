@@ -11,7 +11,7 @@ async function GetTree() {
 
     let call = async (header) => {
         const data = { ElementId: null, Path: '' }
-        const response = await axios.post(`${config.PATH_BASE}/Task/TodayList`, data, header);
+        const response = await axios.post(`${config.PATH_BASE}Task/TodayList`, data, header);
         return response.data;
     }
     return await callAuthorizedEndpoint(call);
