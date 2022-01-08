@@ -1,7 +1,7 @@
 
 const dev = {
     clientId: "devtasks3web",
-    PATH_BASE: 'https://localhost:8001/api/',
+    PATH_BASE: 'http://localhost:5513/api/',
     stsAuthority: 'https://identityserver.productivitytools.tech:8010/',
    // stsAuthority: 'https://localhost:5001/',
     clientRoot: 'http://localhost:3000/',

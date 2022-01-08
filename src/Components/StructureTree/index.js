@@ -6,14 +6,12 @@ import Collapse from '@material-ui/core/Collapse';
 
 import ContextMenu from '../ContextMenu';
 
-import apiService from '../../services/apiService';
 
 function PlusSquare(props) {
     return (
         <span>+</span>
     );
 }
-
 
 function MinusSquare(props) {
     return (
@@ -30,21 +28,10 @@ function CloseSquare(props) {
 
 export default function StructureTree(props) {
 
-    const [list, setList] = useState([]);
     const [expanded, setExpanded] = useState([]);
     const containerRef = useRef(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            console.log("call apiservice");
-            const r = await apiService.GetTree();
-            console.log(r);
-            setList(r);
-        }
-        fetchData();
-        console.log("useeffect");
-    }, []);
-
+   
     const handleToggle = (event, nodeIds) => {
         console.log('handletoggle');
         console.log(nodeIds);
@@ -102,10 +89,9 @@ export default function StructureTree(props) {
                 expanded={expanded}
                 onNodeToggle={handleToggle}
                 className="tree"
-
             >
                 <TreeItem key="22" nodeId="22" label="22"></TreeItem>
-                {list && list.elements && list.elements.map(x => {
+                {props.list && props.list.elements && props.list.elements.map(x => {
                     return (<TreeItem key={x.elementId} nodeId={x.elementId.toString()} label={x.name}>{GetNode(x.elements)}</TreeItem>)
                 })}
             </TreeView>

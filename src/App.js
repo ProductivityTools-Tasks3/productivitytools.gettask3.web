@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react';
 
 import DateCheck from './Components/DateCheck'
 import Home from './Components/Home'
-import StructureTree from './Components/StructureTree'
+
+import Console from './Components/Console'
 
 function App() {
 
@@ -16,7 +17,7 @@ function App() {
         <DateCheck />
       </header>
       <Home />
-      <StructureTree />
+      <Console/>
     </div>
   );
 }
