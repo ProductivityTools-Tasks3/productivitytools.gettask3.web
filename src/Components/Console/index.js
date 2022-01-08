@@ -9,6 +9,7 @@ import ItemDetails from '../ItemDetails';
 export default function Console() {
 
     const [list, setList] = useState([]);
+    const [selectedNode,setSelectedNode]=useState(-1);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -21,12 +22,16 @@ export default function Console() {
         console.log("useeffect");
     }, []);
 
+    function nodeSelect(nodeId){
+        setSelectedNode(nodeId)
+    }
 
     return (
         <div>
             <p>Console</p>
-            <StructureTree list={list} />
+            <StructureTree list={list} nodeSelect={nodeSelect} />
             <ItemDetails />
+            <p>{selectedNode}</p>
         </div>
     )
 }

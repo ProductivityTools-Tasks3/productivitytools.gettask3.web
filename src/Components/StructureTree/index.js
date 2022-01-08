@@ -62,6 +62,11 @@ export default function StructureTree(props) {
         }
     }
 
+    function nodeSelect(e,id){
+        console.log(id);
+        props.nodeSelect(id);
+    }
+
 
     const menuItems = [
         {
@@ -88,7 +93,9 @@ export default function StructureTree(props) {
                 onNodeToggle={handleToggle}
                 expanded={expanded}
                 onNodeToggle={handleToggle}
+                onNodeSelect={nodeSelect}
                 className="tree"
+                
             >
                 <TreeItem key="22" nodeId="22" label="22"></TreeItem>
                 {props.list && props.list.elements && props.list.elements.map(x => {
