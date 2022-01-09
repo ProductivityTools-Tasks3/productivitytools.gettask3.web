@@ -84,7 +84,7 @@ export default function StructureTree(props) {
     ];
 
     return (
-        <div ref={containerRef}>
+        <div ref={containerRef} className='structureTree' >
             <p>treeview below</p>
             <TreeView
                 defaultCollapseIcon={<MinusSquare />}

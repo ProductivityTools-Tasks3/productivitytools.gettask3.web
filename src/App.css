@@ -21,3 +21,20 @@
 .MuiTreeItem-label{
  padding-left: 25px;
 }
+
+.console{
+  border: 1px solid black;
+  overflow: hidden;
+}
+
+.structureTree{
+  color: red;
+  width: 50%;
+  float:left;
+}
+
+.itemDetails{
+  color:green;
+  width: 50%;
+  overflow: hidden;
+}

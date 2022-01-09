@@ -46,7 +46,7 @@ export default function Console() {
     }
 
     return (
-        <div>
+        <div className='console'>
             <p>Console</p>
             <StructureTree list={list} nodeSelect={nodeSelect} />
             <ItemDetails selectedElement={selectedElement} />
