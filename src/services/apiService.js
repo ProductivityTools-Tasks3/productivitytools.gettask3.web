@@ -21,6 +21,15 @@ async function GetTree() {
     // return response.data;
 }
 
+async function finish(elementId){
+    let call=async (header)=>{
+        const data = {ElementId: elementId}
+        const response = await axios.post(`${config.PATH_BASE}Task/Finish`,data, header);
+        return response.data;
+    }
+    return await callAuthorizedEndpoint(call);
+}
+
 async function callAuthorizedEndpoint(call) {
     let authService = new AuthService();
     return await authService.getUser().then(async user => {
@@ -48,5 +57,6 @@ async function callAuthorizedEndpoint(call) {
 
 export default {
     getDate,
-    GetTree
+    GetTree,
+    finish
 }
