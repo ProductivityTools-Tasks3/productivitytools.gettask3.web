@@ -15,6 +15,7 @@ export default function ItemDetails(props) {
             <p><span>Finished: </span><span>{props.selectedElement.finished}</span></p>
             <p><span>Amout of child elements: </span><span>{props.selectedElement.elements.length}</span></p>
             <p><Button onClick={props.finishAction}>Finish</Button></p>
+            <p><Button onClick={props.unDoneAction}>Undone</Button></p>
         </div>)
     }
     else

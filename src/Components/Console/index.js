@@ -39,13 +39,21 @@ export default function Console() {
         }
     }
 
-    function finishItem(){
-        console.log("finish item");
-        selectedElement.status='Finished';
-        //var se = findElement(list, selectedElement.elementId);
-        //se.status='Finshed2';
+    function updateStatus(newStatus) {
+        setSelectedElement({ ...selectedElement, status: newStatus });
 
-       // apiService.finish(props.selectedElement.elementId);
+        let newList = list;
+        let newElement = findElement(newList, selectedElement.elementId);
+        newElement.status = newStatus;
+        setList(newList);
+    }
+
+    function finishItem() {
+        updateStatus("Finished");
+    }
+
+    function unDoneElement() {
+        updateStatus("New");
     }
 
     function nodeSelect(nodeId) {
@@ -58,7 +66,7 @@ export default function Console() {
         <div className='console'>
             <p>Console</p>
             <StructureTree list={list} nodeSelect={nodeSelect} />
-            <ItemDetails selectedElement={selectedElement} finishAction={finishItem} />
+            <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} />
             <p>{selectedElement && selectedElement.elementId}</p>
         </div>
     )
