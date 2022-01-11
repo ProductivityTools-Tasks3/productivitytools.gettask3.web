@@ -4,10 +4,6 @@ import apiService from "../../services/apiService";
 
 export default function ItemDetails(props) {
 
-    function finishItem(){
-        console.log("finish item");
-        apiService.finish(props.selectedElement.elementId);
-    }
 
     if (props.selectedElement!=null) {
         return (<div className='itemDetails'>Item details
@@ -18,7 +14,7 @@ export default function ItemDetails(props) {
             <p><span>Started: </span><span>{props.selectedElement.started}</span></p>
             <p><span>Finished: </span><span>{props.selectedElement.finished}</span></p>
             <p><span>Amout of child elements: </span><span>{props.selectedElement.elements.length}</span></p>
-            <p><Button onClick={finishItem}>Finish</Button></p>
+            <p><Button onClick={props.finishAction}>Finish</Button></p>
         </div>)
     }
     else

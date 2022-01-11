@@ -48,6 +48,7 @@ const StyledTreeItem = (props) => {
     return (<TreeItem {...props} label={
         <Box>
             <Checkbox checked={itemChecked(status)}/>
+            {status}
             {labelText}
         </Box>
     } ></TreeItem>);

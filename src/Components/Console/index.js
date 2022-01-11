@@ -39,6 +39,15 @@ export default function Console() {
         }
     }
 
+    function finishItem(){
+        console.log("finish item");
+        selectedElement.status='Finished';
+        //var se = findElement(list, selectedElement.elementId);
+        //se.status='Finshed2';
+
+       // apiService.finish(props.selectedElement.elementId);
+    }
+
     function nodeSelect(nodeId) {
         console.log(list);
         var se = findElement(list, nodeId);
@@ -49,7 +58,7 @@ export default function Console() {
         <div className='console'>
             <p>Console</p>
             <StructureTree list={list} nodeSelect={nodeSelect} />
-            <ItemDetails selectedElement={selectedElement} />
+            <ItemDetails selectedElement={selectedElement} finishAction={finishItem} />
             <p>{selectedElement && selectedElement.elementId}</p>
         </div>
     )
