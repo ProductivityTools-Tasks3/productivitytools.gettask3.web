@@ -4,6 +4,11 @@ import TreeView from '@material-ui/lab/TreeView';
 import TreeItem from '@material-ui/lab/TreeItem';
 import Collapse from '@material-ui/core/Collapse';
 
+import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
+
+
+
 import ContextMenu from '../ContextMenu';
 
 
@@ -26,12 +31,22 @@ function CloseSquare(props) {
     );
 }
 
+const StyledTreeItem = (props) => {
+    const { labelText } = props;
+    return (<TreeItem {...props} label={
+        <Box>
+            <Checkbox checked={true}/>
+            {labelText}
+        </Box>
+    } ></TreeItem>);
+}
+
 export default function StructureTree(props) {
 
     const [expanded, setExpanded] = useState([]);
     const containerRef = useRef(null);
 
-   
+
     const handleToggle = (event, nodeIds) => {
         console.log('handletoggle');
         console.log(nodeIds);
@@ -53,16 +68,16 @@ export default function StructureTree(props) {
         if (nodes !== undefined) {
             return (nodes.map(x => {
                 return (
-                    <TreeItem nodeId={x.elementId.toString()} key={x.elementId} label={x.name}>
+                    <StyledTreeItem nodeId={x.elementId.toString()} key={x.elementId} labelText={x.name}>
                         {GetNode(x.elements)}
-                    </TreeItem>
+                    </StyledTreeItem>
                 )
             })
             )
         }
     }
 
-    function nodeSelect(e,id){
+    function nodeSelect(e, id) {
         console.log(id);
         props.nodeSelect(id);
     }
@@ -95,11 +110,10 @@ export default function StructureTree(props) {
                 onNodeToggle={handleToggle}
                 onNodeSelect={nodeSelect}
                 className="tree"
-                
+
             >
-                <TreeItem key="22" nodeId="22" label="22"></TreeItem>
                 {props.list && props.list.elements && props.list.elements.map(x => {
-                    return (<TreeItem key={x.elementId} nodeId={x.elementId.toString()} label={x.name}>{GetNode(x.elements)}</TreeItem>)
+                    return (<StyledTreeItem key={x.elementId} nodeId={x.elementId.toString()} labelText={x.name}>{GetNode(x.elements)}</StyledTreeItem>)
                 })}
             </TreeView>
             <ContextMenu parentRef={containerRef} items={menuItems} />
