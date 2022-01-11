@@ -67,7 +67,7 @@ export default function Console() {
     return (
         <div className='console'>
             <p>Console</p>
-            <StructureTree list={list} nodeSelect={nodeSelect} />
+            <StructureTree list={list} nodeSelect={nodeSelect} finishAction={finishItem} unDoneAction={unDoneElement} />
             <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} />
             <p>{selectedElement && selectedElement.elementId}</p>
         </div>

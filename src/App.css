@@ -50,3 +50,11 @@
 .styledTreeItem .checkbox{
   height: 10px;
 }
+
+.styledTreeItem .InProgress{
+  color: green;
+}
+
+.styledTreeItem .Finished{
+  color: gray
+}
