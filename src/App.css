@@ -37,3 +37,16 @@
   width: 50%;
   overflow: hidden;
 }
+
+.styledTreeItem .MuiTreeItem-group{
+  border-left: gray;
+  border-left: dashed;
+  border-width: 1px;
+  padding-left: 8px;
+  margin-left: 8px;
+  height: 10px;;
+}
+
+.styledTreeItem .checkbox{
+  height: 10px;
+}

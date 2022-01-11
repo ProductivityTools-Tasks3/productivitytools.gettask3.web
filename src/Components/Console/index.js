@@ -50,6 +50,8 @@ export default function Console() {
 
     function finishItem() {
         updateStatus("Finished");
+        //apiService.finish(props.selectedElement.elementId);
+
     }
 
     function unDoneElement() {
