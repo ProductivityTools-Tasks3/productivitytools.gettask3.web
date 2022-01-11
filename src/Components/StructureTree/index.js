@@ -10,6 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 
 
 import ContextMenu from '../ContextMenu';
+import { FOCUSABLE_SELECTOR } from '@testing-library/user-event/dist/utils';
 
 
 function PlusSquare(props) {
@@ -31,11 +32,22 @@ function CloseSquare(props) {
     );
 }
 
+const itemChecked=(status)=>{
+    if (status=='Finished')
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 const StyledTreeItem = (props) => {
-    const { labelText } = props;
+    const {status, labelText } = props;
     return (<TreeItem {...props} label={
         <Box>
-            <Checkbox checked={true}/>
+            <Checkbox checked={itemChecked(status)}/>
             {labelText}
         </Box>
     } ></TreeItem>);
@@ -67,8 +79,9 @@ export default function StructureTree(props) {
     function GetNode(nodes) {
         if (nodes !== undefined) {
             return (nodes.map(x => {
+                console.log(x);
                 return (
-                    <StyledTreeItem nodeId={x.elementId.toString()} key={x.elementId} labelText={x.name}>
+                    <StyledTreeItem nodeId={x.elementId.toString()} key={x.elementId} labelText={x.name} status={x.status}>
                         {GetNode(x.elements)}
                     </StyledTreeItem>
                 )
@@ -97,7 +110,8 @@ export default function StructureTree(props) {
             onclick: (treeId) => { props.setSelectedTreeNode(treeId); }
         }
     ];
-
+    if (props && props.list && props.list.elements)
+    {
     return (
         <div ref={containerRef} className='structureTree' >
             <p>treeview below</p>
@@ -112,11 +126,14 @@ export default function StructureTree(props) {
                 className="tree"
 
             >
-                {props.list && props.list.elements && props.list.elements.map(x => {
-                    return (<StyledTreeItem key={x.elementId} nodeId={x.elementId.toString()} labelText={x.name}>{GetNode(x.elements)}</StyledTreeItem>)
-                })}
+                {GetNode(props.list.elements)}
             </TreeView>
             <ContextMenu parentRef={containerRef} items={menuItems} />
 
         </div>)
+    }
+    else
+    {
+        return (<div>still nothing</div>)
+    }
 }
