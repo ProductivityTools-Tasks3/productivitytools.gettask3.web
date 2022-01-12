@@ -39,23 +39,41 @@ export default function Console() {
         }
     }
 
-    function updateStatus(newStatus) {
-        setSelectedElement({ ...selectedElement, status: newStatus });
+    function updateStatus(elementToUpdate, newStatus) {
+        setSelectedElement({ ...elementToUpdate, status: newStatus });
 
         let newList = list;
-        let newElement = findElement(newList, selectedElement.elementId);
+        let newElement = findElement(newList, elementToUpdate.elementId);
         newElement.status = newStatus;
         setList(newList);
     }
 
     function finishItem() {
-        updateStatus("Finished");
-        //apiService.finish(props.selectedElement.elementId);
+        finishThisItem(selectedElement)
+    }
 
+    function finishItemById(elementId){
+        let element=findElement(list,elementId);
+        finishThisItem(element);
+    }
+
+    function finishThisItem(elementToUpdate){
+        console.log("Finish.thisitem");
+        updateStatus(elementToUpdate,"Finished");
+        //apiService.finish(props.selectedElement.elementId);
     }
 
     function unDoneElement() {
-        updateStatus("New");
+        unDoneThisElement(selectedElement);
+    }
+
+    function unDoneElementById(elementId){
+        let element=findElement(list,elementId);
+        unDoneThisElement(element);
+    }
+
+    function unDoneThisElement(elementToUpdate){
+        updateStatus(elementToUpdate,"New");
     }
 
     function nodeSelect(nodeId) {
@@ -67,7 +85,7 @@ export default function Console() {
     return (
         <div className='console'>
             <p>Console</p>
-            <StructureTree list={list} nodeSelect={nodeSelect} finishAction={finishItem} unDoneAction={unDoneElement} />
+            <StructureTree list={list} nodeSelect={nodeSelect} finishAction={finishItemById} unDoneAction={unDoneElementById} />
             <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} />
             <p>{selectedElement && selectedElement.elementId}</p>
         </div>

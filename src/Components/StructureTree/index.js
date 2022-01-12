@@ -44,42 +44,49 @@ function CloseSquare(props) {
 }
 
 
-const itemChecked = (status) => {
-    if (status == 'Finished') {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
 
-const handleCheckboxChange = (elementId,value) => {
-    console.log("checkboxOnChange");
-    console.log(elementId);
-    console.log(value);
-    if (value) {
 
-    }
-    else {
 
-    }
-}
 
-const StyledTreeItem = (props) => {
-    const { elementId, status, name } = props.element;
-    return (<TreeItem {...props} label={
-        <Box>
-            <Checkbox className="checkbox" checked={itemChecked(status)} onChange={() => handleCheckboxChange(elementId,itemChecked(status))} />
-            <span className={status}>[{status}] </span>
-            <span className={status}>{name}</span>
-        </Box>
-    } ></TreeItem>);
-}
 
 export default function StructureTree(props) {
 
     const [expanded, setExpanded] = useState([]);
     const containerRef = useRef(null);
+
+    const itemChecked = (status) => {
+        if (status == 'Finished') {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+
+    const handleCheckboxChange = (elementId, value) => {
+        console.log("checkboxOnChange");
+        console.log(elementId);
+        console.log(value);
+        debugger;
+        if (value) {
+            props.unDoneAction(elementId,"New")
+        }
+        else {
+            props.finishAction(elementId,"Finished")
+        }
+    }
+
+    const StyledTreeItem = (props) => {
+        const { elementId, status, name } = props.element;
+        return (<TreeItem {...props} label={
+            <Box>
+                <Checkbox className="checkbox" checked={itemChecked(status)} onChange={() => handleCheckboxChange(elementId, itemChecked(status))} />
+                <span className={status}>[{status}] </span>
+                <span className={status}>{name}</span>
+            </Box>
+        } ></TreeItem>);
+    }
 
 
     const handleToggle = (event, nodeIds) => {
