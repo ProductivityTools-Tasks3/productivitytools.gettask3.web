@@ -65,10 +65,6 @@ export default function StructureTree(props) {
 
 
     const handleCheckboxChange = (elementId, value) => {
-        console.log("checkboxOnChange");
-        console.log(elementId);
-        console.log(value);
-        debugger;
         if (value) {
             props.unDoneAction(elementId,"New")
         }
@@ -90,8 +86,6 @@ export default function StructureTree(props) {
 
 
     const handleToggle = (event, nodeIds) => {
-        console.log('handletoggle');
-        console.log(nodeIds);
         setExpanded(nodeIds);
     };
 
