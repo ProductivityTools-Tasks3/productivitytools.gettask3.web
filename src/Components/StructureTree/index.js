@@ -46,9 +46,6 @@ function CloseSquare(props) {
 
 
 
-
-
-
 export default function StructureTree(props) {
 
     const [expanded, setExpanded] = useState([]);
@@ -66,6 +63,7 @@ export default function StructureTree(props) {
 
     const handleCheckboxChange = (elementId, value) => {
         if (value) {
+            console.log("undone1");
             props.unDoneAction(elementId,"New")
         }
         else {

@@ -60,7 +60,7 @@ export default function Console() {
     function finishThisItem(elementToUpdate){
         console.log("Finish.thisitem");
         updateStatus(elementToUpdate,"Finished");
-        //apiService.finish(props.selectedElement.elementId);
+        apiService.finish(elementToUpdate.elementId);
     }
 
     function unDoneElement() {
@@ -68,12 +68,14 @@ export default function Console() {
     }
 
     function unDoneElementById(elementId){
+        console.log('undone')
         let element=findElement(list,elementId);
         unDoneThisElement(element);
     }
 
     function unDoneThisElement(elementToUpdate){
         updateStatus(elementToUpdate,"New");
+        apiService.unDone(elementToUpdate.elementId);
     }
 
     function nodeSelect(nodeId) {
