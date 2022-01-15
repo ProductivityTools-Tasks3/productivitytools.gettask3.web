@@ -48,6 +48,14 @@ export default function Console() {
         setList(newList);
     }
 
+    function updateElementInList(elementToUpdate,propertyName,propertyValue){
+        setSelectedElement({ ...elementToUpdate, [propertyName]: propertyValue });
+        let newList = list;
+        let newElement = findElement(newList, elementToUpdate.elementId);
+        newElement[propertyName] = propertyValue;
+        setList(newList);
+    }
+
     function finishItem() {
         finishThisItem(selectedElement)
     }
@@ -84,11 +92,18 @@ export default function Console() {
         setSelectedElement(se);
     }
 
+    function updateElement(propertyName,propertyValue){
+        console.log("Console update element");
+        updateElementInList(selectedElement,propertyName,propertyValue);
+        console.log(propertyName);
+        console.log(propertyValue);
+    }
+
     return (
         <div className='console'>
             <p>Console</p>
             <StructureTree list={list} nodeSelect={nodeSelect} finishAction={finishItemById} unDoneAction={unDoneElementById} />
-            <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} />
+            <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} onChange={updateElement} />
             <p>{selectedElement && selectedElement.elementId}</p>
         </div>
     )
