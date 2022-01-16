@@ -16,7 +16,7 @@ async function GetTree() {
         const response = await axios.post(`${config.PATH_BASE}Task/TodayList`, data, header);
         return response.data;
     }
-    return await callAuthorizedEndpoint(call);
+    return await callAuthorizedEndpointWithToast(call, "Request for a task tree", "Task tree received!");
 
     // const data = { ElementId: null, Path: '' }
     // const response = await axios.post('http://localhost:5513/api/Task/TodayList', data);
@@ -29,7 +29,7 @@ async function finish(elementId) {
         const response = await axios.post(`${config.PATH_BASE}Task/Finish`, data, header);
         return response.data;
     }
-    return await callAuthorizedEndpointWithToast(call, "Request to set task to finished","Task set to finished on the server");
+    return await callAuthorizedEndpointWithToast(call, "Request to set task to finished", "Task set to finished on the server");
 }
 
 async function unDone(elementId) {
@@ -43,7 +43,7 @@ async function unDone(elementId) {
 }
 
 async function callAuthorizedEndpointWithToast(call, pendingMessage, successMessage) {
-    toast.promise(
+   return toast.promise(
         callAuthorizedEndpoint(call),
         {
             pending: pendingMessage ? pendingMessage : "Missing pending message",
