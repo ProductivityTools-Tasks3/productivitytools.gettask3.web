@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { config } from '../Consts';
 import { AuthService } from './authService.js'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 async function getDate() {
     const response = await axios.post(`${config.PATH_BASE}Task/Date`)
@@ -21,26 +23,39 @@ async function GetTree() {
     // return response.data;
 }
 
-async function finish(elementId){
-    let call=async (header)=>{
-        const data = {ElementId: elementId}
-        const response = await axios.post(`${config.PATH_BASE}Task/Finish`,data, header);
+async function finish(elementId) {
+    let call = async (header) => {
+        const data = { ElementId: elementId }
+        const response = await axios.post(`${config.PATH_BASE}Task/Finish`, data, header);
         return response.data;
     }
-    return await callAuthorizedEndpoint(call);
+    return await callAuthorizedEndpointWithToast(call, "Request to set task to finished","Task set to finished on the server");
 }
 
-async function unDone(elementId){
-    let call=async(header)=>{
-        const data={ElementId:elementId};
-        const response=await axios.post(`${config.PATH_BASE}Task/Undone`,data, header);
+async function unDone(elementId) {
+    let call = async (header) => {
+        const data = { ElementId: elementId };
+        const response = await axios.post(`${config.PATH_BASE}Task/Undone`, data, header);
         return response.data;
     }
 
-    return await callAuthorizedEndpoint(call)
+    return await callAuthorizedEndpointWithToast(call, "Request for set task to acctive", "Task set to active on the server")
+}
+
+async function callAuthorizedEndpointWithToast(call, pendingMessage, successMessage) {
+    toast.promise(
+        callAuthorizedEndpoint(call),
+        {
+            pending: pendingMessage ? pendingMessage : "Missing pending message",
+            success: successMessage ? successMessage : "Missing sucesss message",
+            error: 'something happned!!!!'
+        }
+    )
 }
 
 async function callAuthorizedEndpoint(call) {
+
+
     let authService = new AuthService();
     return await authService.getUser().then(async user => {
         if (user && user.access_token) {
@@ -58,7 +73,7 @@ async function callAuthorizedEndpoint(call) {
                 }
             }
         }
-        else{
+        else {
             console.log("user not in the storage, cannot perform authorized call, trying normal call");
             return await call();
         }
