@@ -1,9 +1,14 @@
 import logo from './logo.svg';
 import './App.css';
+import * as React from 'react';
+
+import ReactDOM from 'react-dom';
+
 import apiService from './services/apiService'
 import { useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { StyledEngineProvider } from '@mui/material/styles';
 
 
 
@@ -16,14 +21,14 @@ function App() {
 
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <DateCheck />
-      </header>
-      <Home />
-      <Console/>
-      <ToastContainer />
-    </div>
+      <div className="App">
+        <header className="App-header">
+          <DateCheck />
+        </header>
+        <Home />
+        <Console />
+        <ToastContainer />
+      </div>
   );
 }
 
