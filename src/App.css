@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  font-family:  "Roboto", "Helvetica", "Arial", sans-serif;;
 }
 
 
@@ -33,7 +33,7 @@
 }
 
 .itemDetails{
-  color:green;
+  color:black;
   width: 50%;
   overflow: hidden;
 }
