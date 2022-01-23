@@ -29,6 +29,4 @@ export class AuthService {
     logout=()=>{
         return this.userManager.logout();
     }
-
-    
 }

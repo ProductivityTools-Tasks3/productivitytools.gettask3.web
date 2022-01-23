@@ -54,8 +54,6 @@ async function callAuthorizedEndpointWithToast(call, pendingMessage, successMess
 }
 
 async function callAuthorizedEndpoint(call) {
-
-
     let authService = new AuthService();
     return await authService.getUser().then(async user => {
         if (user && user.access_token) {
@@ -71,6 +69,7 @@ async function callAuthorizedEndpoint(call) {
                     console.log("try to renew token");
                     console.log("more code needed");
                 }
+                throw error;
             }
         }
         else {
