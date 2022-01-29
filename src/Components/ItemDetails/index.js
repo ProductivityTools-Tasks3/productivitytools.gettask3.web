@@ -3,6 +3,9 @@ import Stack from '@mui/material/Stack';
 import React from "react";
 import Moment from 'react-moment';
 
+import apiService from '../../services/apiService';
+
+
 export default function ItemDetails(props) {
 
     const dateFormat = "YYYY-MM-DD HH:MM:SS";
@@ -17,10 +20,14 @@ export default function ItemDetails(props) {
         props.onChange(e.target.name, e.target.value);
     }
 
+    const updateElement = () => {
+        apiService.updateElement(props.selectedElement.elementId, props.selectedElement.name);
+    }
+
     if (props.selectedElement != null) {
         return (<div className='itemDetails'>
             <p><span>ElementId: </span><span>{props.selectedElement.elementId}</span></p>
-            <p><span>Name: </span><input type="text" name="name" value={props.selectedElement.name} onChange={handleChange} ></input></p>
+            <p><span>Name: </span><input type="text" name="name" value={props.selectedElement.name} onChange={handleChange} style={{ width: "90%" }} ></input></p>
             <p><span>Status: </span><span>{props.selectedElement.status}</span></p>
             <p><span>Created: </span><span><Moment format={dateFormat}>{props.selectedElement.created}</Moment></span></p>
             <p><span>Started: </span><span><Moment format={dateFormat}>{props.selectedElement.started}</Moment></span></p>
@@ -31,7 +38,9 @@ export default function ItemDetails(props) {
 
             <Stack spacing={2} direction="row">
                 <Button variant="contained" color="success" onClick={props.finishAction}>Finish</Button>
-                <Button variant="contained" onClick={props.unDoneAction}>Undone</Button>
+                <Button variant="contained" onClick={props.unDoneAction}>Undone</Button>\
+                <Button variant="contained" onClick={updateElement}>Save</Button>
+
             </Stack>
         </div>)
     }

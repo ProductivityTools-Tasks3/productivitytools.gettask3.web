@@ -42,8 +42,21 @@ async function unDone(elementId) {
     return await callAuthorizedEndpointWithToast(call, "Request for set task to acctive", "Task set to active on the server")
 }
 
+async function updateElement(elementId, value) {
+    console.log("update element");
+    console.log(value);
+    let call = async (header) => {
+        const data = { ElementId: elementId, Name: value };
+        const response = await axios.post(`${config.PATH_BASE}Task/Update`, data, header)
+        return response.data;
+    }
+    return await callAuthorizedEndpointWithToast(call,"Request to update element","Element updated");
+}
+
+
+
 async function callAuthorizedEndpointWithToast(call, pendingMessage, successMessage) {
-   return toast.promise(
+    return toast.promise(
         callAuthorizedEndpoint(call),
         {
             pending: pendingMessage ? pendingMessage : "Missing pending message",
@@ -83,5 +96,6 @@ export default {
     getDate,
     GetTree,
     finish,
-    unDone
+    unDone,
+    updateElement
 }
