@@ -121,7 +121,7 @@ export default function StructureTree(props) {
     const menuItems = [
         {
             text: 'Add',
-            onclick: (treeId) => { props.addAction(); console.log(`Add element`); }
+            onclick: () => { props.addAction(); console.log(`Add element`); }
         },
         {
             text: 'Add new tree item',
