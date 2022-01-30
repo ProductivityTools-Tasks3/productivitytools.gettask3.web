@@ -45,7 +45,7 @@ export default function ItemDetails(props) {
 
             <Stack spacing={2} direction="row">
                 <Button variant="contained" color="success" onClick={props.finishAction}>Finish</Button>
-                <Button variant="contained" onClick={props.unDoneAction}>Undone</Button>\
+                <Button variant="contained" onClick={props.unDoneAction}>Undone</Button>
                 <Button variant="contained" onClick={updateElement}>Save</Button>
 
             </Stack>
