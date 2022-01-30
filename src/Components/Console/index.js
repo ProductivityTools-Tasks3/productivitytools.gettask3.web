@@ -99,10 +99,27 @@ export default function Console() {
         console.log(propertyValue);
     }
 
+    function addElement(){
+        setSelectedElement({
+            "name": "",
+            "type": 2,
+            "elementId": null,
+            "parentId": selectedElement.elementId,
+            "status": "New",
+            "created": "2021-11-08T07:17:32.639432",
+            "initialization": "2021-11-08T07:17:32.6394877",
+            "started": "0001-01-01T00:00:00",
+            "finished": null,
+            "category": null,
+            "elements": [],
+            "tomatoes": []
+        });
+    }
+
     return (
         <div className='console'>
             <p>Console</p>
-            <StructureTree list={list} nodeSelect={nodeSelect} finishAction={finishItemById} unDoneAction={unDoneElementById} />
+            <StructureTree list={list} nodeSelect={nodeSelect} finishAction={finishItemById} unDoneAction={unDoneElementById} addAction={addElement} />
             <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} onChange={updateElement} />
             <p>{selectedElement && selectedElement.elementId}</p>
         </div>

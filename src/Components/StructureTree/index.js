@@ -120,8 +120,8 @@ export default function StructureTree(props) {
 
     const menuItems = [
         {
-            text: 'Add new journal item',
-            onclick: (treeId) => { props.setSelectedTreeNode(treeId); console.log(`Item one from container  ${treeId} clicked`); }
+            text: 'Add',
+            onclick: (treeId) => { props.addAction(); console.log(`Add element`); }
         },
         {
             text: 'Add new tree item',

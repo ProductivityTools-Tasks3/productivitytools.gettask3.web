@@ -21,12 +21,19 @@ export default function ItemDetails(props) {
     }
 
     const updateElement = () => {
-        apiService.updateElement(props.selectedElement.elementId, props.selectedElement.name);
+        if (props.selectedElement.elementId === null) {
+            apiService.addElement(props.selectedElement.parentId, props.selectedElement.name)
+        }
+        else {
+            apiService.updateElement(props.selectedElement.parentId, props.selectedElement.elementId, props.selectedElement.name);
+        }
     }
 
     if (props.selectedElement != null) {
         return (<div className='itemDetails'>
             <p><span>ElementId: </span><span>{props.selectedElement.elementId}</span></p>
+            <p><span>ParentId: </span><span>{props.selectedElement.parentId}</span></p>
+
             <p><span>Name: </span><input type="text" name="name" value={props.selectedElement.name} onChange={handleChange} style={{ width: "90%" }} ></input></p>
             <p><span>Status: </span><span>{props.selectedElement.status}</span></p>
             <p><span>Created: </span><span><Moment format={dateFormat}>{props.selectedElement.created}</Moment></span></p>

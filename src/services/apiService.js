@@ -42,15 +42,26 @@ async function unDone(elementId) {
     return await callAuthorizedEndpointWithToast(call, "Request for set task to acctive", "Task set to active on the server")
 }
 
-async function updateElement(elementId, value) {
+async function addElement(parentId, value) {
     console.log("update element");
     console.log(value);
     let call = async (header) => {
-        const data = { ElementId: elementId, Name: value };
+        const data = { ParentId: parentId, Name: value, finished: false };
+        const response = await axios.post(`${config.PATH_BASE}Task/Add`, data, header)
+        return response.data;
+    }
+    return await callAuthorizedEndpointWithToast(call, "Request create element", "Element created");
+}
+
+async function updateElement(parentId, elementId, value) {
+    console.log("update element");
+    console.log(value);
+    let call = async (header) => {
+        const data = { ParentId: parentId, ElementId: elementId, Name: value };
         const response = await axios.post(`${config.PATH_BASE}Task/Update`, data, header)
         return response.data;
     }
-    return await callAuthorizedEndpointWithToast(call,"Request to update element","Element updated");
+    return await callAuthorizedEndpointWithToast(call, "Request to update element", "Element updated");
 }
 
 
@@ -97,5 +108,6 @@ export default {
     GetTree,
     finish,
     unDone,
-    updateElement
+    updateElement,
+    addElement
 }
