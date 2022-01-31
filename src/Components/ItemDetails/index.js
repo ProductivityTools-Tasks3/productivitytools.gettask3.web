@@ -30,7 +30,7 @@ export default function ItemDetails(props) {
     }
 
     if (props.selectedElement != null) {
-        return (<div className='itemDetails'>
+        return (<div className='itemDetails sticky-inner'>
             <p><span>ElementId: </span><span>{props.selectedElement.elementId}</span></p>
             <p><span>ParentId: </span><span>{props.selectedElement.parentId}</span></p>
 
@@ -41,7 +41,7 @@ export default function ItemDetails(props) {
             <p><span>Finished: </span><span><Moment> format={dateFormat}>{props.selectedElement.finished}</Moment></span></p>
             <p><span>Amout of child elements: </span><span>{props.selectedElement.elements.length}</span></p>
 
-
+            <p>{props.isSticky?"sticky":"notsticy"}</p>
 
             <Stack spacing={2} direction="row">
                 <Button variant="contained" color="success" onClick={props.finishAction}>Finish</Button>
@@ -49,6 +49,7 @@ export default function ItemDetails(props) {
                 <Button variant="contained" onClick={updateElement}>Save</Button>
 
             </Stack>
+            
         </div>)
     }
     else {

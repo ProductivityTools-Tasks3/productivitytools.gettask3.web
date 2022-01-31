@@ -1,4 +1,4 @@
-import React, { useEffect, useState, } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 import apiService from '../../services/apiService';
 
@@ -10,6 +10,23 @@ export default function Console() {
 
     const [list, setList] = useState([]);
     const [selectedElement, setSelectedElement] = useState();
+
+    const [isSticky, setSticky] = useState(false);
+    const ref = useRef(null);
+    const handleScroll = () => {
+        if (ref.current) {
+            setSticky(ref.current.getBoundingClientRect().top <= 0);
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', () => handleScroll);
+        };
+    }, []);
+
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -48,7 +65,7 @@ export default function Console() {
         setList(newList);
     }
 
-    function updateElementInList(elementToUpdate,propertyName,propertyValue){
+    function updateElementInList(elementToUpdate, propertyName, propertyValue) {
         setSelectedElement({ ...elementToUpdate, [propertyName]: propertyValue });
         let newList = list;
         let newElement = findElement(newList, elementToUpdate.elementId);
@@ -60,14 +77,14 @@ export default function Console() {
         finishThisItem(selectedElement)
     }
 
-    function finishItemById(elementId){
-        let element=findElement(list,elementId);
+    function finishItemById(elementId) {
+        let element = findElement(list, elementId);
         finishThisItem(element);
     }
 
-    function finishThisItem(elementToUpdate){
+    function finishThisItem(elementToUpdate) {
         console.log("Finish.thisitem");
-        updateStatus(elementToUpdate,"Finished");
+        updateStatus(elementToUpdate, "Finished");
         apiService.finish(elementToUpdate.elementId);
     }
 
@@ -75,14 +92,14 @@ export default function Console() {
         unDoneThisElement(selectedElement);
     }
 
-    function unDoneElementById(elementId){
+    function unDoneElementById(elementId) {
         console.log('undone')
-        let element=findElement(list,elementId);
+        let element = findElement(list, elementId);
         unDoneThisElement(element);
     }
 
-    function unDoneThisElement(elementToUpdate){
-        updateStatus(elementToUpdate,"New");
+    function unDoneThisElement(elementToUpdate) {
+        updateStatus(elementToUpdate, "New");
         apiService.unDone(elementToUpdate.elementId);
     }
 
@@ -92,14 +109,14 @@ export default function Console() {
         setSelectedElement(se);
     }
 
-    function updateElement(propertyName,propertyValue){
+    function updateElement(propertyName, propertyValue) {
         console.log("Console update element");
-        updateElementInList(selectedElement,propertyName,propertyValue);
+        updateElementInList(selectedElement, propertyName, propertyValue);
         console.log(propertyName);
         console.log(propertyValue);
     }
 
-    function addElement(){
+    function addElement() {
         setSelectedElement({
             "name": "",
             "type": 2,
@@ -120,7 +137,10 @@ export default function Console() {
         <div className='console'>
             <p>Console</p>
             <StructureTree list={list} nodeSelect={nodeSelect} finishAction={finishItemById} unDoneAction={unDoneElementById} addAction={addElement} />
-            <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} onChange={updateElement} />
+            <div className={`sticky-wrapper${isSticky ? ' sticky' : ''}`} ref={ref} >
+                <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} onChange={updateElement} isSticky={isSticky} />
+            </div>
+
             <p>{selectedElement && selectedElement.elementId}</p>
         </div>
     )
