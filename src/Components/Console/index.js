@@ -136,12 +136,13 @@ export default function Console() {
     return (
         <div className='console'>
             <p>Console</p>
+            <p>{selectedElement && selectedElement.elementId}</p>
             <StructureTree list={list} nodeSelect={nodeSelect} finishAction={finishItemById} unDoneAction={unDoneElementById} addAction={addElement} />
-            <div className={`sticky-wrapper${isSticky ? ' sticky' : ''}`} ref={ref} >
+            <div className={`${isSticky ? 'sticky-wrapper sticky' : ''}`} ref={ref} >
                 <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} onChange={updateElement} isSticky={isSticky} />
             </div>
 
-            <p>{selectedElement && selectedElement.elementId}</p>
+            
         </div>
     )
 }
