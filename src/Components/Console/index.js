@@ -123,7 +123,7 @@ export default function Console() {
         console.log("childId");
         console.log(childId);
         console.log("newParentId");
-        console.log(parentId);
+        console.log(newParentId);
     }
 
     function addElement() {
