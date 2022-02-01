@@ -73,34 +73,34 @@ export default function StructureTree(props) {
     }
 
     const StyledTreeItem = (props) => {
+        console.log("props");
+        console.log(props);
+        const { changeParent, ...rest } = props;
         const { elementId, status, name } = props.element;
+        const el = props.element;
 
         const [{ isDragging }, dragRef] = useDrag({
             type: 'pet',
-            item: { elementId, name },
+            item: { elementId, name,  el },
             collect: (monitor) => ({
                 isDragging: monitor.isDragging()
             })
         })
-
-        const [basket, setBasket] = useState([])
-
 
         const [{ isOver }, dropRef] = useDrop({
             accept: 'pet',
             drop: (item) => {
                 console.log(item);
                 console.log(elementId);
-                setBasket((basket) =>
-                    !basket.includes(item) ? [...basket, item] : basket)
+                changeParent(item.el, elementId);
             },
             collect: (monitor) => ({
                 isOver: monitor.isOver()
             })
         })
 
-        return (<TreeItem ref={dragRef}   {...props} label={
-            <Box ref={dropRef}  >
+        return (<TreeItem ref={dragRef} className="styledTreeItem"  {...rest} label={
+            <Box ref={dropRef}>
                 <Checkbox className="checkbox" checked={itemChecked(status)} onChange={() => handleCheckboxChange(elementId, itemChecked(status))} />
                 <span className={status}>[{status}] </span>
                 <span className={status}>{name}</span>
@@ -125,13 +125,19 @@ export default function StructureTree(props) {
         props.setSelectedTreeNode(treeId);
     }
 
+    const changeparent = (element, targetElementId) => {
+        console.log("changeParent from Structure tre")
+        props.changeParentAction(element, targetElementId);
+    }
 
     function GetNode(nodes) {
         if (nodes !== undefined) {
             return (nodes.map(x => {
                 console.log(x);
                 return (
-                    <StyledTreeItem className="styledTreeItem" nodeId={x.elementId.toString()} key={x.elementId} element={x} status={x.status}>
+                    // <StyledTreeItem nodeId={x.elementId.toString()} key={x.elementId} element={x}   >
+
+                    <StyledTreeItem nodeId={x.elementId.toString()} element={x} changeParent={changeparent}  >
                         {GetNode(x.elements)}
                     </StyledTreeItem>
                 )

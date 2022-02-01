@@ -119,11 +119,17 @@ export default function Console() {
         console.log(propertyValue);
     }
 
-    function changeParent(childId,newParentId){
+    function changeParent(childId, newParentId) {
         console.log("childId");
         console.log(childId);
         console.log("newParentId");
         console.log(newParentId);
+        var childobject = findElement(list, childId.elementId);
+        var currentparent = findElement(list, childId.parentId);
+        currentparent.elements = currentparent.elements.filter(item => item !== childobject);
+        var parentobject = findElement(list, newParentId);
+        parentobject.elements.push(childobject);
+        updateElementInList(childId, "parentId", newParentId);
     }
 
     function addElement() {
@@ -147,9 +153,9 @@ export default function Console() {
         <div className='console'>
             <p>Console</p>
             <p>{selectedElement && selectedElement.elementId}</p>
-            
+
             <DndProvider backend={HTML5Backend}> {/* drag and drop */}
-                <StructureTree list={list} nodeSelect={nodeSelect} finishAction={finishItemById} unDoneAction={unDoneElementById} addAction={addElement} />
+                <StructureTree list={list} nodeSelect={nodeSelect} finishAction={finishItemById} unDoneAction={unDoneElementById} addAction={addElement} changeParentAction={changeParent} />
             </DndProvider>/
             <div className={`${isSticky ? 'sticky-wrapper sticky' : ''}`} ref={ref} >
                 <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} onChange={updateElement} isSticky={isSticky} />
