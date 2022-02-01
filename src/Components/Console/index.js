@@ -6,6 +6,9 @@ import apiService from '../../services/apiService';
 import StructureTree from '../StructureTree'
 import ItemDetails from '../ItemDetails';
 
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+
 export default function Console() {
 
     const [list, setList] = useState([]);
@@ -137,12 +140,15 @@ export default function Console() {
         <div className='console'>
             <p>Console</p>
             <p>{selectedElement && selectedElement.elementId}</p>
-            <StructureTree list={list} nodeSelect={nodeSelect} finishAction={finishItemById} unDoneAction={unDoneElementById} addAction={addElement} />
+            
+            <DndProvider backend={HTML5Backend}> {/* drag and drop */}
+                <StructureTree list={list} nodeSelect={nodeSelect} finishAction={finishItemById} unDoneAction={unDoneElementById} addAction={addElement} />
+            </DndProvider>/
             <div className={`${isSticky ? 'sticky-wrapper sticky' : ''}`} ref={ref} >
                 <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} onChange={updateElement} isSticky={isSticky} />
             </div>
 
-            
+
         </div>
     )
 }

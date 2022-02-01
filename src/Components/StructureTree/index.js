@@ -10,6 +10,7 @@ import Collapse from '@material-ui/core/Collapse';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 
+import { useDrag, useDrop } from 'react-dnd'
 
 
 import ContextMenu from '../ContextMenu';
@@ -64,20 +65,47 @@ export default function StructureTree(props) {
     const handleCheckboxChange = (elementId, value) => {
         if (value) {
             console.log("undone1");
-            props.unDoneAction(elementId,"New")
+            props.unDoneAction(elementId, "New")
         }
         else {
-            props.finishAction(elementId,"Finished")
+            props.finishAction(elementId, "Finished")
         }
     }
 
     const StyledTreeItem = (props) => {
         const { elementId, status, name } = props.element;
-        return (<TreeItem {...props} label={
-            <Box>
+
+        const [{ isDragging }, dragRef] = useDrag({
+            type: 'pet',
+            item: { elementId, name },
+            collect: (monitor) => ({
+                isDragging: monitor.isDragging()
+            })
+        })
+
+        const [basket, setBasket] = useState([])
+
+
+        const [{ isOver }, dropRef] = useDrop({
+            accept: 'pet',
+            drop: (item) => {
+                console.log(item);
+                console.log(elementId);
+                setBasket((basket) =>
+                    !basket.includes(item) ? [...basket, item] : basket)
+            },
+            collect: (monitor) => ({
+                isOver: monitor.isOver()
+            })
+        })
+
+        return (<TreeItem ref={dragRef}   {...props} label={
+            <Box ref={dropRef}  >
                 <Checkbox className="checkbox" checked={itemChecked(status)} onChange={() => handleCheckboxChange(elementId, itemChecked(status))} />
                 <span className={status}>[{status}] </span>
                 <span className={status}>{name}</span>
+                <span className={status}>  {isDragging && '😱'}</span>
+                <span className={status}> {isOver && <span>Drop Here!</span>}</span>
             </Box>
         } ></TreeItem>);
     }
@@ -132,6 +160,7 @@ export default function StructureTree(props) {
             onclick: (treeId) => { props.setSelectedTreeNode(treeId); }
         }
     ];
+
     if (props && props.list && props.list.elements) {
         return (
             <div ref={containerRef} className='structureTree' >
@@ -145,6 +174,7 @@ export default function StructureTree(props) {
                     onNodeToggle={handleToggle}
                     onNodeSelect={nodeSelect}
                     className="tree"
+
 
                 >
                     {GetNode(props.list.elements)}
