@@ -119,6 +119,13 @@ export default function Console() {
         console.log(propertyValue);
     }
 
+    function changeParent(childId,newParentId){
+        console.log("childId");
+        console.log(childId);
+        console.log("newParentId");
+        console.log(parentId);
+    }
+
     function addElement() {
         setSelectedElement({
             "name": "",
