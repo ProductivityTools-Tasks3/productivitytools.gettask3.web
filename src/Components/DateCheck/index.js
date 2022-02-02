@@ -15,6 +15,6 @@ export default function DateCheck() {
     }, [])
 
     return (
-        <span>Again ci not working? Date time returned from GetTask3 API: {date ? date : `server hasn't responded yet`}</span>
+        <span> 2021.02.02 Date time returned from GetTask3 API: {date ? date : `server hasn't responded yet`}</span>
     )
 }
