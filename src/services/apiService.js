@@ -64,7 +64,14 @@ async function updateElement(parentId, elementId, value) {
     return await callAuthorizedEndpointWithToast(call, "Request to update element", "Element updated");
 }
 
-
+async function moveElement(elementId,targetParentId){
+    let call=async (header)=>{
+        const data={ElementIds:[elementId],Target:targetParentId}
+        const response=await axios.post(`${config.PATH_BASE}Task/Move`, data, header)
+        return response.data;
+    }
+    return await callAuthorizedEndpointWithToast(call, "Request to move element", "Element moved");
+}
 
 async function callAuthorizedEndpointWithToast(call, pendingMessage, successMessage) {
     return toast.promise(
@@ -109,5 +116,6 @@ export default {
     finish,
     unDone,
     updateElement,
-    addElement
+    addElement,
+    moveElement
 }

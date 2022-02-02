@@ -44,8 +44,8 @@ export default function Console() {
 
     function findElement(candidateElement, nodeId) {
         var candidateElementId = candidateElement.elementId.toString();
-        console.log(candidateElement.elementId);
-        console.log(candidateElementId);
+        //console.log(candidateElement.elementId);
+       // console.log(candidateElementId);
         if (candidateElementId == nodeId) {
             return candidateElement;
         } else {
@@ -119,17 +119,18 @@ export default function Console() {
         console.log(propertyValue);
     }
 
-    function changeParent(childId, newParentId) {
-        console.log("childId");
-        console.log(childId);
-        console.log("newParentId");
-        console.log(newParentId);
-        var childobject = findElement(list, childId.elementId);
-        var currentparent = findElement(list, childId.parentId);
+    function changeParent(child, newParentId) {
+        // console.log("childId");
+        // console.log(childId);
+        // console.log("newParentId");
+        // console.log(newParentId);
+        var childobject = findElement(list, child.elementId);
+        var currentparent = findElement(list, child.parentId);
         currentparent.elements = currentparent.elements.filter(item => item !== childobject);
         var parentobject = findElement(list, newParentId);
         parentobject.elements.push(childobject);
-        updateElementInList(childId, "parentId", newParentId);
+        updateElementInList(child, "parentId", newParentId);
+        apiService.moveElement(child.elementId,newParentId);
     }
 
     function addElement() {

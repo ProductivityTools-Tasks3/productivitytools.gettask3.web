@@ -75,13 +75,13 @@ export default function StructureTree(props) {
     const StyledTreeItem = (props) => {
         console.log("props");
         console.log(props);
-        const { changeParent, ...rest } = props;
-        const { elementId, status, name } = props.element;
-        const el = props.element;
+        const { changeParent, element, ...rest } = props;
+        console.log("el");
+        console.log(element);
 
         const [{ isDragging }, dragRef] = useDrag({
             type: 'pet',
-            item: { elementId, name,  el },
+            item: element ,
             collect: (monitor) => ({
                 isDragging: monitor.isDragging()
             })
@@ -91,8 +91,7 @@ export default function StructureTree(props) {
             accept: 'pet',
             drop: (item) => {
                 console.log(item);
-                console.log(elementId);
-                changeParent(item.el, elementId);
+                changeParent(item, element.elementId);
             },
             collect: (monitor) => ({
                 isOver: monitor.isOver()
@@ -101,11 +100,11 @@ export default function StructureTree(props) {
 
         return (<TreeItem ref={dragRef} className="styledTreeItem"  {...rest} label={
             <Box ref={dropRef}>
-                <Checkbox className="checkbox" checked={itemChecked(status)} onChange={() => handleCheckboxChange(elementId, itemChecked(status))} />
-                <span className={status}>[{status}] </span>
-                <span className={status}>{name}</span>
-                <span className={status}>  {isDragging && '😱'}</span>
-                <span className={status}> {isOver && <span>Drop Here!</span>}</span>
+                <Checkbox className="checkbox" checked={itemChecked(element.status)} onChange={() => handleCheckboxChange(element.elementId, itemChecked(element.status))} />
+                <span className={element.status}>[{element.status}] </span>
+                <span className={element.status}>{element.name}</span>
+                <span className={element.status}>  {isDragging && '😱'}</span>
+                <span className={element.status}> {isOver && <span>Drop Here!</span>}</span>
             </Box>
         } ></TreeItem>);
     }
