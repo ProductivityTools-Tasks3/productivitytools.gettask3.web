@@ -107,7 +107,7 @@ export default function Console() {
     }
 
     function nodeSelect(nodeId) {
-        console.log(list);
+       // console.log(list);
         var se = findElement(list, nodeId);
         setSelectedElement(se);
     }
@@ -115,8 +115,8 @@ export default function Console() {
     function updateElement(propertyName, propertyValue) {
         console.log("Console update element");
         updateElementInList(selectedElement, propertyName, propertyValue);
-        console.log(propertyName);
-        console.log(propertyValue);
+        // console.log(propertyName);
+        // console.log(propertyValue);
     }
 
     function changeParent(child, newParentId) {

@@ -73,11 +73,11 @@ export default function StructureTree(props) {
     }
 
     const StyledTreeItem = (props) => {
-        console.log("props");
-        console.log(props);
+        // console.log("props");
+        // console.log(props);
         const { changeParent, element, ...rest } = props;
-        console.log("el");
-        console.log(element);
+        // console.log("el");
+        // console.log(element);
 
         const [{ isDragging }, dragRef] = useDrag({
             type: 'pet',
@@ -133,7 +133,7 @@ export default function StructureTree(props) {
     function GetNode(nodes) {
         if (nodes !== undefined) {
             return (nodes.map(x => {
-                console.log(x);
+             //   console.log(x);
                 return (
                     // <StyledTreeItem nodeId={x.elementId.toString()} key={x.elementId} element={x}   >
 

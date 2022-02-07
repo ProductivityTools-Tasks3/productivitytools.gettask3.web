@@ -12,11 +12,11 @@ export default function ItemDetails(props) {
 
     const handleChange = (e, o) => {
 
-        console.log("Item detials handle change");
-        console.log(e);
-        console.log(o);
-        console.log(e.target.value);
-        console.log(e.target.name);
+        // console.log("Item detials handle change");
+        // console.log(e);
+        // console.log(o);
+        // console.log(e.target.value);
+        // console.log(e.target.name);
         props.onChange(e.target.name, e.target.value);
     }
 
