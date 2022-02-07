@@ -42,6 +42,17 @@ async function unDone(elementId) {
     return await callAuthorizedEndpointWithToast(call, "Request for set task to acctive", "Task set to active on the server")
 }
 
+async function start(elementId) {
+    let call = async (header) => {
+        const data = { ElementId: elementId };
+        const response = await axios.post(`${config.PATH_BASE}Task/Start`, data, header);
+        return response.data;
+    }
+
+    return await callAuthorizedEndpointWithToast(call, "Request for start task", "Task started on the server")
+}
+
+
 async function addElement(parentId, value) {
     console.log("update element");
     console.log(value);
@@ -117,5 +128,6 @@ export default {
     unDone,
     updateElement,
     addElement,
-    moveElement
+    moveElement,
+    start
 }

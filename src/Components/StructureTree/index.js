@@ -137,7 +137,7 @@ export default function StructureTree(props) {
                 return (
                     // <StyledTreeItem nodeId={x.elementId.toString()} key={x.elementId} element={x}   >
 
-                    <StyledTreeItem nodeId={x.elementId.toString()} element={x} changeParent={changeparent}  >
+                    <StyledTreeItem key={x.elementId.toString()} nodeId={x.elementId.toString()} element={x} changeParent={changeparent}  >
                         {GetNode(x.elements)}
                     </StyledTreeItem>
                 )

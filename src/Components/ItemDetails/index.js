@@ -1,4 +1,4 @@
-import { Button } from "@material-ui/core";
+import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import React from "react";
 import Moment from 'react-moment';
@@ -29,6 +29,11 @@ export default function ItemDetails(props) {
         }
     }
 
+    const startElement =(e)=>{
+        props.onChange("status", "InProgress");
+        apiService.start(props.selectedElement.elementId);
+    }
+
     if (props.selectedElement != null) {
         return (<div className='itemDetails sticky-inner'>
             <p><span>ElementId: </span><span>{props.selectedElement.elementId}</span></p>
@@ -38,15 +43,16 @@ export default function ItemDetails(props) {
             <p><span>Status: </span><span>{props.selectedElement.status}</span></p>
             <p><span>Created: </span><span><Moment format={dateFormat}>{props.selectedElement.created}</Moment></span></p>
             <p><span>Started: </span><span><Moment format={dateFormat}>{props.selectedElement.started}</Moment></span></p>
-            <p><span>Finished: </span><span><Moment> format={dateFormat}>{props.selectedElement.finished}</Moment></span></p>
+            <p><span>Finished: </span><span><Moment format={dateFormat}> {props.selectedElement.finished}</Moment></span></p>
             <p><span>Amout of child elements: </span><span>{props.selectedElement.elements.length}</span></p>
 
             <p>{props.isSticky?"sticky":"notsticy"}</p>
 
             <Stack spacing={2} direction="row">
-                <Button variant="contained" color="success" onClick={props.finishAction}>Finish</Button>
+                <Button variant="contained" onClick={props.finishAction}>Finish</Button>
                 <Button variant="contained" onClick={props.unDoneAction}>Undone</Button>
                 <Button variant="contained" onClick={updateElement}>Save</Button>
+                <Button variant="contained" onClick={startElement}>Start</Button>
 
             </Stack>
             
