@@ -103,6 +103,7 @@ export default function StructureTree(props) {
                 <Checkbox className="checkbox" checked={itemChecked(element.status)} onChange={() => handleCheckboxChange(element.elementId, itemChecked(element.status))} />
                 <span className={element.status}>[{element.status}] </span>
                 <span className={element.status}>{element.name}</span>
+                <span className={element.status}>[{element.elements.length}]</span>
                 <span className={element.status}>  {isDragging && '😱'}</span>
                 <span className={element.status}> {isOver && <span>Drop Here!</span>}</span>
             </Box>
