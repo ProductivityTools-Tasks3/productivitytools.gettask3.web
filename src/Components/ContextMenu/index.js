@@ -18,6 +18,7 @@ const ContextMenu = ({ parentRef, items }) => {
         console.log(parentRef);
 
         const showMenu = (event) => {
+
             console.log(event);
             event.preventDefault();
             setIsVisible(true);
@@ -26,10 +27,11 @@ const ContextMenu = ({ parentRef, items }) => {
             console.log('show');
             console.log(event.path)
             let reversedArray = event.path.reverse();
-            let li = reversedArray.find(e => e.nodeName == 'LI');
+            let li = reversedArray.find(e => e.nodeName == 'LI' && e.className == 'MuiTreeItem-root styledTreeItem');
             //let id=li.attributes.find(e=>e.name='xxxx')
-            //   console.log(event.path.find(e=>e.nodeName=='LI').getAttribute('contextmenuid'));
-            let elementId = event.path.find(e => e.nodeName == 'LI').getAttribute('contextmenuid');
+            console.log(li.getAttribute('elementId'));
+            let elementId = event.path.find(e => e.nodeName == 'LI' && e.className == 'MuiTreeItem-root styledTreeItem').getAttribute('elementId');
+debugger;
             setSelectedTreeId(elementId);
             console.log("selectet tree id")
             console.log(elementId);
@@ -59,7 +61,7 @@ const ContextMenu = ({ parentRef, items }) => {
             {items.map((item, index) => {
                 return (
                     <div key={index}
-                        onClick={() => item.onclick(selectedTreeId)}
+                        onClick={(e) => item.onclick(e, selectedTreeId)}
                         className='context-menuItem'>
                         {item.text}
                     </div>

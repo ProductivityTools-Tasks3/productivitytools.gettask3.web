@@ -98,14 +98,15 @@ export default function StructureTree(props) {
             })
         })
 
-        return (<TreeItem ref={dragRef} className="styledTreeItem"  {...rest} label={
+        return (<TreeItem ref={dragRef} className="styledTreeItem" elementId={element.elementId}  {...rest} label={
             <Box ref={dropRef}>
                 <Checkbox className="checkbox" checked={itemChecked(element.status)} onChange={() => handleCheckboxChange(element.elementId, itemChecked(element.status))} />
                 <span className={element.status}>[{element.status}] </span>
                 <span className={element.status}>{element.name}</span>
                 <span className={element.status}>[{element.elements.length}]</span>
                 <span className={element.status}>  {isDragging && '😱'}</span>
-                <span className={element.status}> {isOver && <span>Drop Here!</span>}</span>
+                <span className={element.status}> {isOver && <span>Drop Here!</span>}</span> 
+                <span className='elementId'>{element.elementId}</span>
             </Box>
         } ></TreeItem>);
     }
@@ -155,7 +156,7 @@ export default function StructureTree(props) {
     const menuItems = [
         {
             text: 'Add',
-            onclick: () => { props.addAction(); console.log(`Add element`); }
+            onclick: (event,selectedTreeId) => { props.addAction(event,selectedTreeId); console.log(`Add element`); }
         },
         {
             text: 'Add new tree item',

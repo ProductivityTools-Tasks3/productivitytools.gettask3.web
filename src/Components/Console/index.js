@@ -133,12 +133,13 @@ export default function Console() {
         apiService.moveElement(child.elementId,newParentId);
     }
 
-    function addElement() {
+    function addElement(event, selectedTreeId) {
+        debugger;
         setSelectedElement({
             "name": "",
             "type": 2,
             "elementId": null,
-            "parentId": selectedElement.elementId,
+            "parentId": selectedTreeId,
             "status": "New",
             "created": "2021-11-08T07:17:32.639432",
             "initialization": "2021-11-08T07:17:32.6394877",
