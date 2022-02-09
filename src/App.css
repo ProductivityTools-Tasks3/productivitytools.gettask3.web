@@ -76,6 +76,10 @@
   color: green;
 }
 
+.styledTreeItem .TaskBag{
+  font-weight: bold;
+}
+
 .styledTreeItem .Finished{
   color: gray
 }
