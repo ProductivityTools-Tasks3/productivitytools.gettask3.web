@@ -135,7 +135,7 @@ export default function StructureTree(props) {
 
     function GetNode(nodes) {
         if (nodes !== undefined) {
-            return (nodes.sort((x, y) => x.type == 1 ? 1 : -1).map(x => {
+            return (nodes.sort((x, y) => x.type == "TaskBag" ? -1 : 1).map(x => {
                 //   console.log(x);
                 return (
                     // <StyledTreeItem nodeId={x.elementId.toString()} key={x.elementId} element={x}   >
