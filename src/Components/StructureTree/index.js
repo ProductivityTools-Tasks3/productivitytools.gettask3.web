@@ -81,7 +81,7 @@ export default function StructureTree(props) {
 
         const [{ isDragging }, dragRef] = useDrag({
             type: 'pet',
-            item: element ,
+            item: element,
             collect: (monitor) => ({
                 isDragging: monitor.isDragging()
             })
@@ -101,11 +101,13 @@ export default function StructureTree(props) {
         return (<TreeItem ref={dragRef} className="styledTreeItem" elementId={element.elementId}  {...rest} label={
             <Box ref={dropRef}>
                 <Checkbox className="checkbox" checked={itemChecked(element.status)} onChange={() => handleCheckboxChange(element.elementId, itemChecked(element.status))} />
-                <span className={element.status}>[{element.status}] </span>
-                <span className={element.status}>{element.name}</span>
-                <span className={element.status}>[{element.elements.length}]</span>
-                <span className={element.status}>  {isDragging && '😱'}</span>
-                <span className={element.status}> {isOver && <span>Drop Here!</span>}</span> 
+                <span className={element.status + ' ' + element.status}>
+                    <span>[{element.status}] </span>
+                    <span>{element.name}</span>
+                    <span>[{element.elements.length}]</span>
+                    <span>{isDragging && '😱'}</span>
+                    <span> {isOver && <span>Drop Here!</span>}</span>
+                </span>
                 <span className='elementId'>{element.elementId}</span>
             </Box>
         } ></TreeItem>);
@@ -133,8 +135,8 @@ export default function StructureTree(props) {
 
     function GetNode(nodes) {
         if (nodes !== undefined) {
-            return (nodes.map(x => {
-             //   console.log(x);
+            return (nodes.sort((x, y) => x.type == 1 ? 1 : -1).map(x => {
+                //   console.log(x);
                 return (
                     // <StyledTreeItem nodeId={x.elementId.toString()} key={x.elementId} element={x}   >
 
@@ -156,7 +158,7 @@ export default function StructureTree(props) {
     const menuItems = [
         {
             text: 'Add',
-            onclick: (event,selectedTreeId) => { props.addAction(event,selectedTreeId); console.log(`Add element`); }
+            onclick: (event, selectedTreeId) => { props.addAction(event, selectedTreeId); console.log(`Add element`); }
         },
         {
             text: 'Add new tree item',
