@@ -40,7 +40,7 @@ export default function ItemDetails(props) {
             <p><span>ParentId: </span><span>{props.selectedElement.parentId}</span></p>
 
             <p><span>Name: </span><input type="text" name="name" value={props.selectedElement.name} onChange={handleChange} style={{ width: "90%" }} ></input></p>
-            <p><span>Details: </span><input type="text" name="details" value={props.selectedElement.details == null ? "" : props.selectedElement.details} onChange={handleChange} style={{ width: "90%" }} ></input></p>
+            <p><span>Details: </span><textarea  name="details" value={props.selectedElement.details == null ? "" : props.selectedElement.details} onChange={handleChange} style={{ width: "90%" }} ></textarea></p>
             <p><span>Status: </span><span>{props.selectedElement.status}</span></p>
             <p><span>Created: </span><span><Moment format={dateFormat}>{props.selectedElement.created}</Moment></span></p>
             <p><span>Started: </span><span><Moment format={dateFormat}>{props.selectedElement.started}</Moment></span></p>
