@@ -22,14 +22,14 @@ export default function ItemDetails(props) {
 
     const updateElement = () => {
         if (props.selectedElement.elementId === null) {
-            apiService.addElement(props.selectedElement.parentId, props.selectedElement.name)
+            apiService.addElement(props.selectedElement.parentId, props.selectedElement.name, props.selectedElement.details)
         }
         else {
             apiService.updateElement(props.selectedElement.parentId, props.selectedElement.elementId, props.selectedElement.name);
         }
     }
 
-    const startElement =(e)=>{
+    const startElement = (e) => {
         props.onChange("status", "InProgress");
         apiService.start(props.selectedElement.elementId);
     }
@@ -40,13 +40,14 @@ export default function ItemDetails(props) {
             <p><span>ParentId: </span><span>{props.selectedElement.parentId}</span></p>
 
             <p><span>Name: </span><input type="text" name="name" value={props.selectedElement.name} onChange={handleChange} style={{ width: "90%" }} ></input></p>
+            <p><span>Details: </span><input type="text" name="details" value={props.selectedElement.details == null ? "" : props.selectedElement.details} onChange={handleChange} style={{ width: "90%" }} ></input></p>
             <p><span>Status: </span><span>{props.selectedElement.status}</span></p>
             <p><span>Created: </span><span><Moment format={dateFormat}>{props.selectedElement.created}</Moment></span></p>
             <p><span>Started: </span><span><Moment format={dateFormat}>{props.selectedElement.started}</Moment></span></p>
             <p><span>Finished: </span><span><Moment format={dateFormat}> {props.selectedElement.finished}</Moment></span></p>
             <p><span>Amout of child elements: </span><span>{props.selectedElement.elements.length}</span></p>
 
-            <p>{props.isSticky?"sticky":"notsticy"}</p>
+            <p>{props.isSticky ? "sticky" : "notsticy"}</p>
 
             <Stack spacing={2} direction="row">
                 <Button variant="contained" onClick={props.finishAction}>Finish</Button>
@@ -55,8 +56,8 @@ export default function ItemDetails(props) {
                 <Button variant="contained" onClick={startElement}>Start</Button>
 
             </Stack>
-            
-        </div>)
+
+        </div >)
     }
     else {
         return <div>empty</div>
