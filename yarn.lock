@@ -3303,6 +3303,11 @@ core-js@^3.19.2:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.20.0.tgz#1c5ac07986b8d15473ab192e45a2e115a4a95b79"
   integrity sha512-KjbKU7UEfg4YPpskMtMXPhUKn7m/1OdTHTVjy09ScR2LVaoUXe8Jh0UdvN2EKUR6iKTJph52SJP95mAB0MnVLQ==
 
+core-js@^3.21.0, core-js@^3.6.5:
+  version "3.21.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.21.0.tgz#f479dbfc3dffb035a0827602dd056839a774aa71"
+  integrity sha512-YUdI3fFu4TF/2WykQ2xzSiTQdldLB4KVuL9WeAy5XONZYt5Cun/fpQvctoKbCgvPhmzADeesTk/j2Rdx77AcKQ==
+
 core-js@^3.8.3:
   version "3.20.1"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.20.1.tgz#eb1598047b7813572f1dc24b7c6a95528c99eef3"
@@ -6502,6 +6507,13 @@ obuf@^1.0.0, obuf@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/obuf/-/obuf-1.1.2.tgz#09bea3343d41859ebd446292d11c9d4db619084e"
   integrity sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==
+
+off-color@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/off-color/-/off-color-2.0.0.tgz#ecf3bda52e9a78dde535db86361e048741a56631"
+  integrity sha512-JJ9ObbY2CzgT7F8PpdpHGNjQa7QbU8f4DkY3cCxYUq9NezYUMmL/oSofCc5MMaiUnNNBEFCc4w1unMA+R8syvw==
+  dependencies:
+    core-js "^3.6.5"
 
 oidc-client@^1.11.5:
   version "1.11.5"
