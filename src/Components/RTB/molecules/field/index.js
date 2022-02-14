@@ -1,7 +1,17 @@
 import Input from '../../atoms/input'
 import RichEditor from '../../organisms/richEditor';
+import React, { useCallback, useEffect, useReducer, useRef } from 'react';
+
+const reducer = (state, action = false) => {
+    if (action) {
+      return 'setValues';
+    } else return ++state > 0 ? state : 0;
+  };
 
 const Field = ({ setRef = () => { }, formLinker, ...props }) => {
+    const inputRef = useRef();
+    const [state, forceUpdate] = useReducer(reducer, 0);
+
     debugger;
     const handleChange = value => {
         if (props.inputDisabled) {
@@ -11,6 +21,17 @@ const Field = ({ setRef = () => { }, formLinker, ...props }) => {
 
         props.onChange(value);
     };
+
+    const setRefFn = useCallback(
+        el => {
+          if (el !== null) {
+            inputRef.current = el;
+            setRef(el);
+            formLinker.setRef(props.name, { forceUpdate, inputRef });
+          }
+        },
+        [formLinker, props.name, setRef]
+      );
 
     debugger;
     const renderInput = () => {
