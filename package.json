@@ -15,6 +15,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.24.0",
     "core-js": "^3.21.0",
+    "form-linker": "^1.2.0",
     "moment": "^2.29.1",
     "off-color": "^2.0.0",
     "oidc-client": "^1.11.5",
