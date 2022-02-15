@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 export const MAX_INDENT_DEPTH = 20;
 export const MAX_LIST_DEPTH = 4;
 export const COLORS = [

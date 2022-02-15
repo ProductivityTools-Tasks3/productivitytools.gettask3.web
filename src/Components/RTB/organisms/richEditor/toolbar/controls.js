@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import ColorList from './colorList';
 import ControlButton from './button';
 import Dropdown from './richEditorDropdown';

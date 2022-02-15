@@ -1,3 +1,6 @@
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react"
+
 import React, { useState } from 'react';
 
 const rows = Array(8).fill(1);

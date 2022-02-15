@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import PrimaryStyle from './primary.style';
 import PropTypes from 'prop-types';
 import React from 'react';

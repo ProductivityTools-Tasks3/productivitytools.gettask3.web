@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import Icon from '../../atoms/icon';
 import Label from '../../atoms/label';
 import PropTypes from 'prop-types';

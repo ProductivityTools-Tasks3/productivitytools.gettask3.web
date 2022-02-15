@@ -1,4 +1,8 @@
+/** @jsxImportSource @emotion/react */
+
 import Controls from './toolbar/controls';
+
+
 import DraftStyles from './draftjs.style';
 import EditorStyle from './editor.style';
 import LinkPopover from './linkPopover';

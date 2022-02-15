@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { EditorBlock, EditorState } from 'draft-js';

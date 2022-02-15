@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import PropTypes from 'prop-types';
 import React from 'react';
 import Tooltip from '../../../atoms/tooltip';

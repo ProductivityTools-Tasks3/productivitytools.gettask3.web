@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import Checkbox from '../../molecules/checkbox';
 // import Currency from '../../atoms/currency';
 import Input from '../../atoms/input';

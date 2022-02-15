@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import React, { useEffect, useState } from 'react';
 import Icon from '../../../atoms/icon';
 import Style from './scrollMessage.style';

@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import React from 'react';
 import Styled from './color.style';
 

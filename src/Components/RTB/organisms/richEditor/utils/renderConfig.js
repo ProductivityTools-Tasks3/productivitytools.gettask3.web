@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import React from 'react'; // eslint-disable-line no-unused-vars
 import { Image, HorizontalRule, Pagebreak, StyledBlock, Table, ListItem } from './blockRenderComponents';
 import { camelCase, isEmpty, kebabCase } from 'lodash';

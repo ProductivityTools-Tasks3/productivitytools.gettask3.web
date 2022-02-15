@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import Style from './tooltip.style.js';

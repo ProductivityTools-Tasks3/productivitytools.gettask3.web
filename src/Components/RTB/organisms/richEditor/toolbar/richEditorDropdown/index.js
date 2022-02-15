@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import DropdownBtn from "../../../../molecules/dropdownBtn";
 import Icon from "../../../../atoms/icon";
 import PropTypes from "prop-types";
