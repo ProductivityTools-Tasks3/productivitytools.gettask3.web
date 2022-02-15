@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import React from "react";
 import Moment from 'react-moment';
 
-import Editor from '../RTB/editor'
+import Editor from '../RTB'
 
 import apiService from '../../services/apiService';
 
