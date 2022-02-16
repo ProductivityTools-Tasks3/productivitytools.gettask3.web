@@ -8,7 +8,7 @@ import Label from '../../atoms/label';
 // import MultiSelect from '../../molecules/multiSelect';
 import PropTypes from 'prop-types';
 // import RadioBtn from '../../molecules/radioBtn';
-import React, { useCallback, useEffect, useReducer, useRef } from 'react';
+import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import RichEditor from '../..//organisms/richEditor';
 // import Select from '../../atoms/select';
 import Style from './field.style';
@@ -25,12 +25,14 @@ const reducer = (state, action = false) => {
 const Field = ({ setRef = () => {}, formLinker, ...props }) => {
   const inputRef = useRef();
   const [state, forceUpdate] = useReducer(reducer, 0);
+  //const [innerValue, setInnerValue] = useState("paw");
 
   const handleChange = value => {
     if (props.inputDisabled) {
       return null;
     }
-    formLinker.setValue(props.name, value);
+    //debugger;
+    //formLinker.setValue(props.name, value);
 
     props.onChange(value);
   };
@@ -65,6 +67,12 @@ const Field = ({ setRef = () => {}, formLinker, ...props }) => {
     };
   }, [formLinker, props.name]);
 
+
+  useEffect(() => {
+    inputRef.current.reset(props.content);
+    debugger;
+  }, [props.content]);
+
   const isValueSet = useRef(false);
   useEffect(() => {
     if (
@@ -88,18 +96,20 @@ const Field = ({ setRef = () => {}, formLinker, ...props }) => {
     return <Info info={props.info} />;
   };
 
+
   const renderInput = () => {
     const commonProps = {
       onBlur: handleBlur,
       onChange: handleChange,
       onFocus: handleFocus,
-      value: formLinker.getValue(props.name),
+      value:  formLinker.getValue(props.name),
       error: formLinker.getError(props.name) && !isEmpty(formLinker.getError(props.name)),
     };
+    //debugger;
     switch (props.type) {
       case 'checkbox': {
         const checkProps = {
-          checkStatus: formLinker.getValue(props.name),
+          checkStatus: true,
           hollow: true,
           onCheck: handleChange,
           error: formLinker.getError(props.name),
@@ -165,11 +175,21 @@ const Field = ({ setRef = () => {}, formLinker, ...props }) => {
     console.error(`Warning: The ${props.name} field name is not found in the schema.`);
   }
 
+  // const zrobcos = () => {
+  //   let miliseconds = new Date().getMilliseconds().toString();;
+  //   //  isValueSet.current = false;
+  //   //  formLinker.setValue("editor", miliseconds, true, true);
+  //   setInnerValue(miliseconds);
+  //   //inputRef.current.reset(miliseconds);
+
+  // }
+
   return (
     <Style className={classes}>
       {renderLabel()}
       {renderInfo()}
       {renderInput()}
+      {/* <button onClick={zrobcos}>fdsafa</button> */}
     </Style>
   );
 };
@@ -228,9 +248,9 @@ Field.propTypes = {
 };
 
 Field.defaultProps = {
-  onBlur: () => {},
-  onChange: () => {},
-  onFocus: () => {},
+  onBlur: () => { },
+  onChange: () => { },
+  onFocus: () => { },
   size: 'md',
 };
 

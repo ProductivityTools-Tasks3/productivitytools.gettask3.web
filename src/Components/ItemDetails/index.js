@@ -66,7 +66,7 @@ export default function ItemDetails(props) {
             </Stack>
 
             <div><Editor content={props.selectedElement.details} onChange={handleDetailsChange} /></div>
-
+            <div>{props.selectedElement.details}</div>
         </div >)
     }
     else {
