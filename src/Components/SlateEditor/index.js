@@ -2,9 +2,14 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import React, { useState, useCallback, useEffect, useMemo } from "react";
 import Moment from 'react-moment';
+import './Editor.css'
+
+
 
 import { Slate, Editable, withReact } from 'slate-react'
 import { createEditor } from 'slate'
+
+import  Toolbar  from './Toolbar'
 
 export default function SlateEditor(props) {
 
@@ -19,12 +24,12 @@ export default function SlateEditor(props) {
     useEffect(() => {
         let x = new Date().getMilliseconds().toString();
         setNumber(x);
-        let newValue=[{
+        let newValue = [{
             type: 'paragraph',
             children: [{ text: props.selectedElement?.details || "No data" }],
         },]
-        
-        editor.children=newValue;
+
+        editor.children = newValue;
         setValue(newValue)
 
 
@@ -33,13 +38,8 @@ export default function SlateEditor(props) {
 
     return (
         <div>
-            <Slate
-                editor={editor}
-                value={value}
-                onChange={newValue => {
-                    setValue(newValue)
-                }
-                }>
+            <Slate editor={editor} value={value} onChange={newValue => { setValue(newValue) }}>
+                <Toolbar />
                 <Editable />
             </Slate>
             <p>raw:</p>
