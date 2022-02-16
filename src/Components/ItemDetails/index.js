@@ -22,12 +22,16 @@ export default function ItemDetails(props) {
         props.onChange(e.target.name, e.target.value);
     }
 
+    const handleDetailsChange = (value) => {
+        props.onChange("details", value);
+    }
+
     const updateElement = () => {
         if (props.selectedElement.elementId === null) {
             apiService.addElement(props.selectedElement.parentId, props.selectedElement.name, props.selectedElement.details)
         }
         else {
-            apiService.updateElement(props.selectedElement.parentId, props.selectedElement.elementId, props.selectedElement.name);
+            apiService.updateElement(props.selectedElement.parentId, props.selectedElement.elementId, props.selectedElement.name, props.selectedElement.details);
         }
     }
 
@@ -35,6 +39,8 @@ export default function ItemDetails(props) {
         props.onChange("status", "InProgress");
         apiService.start(props.selectedElement.elementId);
     }
+
+    const content = "fsda";
 
     if (props.selectedElement != null) {
         return (<div className='itemDetails sticky-inner'>
@@ -59,7 +65,7 @@ export default function ItemDetails(props) {
 
             </Stack>
 
-            <div><Editor/></div>
+            <div><Editor content={props.selectedElement.details} onChange={handleDetailsChange} /></div>
 
         </div >)
     }
