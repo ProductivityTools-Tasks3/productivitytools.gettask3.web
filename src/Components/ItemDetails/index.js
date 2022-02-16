@@ -1,14 +1,19 @@
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import React from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Moment from 'react-moment';
 
+
 import apiService from '../../services/apiService';
+import SlateEditor from '../SlateEditor';
 
 
 export default function ItemDetails(props) {
 
     const dateFormat = "YYYY-MM-DD HH:MM:SS";
+
+
+
 
     const handleChange = (e, o) => {
 
@@ -34,13 +39,14 @@ export default function ItemDetails(props) {
         apiService.start(props.selectedElement.elementId);
     }
 
+
     if (props.selectedElement != null) {
         return (<div className='itemDetails sticky-inner'>
             <p><span>ElementId: </span><span>{props.selectedElement.elementId}</span></p>
             <p><span>ParentId: </span><span>{props.selectedElement.parentId}</span></p>
 
             <p><span>Name: </span><input type="text" name="name" value={props.selectedElement.name} onChange={handleChange} style={{ width: "90%" }} ></input></p>
-            <p><span>Details: </span><textarea  name="details" value={props.selectedElement.details == null ? "" : props.selectedElement.details} onChange={handleChange} style={{ width: "90%" }} ></textarea></p>
+            <p><span>Details: </span><textarea name="details" value={props.selectedElement.details == null ? "" : props.selectedElement.details} onChange={handleChange} style={{ width: "90%" }} ></textarea></p>
             <p><span>Status: </span><span>{props.selectedElement.status}</span></p>
             <p><span>Created: </span><span><Moment format={dateFormat}>{props.selectedElement.created}</Moment></span></p>
             <p><span>Started: </span><span><Moment format={dateFormat}>{props.selectedElement.started}</Moment></span></p>
@@ -56,7 +62,9 @@ export default function ItemDetails(props) {
                 <Button variant="contained" onClick={startElement}>Start</Button>
 
             </Stack>
-
+            <p>slatestart</p>
+            <SlateEditor selectedElement={props.selectedElement}></SlateEditor>
+            <p>slatefinish</p>
         </div >)
     }
     else {
