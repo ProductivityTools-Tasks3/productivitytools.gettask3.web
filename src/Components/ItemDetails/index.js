@@ -3,8 +3,6 @@ import Stack from '@mui/material/Stack';
 import React from "react";
 import Moment from 'react-moment';
 
-import Editor from '../RTB'
-
 import apiService from '../../services/apiService';
 
 
@@ -22,16 +20,12 @@ export default function ItemDetails(props) {
         props.onChange(e.target.name, e.target.value);
     }
 
-    const handleDetailsChange = (value) => {
-        props.onChange("details", value);
-    }
-
     const updateElement = () => {
         if (props.selectedElement.elementId === null) {
             apiService.addElement(props.selectedElement.parentId, props.selectedElement.name, props.selectedElement.details)
         }
         else {
-            apiService.updateElement(props.selectedElement.parentId, props.selectedElement.elementId, props.selectedElement.name, props.selectedElement.details);
+            apiService.updateElement(props.selectedElement.parentId, props.selectedElement.elementId, props.selectedElement.name);
         }
     }
 
@@ -40,15 +34,13 @@ export default function ItemDetails(props) {
         apiService.start(props.selectedElement.elementId);
     }
 
-    const content = "fsda";
-
     if (props.selectedElement != null) {
         return (<div className='itemDetails sticky-inner'>
             <p><span>ElementId: </span><span>{props.selectedElement.elementId}</span></p>
             <p><span>ParentId: </span><span>{props.selectedElement.parentId}</span></p>
 
             <p><span>Name: </span><input type="text" name="name" value={props.selectedElement.name} onChange={handleChange} style={{ width: "90%" }} ></input></p>
-            <p><span>Details: </span><textarea name="details" value={props.selectedElement.details == null ? "" : props.selectedElement.details} onChange={handleChange} style={{ width: "90%" }} ></textarea></p>
+            <p><span>Details: </span><textarea  name="details" value={props.selectedElement.details == null ? "" : props.selectedElement.details} onChange={handleChange} style={{ width: "90%" }} ></textarea></p>
             <p><span>Status: </span><span>{props.selectedElement.status}</span></p>
             <p><span>Created: </span><span><Moment format={dateFormat}>{props.selectedElement.created}</Moment></span></p>
             <p><span>Started: </span><span><Moment format={dateFormat}>{props.selectedElement.started}</Moment></span></p>
@@ -65,8 +57,6 @@ export default function ItemDetails(props) {
 
             </Stack>
 
-            <div><Editor content={props.selectedElement.details} onChange={handleDetailsChange} /></div>
-            <div>{props.selectedElement.details}</div>
         </div >)
     }
     else {
