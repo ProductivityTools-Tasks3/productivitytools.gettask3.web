@@ -108,7 +108,7 @@ export default function StructureTree(props) {
                     <span>{isDragging && '😱'}</span>
                     <span> {isOver && <span>Drop Here!</span>}</span>
                 </span>
-                {/* <span className='elementId'>{element.elementId}</span> */}
+                <span className='elementId'>{element.elementId}</span>
             </Box>
         } ></TreeItem>);
     }
