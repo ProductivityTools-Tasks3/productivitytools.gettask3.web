@@ -57,18 +57,18 @@ async function addElement(parentId, value, details) {
     console.log("update element");
     console.log(value);
     let call = async (header) => {
-        const data = { ParentId: parentId, Name: value, Details: details, Finished: false };
+        const data = { ParentId: parentId, Name: value, Details: details, DetailsType: 'Slate', Finished: false };
         const response = await axios.post(`${config.PATH_BASE}Task/Add`, data, header)
         return response.data;
     }
     return await callAuthorizedEndpointWithToast(call, "Request create element", "Element created");
 }
 
-async function updateElement(parentId, elementId, value) {
+async function updateElement(parentId, elementId, value, details) {
     console.log("update element");
     console.log(value);
     let call = async (header) => {
-        const data = { ParentId: parentId, ElementId: elementId, Name: value };
+        const data = { ParentId: parentId, ElementId: elementId, Name: value, Details: details, DetailsType: 'Slate' };
         const response = await axios.post(`${config.PATH_BASE}Task/Update`, data, header)
         return response.data;
     }

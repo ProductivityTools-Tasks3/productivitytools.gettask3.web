@@ -11,7 +11,7 @@ import SlateEditor from '../SlateEditor';
 export default function ItemDetails(props) {
 
     const dateFormat = "YYYY-MM-DD HH:MM:SS";
-
+    const [details, setDetails] = useState({});
 
 
 
@@ -25,12 +25,18 @@ export default function ItemDetails(props) {
         props.onChange(e.target.name, e.target.value);
     }
 
+    const detailsChanged = (value) => {
+        setDetails(value);
+    }
+
     const updateElement = () => {
+        debugger;
+        let newValue=JSON.stringify(details)
         if (props.selectedElement.elementId === null) {
-            apiService.addElement(props.selectedElement.parentId, props.selectedElement.name, props.selectedElement.details)
+            apiService.addElement(props.selectedElement.parentId, props.selectedElement.name, newValue)
         }
         else {
-            apiService.updateElement(props.selectedElement.parentId, props.selectedElement.elementId, props.selectedElement.name);
+            apiService.updateElement(props.selectedElement.parentId, props.selectedElement.elementId, props.selectedElement.name, newValue);
         }
     }
 
@@ -63,7 +69,7 @@ export default function ItemDetails(props) {
 
             </Stack>
             <p>slatestart</p>
-            <SlateEditor selectedElement={props.selectedElement}></SlateEditor>
+            <SlateEditor selectedElement={props.selectedElement} detailsChanged={detailsChanged}></SlateEditor>
             <p>slatefinish</p>
         </div >)
     }

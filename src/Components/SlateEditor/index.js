@@ -9,7 +9,7 @@ import './Editor.css'
 import { Slate, Editable, withReact } from 'slate-react'
 import { createEditor } from 'slate'
 
-import  Toolbar  from './Toolbar'
+import Toolbar from './Toolbar'
 
 export default function SlateEditor(props) {
 
@@ -24,10 +24,13 @@ export default function SlateEditor(props) {
     useEffect(() => {
         let x = new Date().getMilliseconds().toString();
         setNumber(x);
-        let newValue = [{
+
+        let template = [{
             type: 'paragraph',
             children: [{ text: props.selectedElement?.details || "No data" }],
         },]
+
+        let newValue = props.selectedElement?.detailsType == 'Slate' ? props.selectedElement?.details : template
 
         editor.children = newValue;
         setValue(newValue)
@@ -38,7 +41,7 @@ export default function SlateEditor(props) {
 
     return (
         <div>
-            <Slate editor={editor} value={value} onChange={newValue => { setValue(newValue) }}>
+            <Slate editor={editor} value={value} onChange={newValue => { setValue(newValue); props.detailsChanged(newValue) }}>
                 <Toolbar />
                 <Editable />
             </Slate>
