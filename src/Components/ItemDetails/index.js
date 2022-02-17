@@ -48,8 +48,6 @@ export default function ItemDetails(props) {
 
     if (props.selectedElement != null) {
         return (<div className='itemDetails sticky-inner'>
-            <p><span>ElementId: </span><span>{props.selectedElement.elementId}</span></p>
-            <p><span>ParentId: </span><span>{props.selectedElement.parentId}</span></p>
             <Stack spacing={2} direction="row">
                 <Button variant="contained" onClick={props.finishAction}>Finish</Button>
                 <Button variant="contained" onClick={props.unDoneAction}>Undone</Button>
@@ -67,6 +65,8 @@ export default function ItemDetails(props) {
             <p><span>Started: </span><span><Moment format={dateFormat}>{props.selectedElement.started}</Moment></span></p>
             <p><span>Finished: </span><span><Moment format={dateFormat}> {props.selectedElement.finished}</Moment></span></p>
             <hr />
+            <p><span>ElementId: </span><span>{props.selectedElement.elementId}</span></p>
+            <p><span>ParentId: </span><span>{props.selectedElement.parentId}</span></p>
             <p><span>Details: </span><textarea name="details" value={props.selectedElement.details == null ? "" : props.selectedElement.details} onChange={handleChange} style={{ width: "90%" }} ></textarea></p>
             <p><span>Amout of child elements: </span><span>{props.selectedElement.elements.length}</span></p>
 

@@ -158,7 +158,7 @@ export default function Console() {
 
             <DndProvider backend={HTML5Backend}> {/* drag and drop */}
                 <StructureTree list={list} nodeSelect={nodeSelect} finishAction={finishItemById} unDoneAction={unDoneElementById} addAction={addElement} changeParentAction={changeParent} />
-            </DndProvider>/
+            </DndProvider>
             <div className={`${isSticky ? 'sticky-wrapper sticky' : ''}`} ref={ref} >
                 <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} onChange={updateElement} isSticky={isSticky} />
             </div>
