@@ -1,7 +1,7 @@
 import React from "react";
-import Button from "../button";
-import Icon from "../icon";
-import { TableUtil } from "../Utils/table.js";
+import Button from "../../Toolbar/button";
+import Icon from "../../Toolbar/icon";
+import { TableUtil } from "../../Utils/table.js";
 
 const InTable = ({ editor }) => {
   const table = new TableUtil(editor);

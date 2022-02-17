@@ -1,9 +1,9 @@
 import React, {useRef, useState} from 'react';
 import Button from '../button.js'
 import Icon from '../icon.js'
-import {isBlockActive} from '../slateUtilityFunctions'
-import usePopup from '../Utils/usePopup'
-import {insertEmbed } from '../Utils/embed.js'
+import {isBlockActive} from '../../Utils/slateUtilityFunctions'
+import usePopup from '../../Utils/usePopup'
+import {insertEmbed } from '../../Utils/embed.js'
 const Embed = ({editor,format}) =>{
     const urlInputRef = useRef();
     const [showInput,setShowInput] = usePopup(urlInputRef);

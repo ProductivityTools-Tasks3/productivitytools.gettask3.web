@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import Icon from "../icon.js";
-import usePopup from "../Utils/usePopup";
+import Icon from "../../Toolbar/icon.js";
+import usePopup from "../../Utils/usePopup";
 import { Transforms } from "slate";
-import { TableUtil } from "../Utils/table.js";
+import { TableUtil } from "../../Utils/table.js";
 import "./Table.css";
 
 const Table = ({ editor }) => {

@@ -10,7 +10,8 @@ import {
     addMarkData,
     isBlockActive,
     activeMark
-} from "./slateUtilityFunctions.js";
+  } from "../Utils/slateUtilityFunctions.js";
+
 import useTable from "./useTable.js";
 
 
@@ -18,10 +19,10 @@ import defaultToolbarGroups from "./toolbarGroups.js";
 import "./styles.css";
 
 import ColorPicker from "./ColorPicker";
-import LinkButton from "./Link/LinkButton.js";
+import LinkButton from "../Elements/Link/LinkButton.js";
 import Embed from "./Embed";
-import Table from "./Table";
-import InTable from "./Table/InTable";
+import Table from "../Elements/Table";
+import InTable from "../Elements/Table/InTable";
 
 
 const Toolbar = () => {

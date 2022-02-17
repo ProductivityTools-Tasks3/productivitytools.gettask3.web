@@ -2,9 +2,9 @@ import React, { useRef, useState } from "react";
 import { MdFormatColorText, MdFormatColorFill, MdCheck } from "react-icons/md";
 import "./ColorPicker.css";
 import { colors } from "./defaultColors.js";
-import { addMarkData, activeMark } from "../slateUtilityFunctions.js";
+import { addMarkData, activeMark } from "../../Utils/slateUtilityFunctions.js";
 import { Transforms } from "slate";
-import usePopup from "../Utils/usePopup.js";
+import usePopup from "../../Utils/usePopup.js";
 import { ReactEditor } from "slate-react";
 
 const logo = {
