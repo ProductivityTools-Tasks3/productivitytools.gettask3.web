@@ -22,15 +22,17 @@ export default function SlateEditor(props) {
 
 
     useEffect(() => {
+        debugger;
         let x = new Date().getMilliseconds().toString();
         setNumber(x);
-
+        let details = props.selectedElement?.details;
+        let detailsType = props.selectedElement?.detailsType;
         let template = [{
             type: 'paragraph',
-            children: [{ text: props.selectedElement?.details || "No data" }],
+            children: [{ text: details || "No data" }],
         },]
 
-        let newValue = props.selectedElement?.detailsType == 'Slate' ? props.selectedElement?.details : template
+        let newValue = detailsType == 'Slate' ? JSON.parse(details) : template
 
         editor.children = newValue;
         setValue(newValue)
