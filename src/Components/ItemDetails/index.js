@@ -54,10 +54,10 @@ export default function ItemDetails(props) {
     if (props.selectedElement != null) {
         return (<div className='itemDetails sticky-inner'>
             <Stack spacing={2} direction="row">
-                <Button variant="contained" onClick={props.finishAction}>Finish</Button>
-                <Button variant="contained" onClick={props.unDoneAction}>Undone</Button>
+                <Button variant={`${props.finishAction ? 'contained' : 'disabled'}`} onClick={props.finishAction}>Finish</Button>
+                <Button variant={`${props.unDoneAction ? 'contained' : 'disabled'}`} onClick={props.unDoneAction}>Undone</Button>
                 <Button variant="contained" onClick={updateElement}>Save</Button>
-                <Button variant="contained" onClick={startElement}>Start</Button>
+                <Button variant={`${props.finishAction ? 'contained' : 'disabled'}`} onClick={startElement}>Start</Button>
             </Stack>
 
             <p><span>Name: </span><input type="text" name="name" value={props.selectedElement.name} onChange={handleChange} style={{ width: "90%" }} ></input></p>

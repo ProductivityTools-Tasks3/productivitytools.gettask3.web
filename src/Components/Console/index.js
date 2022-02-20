@@ -166,19 +166,28 @@ export default function Console() {
         setNewElement({ ...newElement, [propertyName]: propertyValue });
     }
 
-    // function addElementToTree() {
-    //     debugger;
-    //     let parent = findElement(list, selectedElement.parentId);
-    //     parent.elements.push(selectedElement);
-    // }
+    useEffect(() => {
+        console.log("NewElement: " + newElement);
+        console.log("NEwElementId: =" + newElement?.elementId);
+        if (newElement && newElement.elementId) {
+            addElementToTree(newElement);
+            nodeSelect(newElement.elementId);
+            setNewElement(null);
+        }
+    }, [newElement && newElement.elementId])
+
+    function addElementToTree(element) {
+        let parent = findElement(list, element.parentId);
+        parent.elements.push(element);
+    }
 
     const renderItemDetails = () => {
         if (newElement == null) {
-            return <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} onChange={updateElement}  isSticky={isSticky} />
+            return <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} onChange={updateElement} isSticky={isSticky} />
 
         }
         else {
-            return <ItemDetails selectedElement={newElement} finishAction={finishItem} unDoneAction={unDoneElement} onChange={updateNewElement} isSticky={isSticky} />
+            return <ItemDetails selectedElement={newElement} onChange={updateNewElement} isSticky={isSticky} />
         }
     }
 
