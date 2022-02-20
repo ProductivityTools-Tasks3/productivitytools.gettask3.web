@@ -28,7 +28,6 @@ export default function SlateEditor(props) {
 
 
     useEffect(() => {
-        debugger;
         let x = new Date().getMilliseconds().toString();
         setNumber(x);
         let details = props.selectedElement?.details;

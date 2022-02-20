@@ -13,6 +13,7 @@ export default function Console() {
 
     const [list, setList] = useState([]);
     const [selectedElement, setSelectedElement] = useState();
+    const [newElement, setNewElement] = useState(null);
 
     const [isSticky, setSticky] = useState(false);
     const ref = useRef(null);
@@ -45,7 +46,7 @@ export default function Console() {
     function findElement(candidateElement, nodeId) {
         var candidateElementId = candidateElement.elementId.toString();
         //console.log(candidateElement.elementId);
-       // console.log(candidateElementId);
+        // console.log(candidateElementId);
         if (candidateElementId == nodeId) {
             return candidateElement;
         } else {
@@ -107,13 +108,14 @@ export default function Console() {
     }
 
     function nodeSelect(nodeId) {
-       // console.log(list);
+        // console.log(list);
         var se = findElement(list, nodeId);
         setSelectedElement(se);
+
     }
 
     function updateElement(propertyName, propertyValue) {
-        console.log("Console update element");
+        console.log("Console update element" + propertyName);
         updateElementInList(selectedElement, propertyName, propertyValue);
         // console.log(propertyName);
         // console.log(propertyValue);
@@ -130,13 +132,20 @@ export default function Console() {
         var parentobject = findElement(list, newParentId);
         parentobject.elements.push(childobject);
         updateElementInList(child, "parentId", newParentId);
-        apiService.moveElement(child.elementId,newParentId);
+        apiService.moveElement(child.elementId, newParentId);
     }
 
+    // const updateSelectedElementId = (id) => {
+    //     let updatedElement = { ...selectedElement, elementId: 1 };
+    //     debugger;
+    //     console.log(updatedElement);
+    //     setSelectedElement(updatedElement, addElementToTree);
+    //     console.log(selectedElement)
+    // }
+
     function addElement(event, selectedTreeId) {
-        debugger;
-        setSelectedElement({
-            "name": "",
+        let newElement = {
+            "name": "New element",
             "type": 2,
             "elementId": null,
             "parentId": selectedTreeId,
@@ -148,7 +157,29 @@ export default function Console() {
             "category": null,
             "elements": [],
             "tomatoes": []
-        });
+        }
+
+        setNewElement(newElement);
+    }
+
+    const updateNewElement = (propertyName, propertyValue) => {
+        setNewElement({ ...newElement, [propertyName]: propertyValue });
+    }
+
+    // function addElementToTree() {
+    //     debugger;
+    //     let parent = findElement(list, selectedElement.parentId);
+    //     parent.elements.push(selectedElement);
+    // }
+
+    const renderItemDetails = () => {
+        if (newElement == null) {
+            return <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} onChange={updateElement}  isSticky={isSticky} />
+
+        }
+        else {
+            return <ItemDetails selectedElement={newElement} finishAction={finishItem} unDoneAction={unDoneElement} onChange={updateNewElement} isSticky={isSticky} />
+        }
     }
 
     return (
@@ -160,7 +191,7 @@ export default function Console() {
                 <StructureTree list={list} nodeSelect={nodeSelect} finishAction={finishItemById} unDoneAction={unDoneElementById} addAction={addElement} changeParentAction={changeParent} />
             </DndProvider>
             <div className={`${isSticky ? 'sticky-wrapper sticky' : ''}`} ref={ref} >
-                <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} onChange={updateElement} isSticky={isSticky} />
+                {renderItemDetails()}
             </div>
 
 

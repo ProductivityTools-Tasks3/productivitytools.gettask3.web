@@ -135,6 +135,9 @@ export default function StructureTree(props) {
 
     function GetNode(nodes) {
         if (nodes !== undefined) {
+           //debugger;
+           //what to do with id?
+           //nodes.push({name:'New', elementId:null});
             return (nodes.sort((x, y) => (x.type == "TaskBag" && y.type != "TaskBag") ? -1 : 1).map(x => {
                 //   console.log(x);
                 return (

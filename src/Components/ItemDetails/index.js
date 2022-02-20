@@ -12,6 +12,9 @@ export default function ItemDetails(props) {
 
     const dateFormat = "YYYY-MM-DD HH:MM:SS";
     const [details, setDetails] = useState({});
+    const [newElement, setNewElement] = useState(null);
+
+    const getCurrentElement = () => newElement != null ? newElement : props.selectedElement;
 
 
 
@@ -29,11 +32,13 @@ export default function ItemDetails(props) {
         setDetails(value);
     }
 
-    const updateElement = () => {
-        debugger;
+    const updateElement = async () => {
         let newValue = JSON.stringify(details)
         if (props.selectedElement.elementId === null) {
-            apiService.addElement(props.selectedElement.parentId, props.selectedElement.name, newValue)
+            let newId = await apiService.addElement(props.selectedElement.parentId, props.selectedElement.name, newValue);
+            debugger;
+            props.onChange('elementId', newId);
+            // props.addElementToTree(props.selectedElement);
         }
         else {
             apiService.updateElement(props.selectedElement.parentId, props.selectedElement.elementId, props.selectedElement.name, newValue);
