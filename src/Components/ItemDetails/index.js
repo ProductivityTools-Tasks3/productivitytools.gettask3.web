@@ -12,9 +12,6 @@ export default function ItemDetails(props) {
 
     const dateFormat = "YYYY-MM-DD HH:MM:SS";
     const [details, setDetails] = useState({});
-    const [newElement, setNewElement] = useState(null);
-
-    const getCurrentElement = () => newElement != null ? newElement : props.selectedElement;
 
 
 

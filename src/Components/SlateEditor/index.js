@@ -76,7 +76,7 @@ export default function SlateEditor(props) {
         children: [{ text: 'empty' }],
     },])
     const [number, setNumber] = useState([])
-
+    const [title, setTitle] = useState('nothing');
 
     useEffect(() => {
         let x = new Date().getMilliseconds().toString();
@@ -104,10 +104,18 @@ export default function SlateEditor(props) {
         return <Leaf {...props} />
     }, [])
 
+    const editorChanged = (newValue) => {
+        setValue(newValue);
+        props.detailsChanged(newValue)
+        setTitle(editor.children[0].children[0].text);
+
+    }
+
+
     return (
         <div>
             <div style={{ width: '95%', margin: '0 auto' }}>
-                <Slate editor={editor} value={value} onChange={newValue => { setValue(newValue); props.detailsChanged(newValue) }}>
+                <Slate editor={editor} value={value} onChange={editorChanged}>
                     <Toolbar />
 
                     <div className="editor-wrapper" style={{ border: '1px solid #f3f3f3', padding: '0 10px' }}>
@@ -119,6 +127,7 @@ export default function SlateEditor(props) {
                     </div>
                 </Slate>
             </div>
+            <div>{title}</div>
         </div>
     )
 }
