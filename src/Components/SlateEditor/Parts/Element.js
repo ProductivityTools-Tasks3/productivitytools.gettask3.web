@@ -8,9 +8,11 @@ export const Element = (props) =>{
     const {attributes, children, element} = props;
     
     switch(element.type){
+        case 'title':
+            return <h1 {...attributes}>{children}</h1>
         case 'headingOne':
             return <h1 {...attributes}>{children}</h1>
-        case 'headingTwo':
+        case 'headingTwo':  
             return <h2 {...attributes}>{children}</h2>
         case 'headingThree':
             return <h3 {...attributes}>{children}</h3>
