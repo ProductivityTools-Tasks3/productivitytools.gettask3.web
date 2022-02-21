@@ -70,7 +70,8 @@ const withLayout = editor => {
 
 export default function SlateEditor(props) {
 
-    const editor = useMemo(() => withLayout(withReact(createEditor())), [])
+    //const editor = useMemo(() => withLayout(withReact(createEditor())), [])
+    const editor = useMemo(() => withReact(createEditor()), []);
     const [value, setValue] = useState([{
         type: 'paragraph',
         children: [{ text: 'empty' }],
@@ -116,7 +117,7 @@ export default function SlateEditor(props) {
         <div>
             <div style={{ width: '95%', margin: '0 auto' }}>
                 <Slate editor={editor} value={value} onChange={editorChanged}>
-                    {/* <Toolbar /> */}
+                    <Toolbar />
 
                     <div className="editor-wrapper" style={{ border: '1px solid #f3f3f3', padding: '0 10px' }}>
                         <Editable
