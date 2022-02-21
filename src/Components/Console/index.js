@@ -156,7 +156,8 @@ export default function Console() {
             "finished": null,
             "category": null,
             "elements": [],
-            "tomatoes": []
+            "tomatoes": [],
+            "details": "empty"
         }
 
         setNewElement(newElement);
@@ -164,6 +165,10 @@ export default function Console() {
 
     const updateNewElement = (propertyName, propertyValue) => {
         setNewElement({ ...newElement, [propertyName]: propertyValue });
+    }
+
+    const saveNewElement = (id, details) => {
+        setNewElement({ ...newElement, elementId: id, details: details, detailsType: 'Slate' })
     }
 
     useEffect(() => {
@@ -182,18 +187,21 @@ export default function Console() {
     }
 
     const renderItemDetails = () => {
+
         if (newElement == null) {
             return <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} onChange={updateElement} isSticky={isSticky} />
 
         }
         else {
-            return <ItemDetails selectedElement={newElement} onChange={updateNewElement} isSticky={isSticky} />
+            return <ItemDetails selectedElement={newElement} onChange={updateNewElement} saveNewElement={saveNewElement} isSticky={isSticky} />
         }
     }
 
     return (
         <div className='console'>
             <p>Console</p>
+            <p>{newElement && newElement.details}</p>
+
             <p>{selectedElement && selectedElement.elementId}</p>
 
             <DndProvider backend={HTML5Backend}> {/* drag and drop */}

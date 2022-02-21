@@ -33,9 +33,7 @@ export default function ItemDetails(props) {
         let newValue = JSON.stringify(details)
         if (props.selectedElement.elementId === null) {
             let newId = await apiService.addElement(props.selectedElement.parentId, props.selectedElement.name, newValue);
-            debugger;
-            props.onChange('elementId', newId);
-            // props.addElementToTree(props.selectedElement);
+            props.saveNewElement(newId, newValue);
         }
         else {
             apiService.updateElement(props.selectedElement.parentId, props.selectedElement.elementId, props.selectedElement.name, newValue);
@@ -47,7 +45,8 @@ export default function ItemDetails(props) {
         apiService.start(props.selectedElement.elementId);
     }
 
-
+    console.log("rendering item details");
+    console.log(props.selectedElement);
     if (props.selectedElement != null) {
         return (<div className='itemDetails sticky-inner'>
             <Stack spacing={2} direction="row">
