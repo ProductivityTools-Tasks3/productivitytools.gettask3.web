@@ -109,7 +109,7 @@ export default function SlateEditor(props) {
         setValue(newValue);
         props.detailsChanged(newValue)
         setTitle(editor.children[0].children[0].text);
-
+        props.taskNameChanged(editor.children[0].children[0].text);
     }
 
 
