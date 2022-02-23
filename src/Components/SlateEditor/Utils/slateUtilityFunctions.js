@@ -1,6 +1,5 @@
 import { Editor, Transforms, Element as SlateElement } from "slate";
 import { ReactEditor } from "slate-react";
-import Console from "../../Console";
 
 const alignment = ["alignLeft", "alignRight", "alignCenter"];
 const list_types = ["orderedList", "unorderedList"];
@@ -81,32 +80,12 @@ export const isMarkActive = (editor, format) => {
 };
 
 export const isBlockActive = (editor, format) => {
-  console.log("isBlockActive========================")
-  console.log(editor);
-  console.log(format);
   const [match] = Editor.nodes(editor, {
-    match: (n) => {
-      console.log("-----")
-      console.log(n);
-      let x1 = Editor.isEditor(n);
-      console.log("isEditor", x1);
-      let x2 = SlateElement.isElement(n);
-      console.log("isElement", x2);
-      let x3 = n.type;
-      console.log("type", x3);
-      console.log("format", format);
-      console.log(editor.Element);
-      var x = !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === format;
-      console.log(x);
-      console.log("isEditor", x1, "isElement", x2, "type", x3, "format", format, "x", x);
-      console.log("finish");
-      return x;
-    }
+    match: (n) =>
+      !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === format
   });
-  console.log("match finished");
-  console.log(match);
+
   return !!match;
-  //return true;
 };
 
 export const activeMark = (editor, format) => {

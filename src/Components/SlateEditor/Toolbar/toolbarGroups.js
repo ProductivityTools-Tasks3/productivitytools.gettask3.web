@@ -74,50 +74,50 @@ const toolbarGroups = [
         format: "headingOne",
         type: "block"
       },
-    //   {
-    //     id: 12,
-    //     format: "headingTwo",
-    //     type: "block"
-    //   },
-    //   {
-    //     id: 13,
-    //     format: "headingThree",
-    //     type: "block"
-    //   },
-    //   {
-    //     id: 14,
-    //     format: "blockquote",
-    //     type: "block"
-    //   }
-    // ],
-    // [
-    //   {
-    //     id: 15,
-    //     format: "orderedList",
-    //     type: "block"
-    //   },
-    //   {
-    //     id: 16,
-    //     format: "unorderedList",
-    //     type: "block"
-    //   }
-    // ],
-    // [
-    //   {
-    //     id: 17,
-    //     format: "alignLeft",
-    //     type: "block"
-    //   },
-    //   {
-    //     id: 18,
-    //     format: "alignCenter",
-    //     type: "block"
-    //   },
-    //   {
-    //     id: 19,
-    //     format: "alignRight",
-    //     type: "block"
-    //   }
+      {
+        id: 12,
+        format: "headingTwo",
+        type: "block"
+      },
+      {
+        id: 13,
+        format: "headingThree",
+        type: "block"
+      },
+      {
+        id: 14,
+        format: "blockquote",
+        type: "block"
+      }
+    ],
+    [
+      {
+        id: 15,
+        format: "orderedList",
+        type: "block"
+      },
+      {
+        id: 16,
+        format: "unorderedList",
+        type: "block"
+      }
+    ],
+    [
+      {
+        id: 17,
+        format: "alignLeft",
+        type: "block"
+      },
+      {
+        id: 18,
+        format: "alignCenter",
+        type: "block"
+      },
+      {
+        id: 19,
+        format: "alignRight",
+        type: "block"
+      }
     ],
     [
       {

@@ -30,23 +30,19 @@ export default function ItemDetails(props) {
     }
 
     const updateElement = async () => {
-        let jsonDetails = JSON.stringify(details)
+        let newValue = JSON.stringify(details)
         if (props.selectedElement.elementId === null) {
-            let newId = await apiService.addElement(props.selectedElement.parentId, props.selectedElement.name, jsonDetails);
-            props.saveNewElement(newId, jsonDetails);
+            let newId = await apiService.addElement(props.selectedElement.parentId, props.selectedElement.name, newValue);
+            props.saveNewElement(newId, newValue);
         }
         else {
-            apiService.updateElement(props.selectedElement.parentId, props.selectedElement.elementId, props.selectedElement.name, jsonDetails);
+            apiService.updateElement(props.selectedElement.parentId, props.selectedElement.elementId, props.selectedElement.name, newValue);
         }
     }
 
     const startElement = (e) => {
         props.onChange("status", "InProgress");
         apiService.start(props.selectedElement.elementId);
-    }
-
-    const taskNameChanged = (value) => {
-        props.onChange('name', value);
     }
 
     console.log("rendering item details");
@@ -62,7 +58,7 @@ export default function ItemDetails(props) {
 
             <p><span>Name: </span><input type="text" name="name" value={props.selectedElement.name} onChange={handleChange} style={{ width: "90%" }} ></input></p>
             <p><span>Status: </span><span>{props.selectedElement.status}</span></p>
-            <SlateEditor selectedElement={props.selectedElement} detailsChanged={detailsChanged} taskNameChanged={taskNameChanged}></SlateEditor>
+            <SlateEditor selectedElement={props.selectedElement} detailsChanged={detailsChanged}></SlateEditor>
 
 
 
