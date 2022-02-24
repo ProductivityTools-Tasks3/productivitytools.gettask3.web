@@ -21,6 +21,7 @@ import {
 import { Slate, Editable, withReact } from 'slate-react'
 import Toolbar from './Toolbar'
 import { autocompleteClasses } from '@mui/material';
+import { useDebugValue } from 'react';
 
 
 const withLayout = editor => {
@@ -70,17 +71,20 @@ const withLayout = editor => {
 
 export default function SlateEditor(props) {
 
-    const editor = useMemo(() => withLayout(withReact(createEditor())), [])
+   // const editor = useMemo(() => withLayout(withReact(createEditor())), [])
+   const editor = useMemo(() => withReact(createEditor()), [])
     const [value, setValue] = useState([{
         type: 'paragraph',
         children: [{ text: 'empty' }],
     },])
-    const [number, setNumber] = useState([])
     const [title, setTitle] = useState('nothing');
 
     useEffect(() => {
-        let x = new Date().getMilliseconds().toString();
-        setNumber(x);
+        changeContent();
+    }, [props.selectedElement])
+
+    const changeContent = () => {
+
         let details = props.selectedElement?.details;
         let detailsType = props.selectedElement?.detailsType;
         let template = [{
@@ -88,14 +92,53 @@ export default function SlateEditor(props) {
             children: [{ text: details || "No data" }],
         },]
 
-        let newValue = detailsType == 'Slate' ? JSON.parse(details) : template
+        debugger;
+        let newValue = ''
+        if (detailsType == 'Slate') {
+            let detailsObject = JSON.parse(details);
+            if (detailsObject && Object.keys(detailsObject).length > 0 && Object.getPrototypeOf(detailsObject) != Object.prototype) {
+                newValue = detailsObject;
+            }
+            else
+            {
+                newValue = template;
+            }
+        }
+        else {
+            newValue = template;
+        }
+        console.log("details");
+        console.log(details);
+        console.log("NewVAlue");
+        console.log(newValue);
+        let totalNodes = editor.children.length
 
-        editor.children = newValue;
-        setValue(newValue)
+        // No saved content, don't delete anything to prevent errors
+        if (value.length <= 0) {
+            return
+        }
 
+        // Remove every node except the last one
+        // Otherwise SlateJS will return error as there's no content
+        for (let i = 0; i < totalNodes - 1; i++) {
+            console.log(i)
+            Transforms.removeNodes(editor, {
+                at: [i],
+            })
+        }
 
-    }, [props.selectedElement.elementId])
+        // Add content to SlateJS
+        for (const v1 of newValue) {
+            Transforms.insertNodes(editor, v1, {
+                at: [editor.children.length],
+            })
+        }
 
+        // Remove the last node that was leftover from before
+        Transforms.removeNodes(editor, {
+            at: [0],
+        })
+    }
     //Saving above
 
     const renderElement = useCallback(props => <Element {...props} />, [])
@@ -108,7 +151,6 @@ export default function SlateEditor(props) {
         setValue(newValue);
         props.detailsChanged(newValue)
         setTitle(editor.children[0].children[0].text);
-
     }
 
 
@@ -116,7 +158,7 @@ export default function SlateEditor(props) {
         <div>
             <div style={{ width: '95%', margin: '0 auto' }}>
                 <Slate editor={editor} value={value} onChange={editorChanged}>
-                    {/* <Toolbar /> */}
+                    <Toolbar />
 
                     <div className="editor-wrapper" style={{ border: '1px solid #f3f3f3', padding: '0 10px' }}>
                         <Editable
