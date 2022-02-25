@@ -71,8 +71,8 @@ const withLayout = editor => {
 
 export default function SlateEditor(props) {
 
-    //const editor = useMemo(() => withLayout(withReact(createEditor())), [])
-    const editor = useMemo(() => withReact(createEditor()), [])
+    const editor = useMemo(() => withLayout(withReact(createEditor())), [])
+    //const editor = useMemo(() => withReact(createEditor()), [])
     const [value, setValue] = useState([{
         type: 'paragraph',
         children: [{ text: 'empty' }],
@@ -113,18 +113,18 @@ export default function SlateEditor(props) {
         let detailsType = props.selectedElement?.detailsType;
         let title = props.selectedElement.name;
 
-        debugger;
+
         let newValue = ''
         if (detailsType == 'Slate') {
             let detailsObject = JSON.parse(rawDetails);
             if (detailsObject && Object.keys(detailsObject).length > 0 && Object.getPrototypeOf(detailsObject) != Object.prototype) {
-                // let detailsTitle = detailsObject[0].children[0].text;
-                // if (detailsTitle != title) {
-                //     detailsObject=[{
-                //         type: 'title',
-                //         children: [{ text: title }],
-                //     }].concat(detailsObject);
-                // }
+                let detailsTitle = detailsObject[0].children[0].text;
+                if (detailsTitle != title) {
+                    detailsObject = [{
+                        type: 'title',
+                        children: [{ text: title }],
+                    }].concat(detailsObject);
+                }
                 newValue = detailsObject;
 
             }
@@ -133,7 +133,6 @@ export default function SlateEditor(props) {
             }
         }
         else {
-            debugger;
             newValue = getSlateStructureFromRawDetails(rawDetails, title);;
         }
         console.log("details");
@@ -144,6 +143,7 @@ export default function SlateEditor(props) {
 
         // No saved content, don't delete anything to prevent errors
         if (value.length <= 0) {
+            editor.changingContent = false;
             return
         }
 
@@ -152,9 +152,10 @@ export default function SlateEditor(props) {
         // Remove every node except the last one
         // Otherwise SlateJS will return error as there's no content
         for (let i = 0; i < totalNodes - 1; i++) {
-            console.log(i)
+            console.log(i);
+            console.log(editor.children);
             Transforms.removeNodes(editor, {
-                at: [i],
+                at: [0],
             })
         }
         // debugger;
@@ -191,11 +192,12 @@ export default function SlateEditor(props) {
     }, [])
 
     const editorChanged = (newValue) => {
+        if (editor.changingContent) return;
         setValue(newValue);
         props.detailsChanged(newValue)
-        let title=editor.children[0].children[0].text;
+        let title = editor.children[0].children[0].text;
         setTitle(title);
-        //props.titleChanged(title);
+        props.titleChanged(title);
     }
 
 
