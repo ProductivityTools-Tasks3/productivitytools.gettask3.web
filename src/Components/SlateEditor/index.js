@@ -71,8 +71,8 @@ const withLayout = editor => {
 
 export default function SlateEditor(props) {
 
-    const editor = useMemo(() => withLayout(withReact(createEditor())), [])
-    //const editor = useMemo(() => withReact(createEditor()), [])
+    //const editor = useMemo(() => withLayout(withReact(createEditor())), [])
+    const editor = useMemo(() => withReact(createEditor()), [])
     const [value, setValue] = useState([{
         type: 'paragraph',
         children: [{ text: 'empty' }],
