@@ -45,6 +45,10 @@ export default function ItemDetails(props) {
         apiService.start(props.selectedElement.elementId);
     }
 
+    const updateTitle=(title)=>{
+        props.onChange('name',title)
+    }
+
     console.log("rendering item details");
     console.log(props.selectedElement);
     if (props.selectedElement != null) {
@@ -58,7 +62,7 @@ export default function ItemDetails(props) {
 
             <p><span>Name: </span><input type="text" name="name" value={props.selectedElement.name} onChange={handleChange} style={{ width: "90%" }} ></input></p>
             <p><span>Status: </span><span>{props.selectedElement.status}</span></p>
-            <SlateEditor selectedElement={props.selectedElement} detailsChanged={detailsChanged}></SlateEditor>
+            <SlateEditor selectedElement={props.selectedElement} detailsChanged={detailsChanged} titleChanged={updateTitle}></SlateEditor>
 
 
 

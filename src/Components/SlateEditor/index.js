@@ -26,9 +26,9 @@ import { useDebugValue } from 'react';
 
 const withLayout = editor => {
     const { normalizeNode } = editor
-
     editor.normalizeNode = ([node, path]) => {
-
+        if (editor.changingContent == true) return;
+        debugger;
         if (path.length === 0) {
             if (editor.children.length < 1) {
                 const title = {
@@ -71,8 +71,8 @@ const withLayout = editor => {
 
 export default function SlateEditor(props) {
 
-   // const editor = useMemo(() => withLayout(withReact(createEditor())), [])
-   const editor = useMemo(() => withReact(createEditor()), [])
+    const editor = useMemo(() => withLayout(withReact(createEditor())), [])
+    //const editor = useMemo(() => withReact(createEditor()), [])
     const [value, setValue] = useState([{
         type: 'paragraph',
         children: [{ text: 'empty' }],
@@ -81,34 +81,63 @@ export default function SlateEditor(props) {
 
     useEffect(() => {
         changeContent();
-    }, [props.selectedElement])
+    }, [props.selectedElement.elementId])
+
+
+    const getSlateStructureFromRawDetails = (rawDetails, title) => {
+        let template = [{
+            type: 'title',
+            children: [{ text: title || "Title" }],
+        }, {
+            type: 'paragraph',
+            children: [{ text: rawDetails || "No data" }],
+        },]
+        return template;
+    }
+
+    const checkIfDetailsContainsTitle = (detailsObject, title) => {
+        let detailsTitle = detailsObject[0].children[0].text;
+        if (detailsTitle != title) {
+            detailsObject.unshift({
+                type: 'paragraph',
+                children: [{ text: title }],
+            });
+        }
+        return detailsObject;
+    }
 
     const changeContent = () => {
 
-        let details = props.selectedElement?.details;
+        editor.changingContent = true;
+        let rawDetails = props.selectedElement?.details;
         let detailsType = props.selectedElement?.detailsType;
-        let template = [{
-            type: 'paragraph',
-            children: [{ text: details || "No data" }],
-        },]
+        let title = props.selectedElement.name;
 
         debugger;
         let newValue = ''
         if (detailsType == 'Slate') {
-            let detailsObject = JSON.parse(details);
+            let detailsObject = JSON.parse(rawDetails);
             if (detailsObject && Object.keys(detailsObject).length > 0 && Object.getPrototypeOf(detailsObject) != Object.prototype) {
+                // let detailsTitle = detailsObject[0].children[0].text;
+                // if (detailsTitle != title) {
+                //     detailsObject=[{
+                //         type: 'title',
+                //         children: [{ text: title }],
+                //     }].concat(detailsObject);
+                // }
                 newValue = detailsObject;
+
             }
-            else
-            {
-                newValue = template;
+            else {
+                newValue = getSlateStructureFromRawDetails(rawDetails, title);
             }
         }
         else {
-            newValue = template;
+            debugger;
+            newValue = getSlateStructureFromRawDetails(rawDetails, title);;
         }
         console.log("details");
-        console.log(details);
+        console.log(rawDetails);
         console.log("NewVAlue");
         console.log(newValue);
         let totalNodes = editor.children.length
@@ -118,6 +147,8 @@ export default function SlateEditor(props) {
             return
         }
 
+
+
         // Remove every node except the last one
         // Otherwise SlateJS will return error as there's no content
         for (let i = 0; i < totalNodes - 1; i++) {
@@ -126,6 +157,17 @@ export default function SlateEditor(props) {
                 at: [i],
             })
         }
+        // debugger;
+        // let detailsTitle = newValue[0].children[0].text;
+        // if (detailsTitle != title) {
+        //     let newElement = {
+        //         type: 'paragraph',
+        //         children: [{ text: title }],
+        //     }
+        //     Transforms.insertNodes(editor, newElement, {
+        //         at: [editor.children.length],
+        //     })
+        // }
 
         // Add content to SlateJS
         for (const v1 of newValue) {
@@ -138,6 +180,7 @@ export default function SlateEditor(props) {
         Transforms.removeNodes(editor, {
             at: [0],
         })
+        editor.changingContent = false;
     }
     //Saving above
 
@@ -150,7 +193,9 @@ export default function SlateEditor(props) {
     const editorChanged = (newValue) => {
         setValue(newValue);
         props.detailsChanged(newValue)
-        setTitle(editor.children[0].children[0].text);
+        let title=editor.children[0].children[0].text;
+        setTitle(title);
+        //props.titleChanged(title);
     }
 
 
