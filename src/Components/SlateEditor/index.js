@@ -3,6 +3,7 @@ import Stack from '@mui/material/Stack';
 import React, { useState, useCallback, useEffect, useMemo } from "react";
 import Moment from 'react-moment';
 import './Editor.css'
+import withLinks from './Plugins/withLinks'
 import { Element } from './Parts/Element.js'
 import { Leaf } from './Parts/Leaf.js'
 import {
@@ -71,7 +72,7 @@ const withLayout = editor => {
 
 export default function SlateEditor(props) {
 
-    const editor = useMemo(() => withLayout(withReact(createEditor())), [])
+    const editor = useMemo(() => withLayout(withLinks(withReact(createEditor()))), [])
     //const editor = useMemo(() => withReact(createEditor()), [])
     const [value, setValue] = useState([{
         type: 'paragraph',

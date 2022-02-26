@@ -13,7 +13,7 @@ const Link = ({ attributes, element, children}) => {
             <a href={element.href} {...attributes}>{children}</a>
             {selected && focused && (
                 <div className='link-popup' contentEditable='false'>
-                    <a href={element.href} target='_blank'>{element.href}</a>
+                    <a href={element.href}>{element.href}</a>
                     <button onClick={()=>removeLink(editor)}><img src={unlink} alt="" /></button>
                 </div>
             )}
