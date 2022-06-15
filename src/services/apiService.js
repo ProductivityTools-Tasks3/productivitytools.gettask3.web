@@ -96,11 +96,15 @@ async function callAuthorizedEndpointWithToast(call, pendingMessage, successMess
 }
 
 async function callAuthorizedEndpoint(call) {
+    let token = localStorage.getItem('token')
     let authService = new AuthService();
     return await authService.getUser().then(async user => {
         if (user && user.access_token) {
             const header = {
-                headers: { Authorization: `Bearer ${user.access_token}` }
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    FirebaseAuth: `${token}`
+                }
             };
             try {
                 const result = await call(header);

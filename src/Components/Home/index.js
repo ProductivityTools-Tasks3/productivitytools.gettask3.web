@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { AuthService } from '../../services/authService';
+import {signInWithGoogle} from '../../Session/firebase'
+
 
 
 export default function Home() {
@@ -13,6 +15,11 @@ export default function Home() {
         authService.login();
     };
 
+    
+    const flogin = () => {
+        signInWithGoogle();
+    };
+
 
     const logout = () => {
         authService.logout();
@@ -23,6 +30,7 @@ export default function Home() {
         <div>
             <p>This is home screen.</p>
             <button onClick={login}>Login</button>
+            <button onClick={flogin}>fLogin</button>
             <button onClick={logout}>Logout</button>
 
         </div>
