@@ -28,7 +28,7 @@ export default function Home() {
 
     return (
         <div>
-            <p>This is home screen.</p>
+            <p>This is home screen. v2</p>
             <button onClick={login}>Login</button>
             <button onClick={flogin}>fLogin</button>
             <button onClick={logout}>Logout</button>
