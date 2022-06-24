@@ -9,7 +9,8 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null)
 
     useEffect(() => {
-        return auth.onIdTokenChanged(async (userr) => {
+        //Adds an observer for changes to the signed-in user's ID token, which includes sign-in, sign-out, and token refresh events.
+        return auth.onIdTokenChanged(async (user) => {
             if (!user) {
                 console.log("missing user")
                 setUser(null)
@@ -23,14 +24,15 @@ export function AuthProvider({ children }) {
         })
     }, []);
 
+    
     useEffect(() => {
         const handle = setInterval(async () => {
             const user = auth.currentUser;
             if (user) {
                 console.log("refresh");
-                let token = await user.getIdToken(true);
+                //true - force refresh
+                await user.getIdToken(true);
                 console.log(user);
-                localStorage.setItem("token", token);
             }
         }, 4 * 6 * 1000);
         return () => clearInterval(handle);
