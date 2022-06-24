@@ -98,7 +98,7 @@ export default function StructureTree(props) {
             })
         })
 
-        return (<TreeItem ref={dragRef} className="styledTreeItem" elementId={element.elementId}  {...rest} label={
+        return (<TreeItem ref={dragRef} className="styledTreeItem" elementid={element.elementId}  {...rest} label={
             <Box ref={dropRef}>
                 <Checkbox className="checkbox" checked={itemChecked(element.status)} onChange={() => handleCheckboxChange(element.elementId, itemChecked(element.status))} />
                 <span className={element.status + ' ' + element.type}>

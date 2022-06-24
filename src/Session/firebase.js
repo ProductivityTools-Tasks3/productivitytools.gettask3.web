@@ -30,7 +30,7 @@ const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const signInWithGoogle = async () => {
     try {
-        refreshToken();
+       // refreshToken();
         const res = await signInWithPopup(auth, googleProvider);
         console.log(res);
         localStorage.setItem("token", res.user.accessToken)
@@ -40,21 +40,21 @@ const signInWithGoogle = async () => {
     }
 };
 
-const refreshToken = () => {
-    let i = 0;
-    setInterval(async () => {
-        const user = auth.currentUser;
-        if (user) {
-            i++
-            await user.getIdToken(true);
-            console.log(user);
-            localStorage.setItem("token", user.accessToken)
-            let message="Token refreshed"+ i;
-            console.log(message);
-            toast(message);
-        }
-    }, 10 * 60 * 1000);
-}
+// const refreshToken = () => {
+//     let i = 0;
+//     setInterval(async () => {
+//         const user = auth.currentUser;
+//         if (user) {
+//             i++
+//             await user.getIdToken(true);
+//             console.log(user);
+//             localStorage.setItem("token", user.accessToken)
+//             let message="Token refreshed"+ i;
+//             console.log(message);
+//             toast(message);
+//         }
+//     }, 10 * 60 * 100);
+// }
 
 const logout = () => {
     signOut(auth);

@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { StyledEngineProvider } from '@mui/material/styles';
+import { AuthProvider } from './Session/AuthContext'
 
 
 
@@ -21,6 +22,7 @@ function App() {
 
 
   return (
+    <AuthProvider>
       <div className="App">
         <header className="App-header">
           <DateCheck />
@@ -29,6 +31,7 @@ function App() {
         <Console />
         <ToastContainer />
       </div>
+    </AuthProvider>
   );
 }
 
