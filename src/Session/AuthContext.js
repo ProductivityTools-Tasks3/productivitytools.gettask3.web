@@ -1,5 +1,7 @@
 import { createContext, useEffect, useContext, useState } from 'react'
+import { MdYoutubeSearchedFor } from 'react-icons/md';
 import { auth } from './firebase'
+import { toast } from 'react-toastify';
 
 const AuthContext = createContext({
     user: null
@@ -14,17 +16,19 @@ export function AuthProvider({ children }) {
             if (!user) {
                 console.log("missing user")
                 setUser(null)
-            }
+            }   
             else {
                 const token = await user.getIdToken();
                 setUser(user);
                 localStorage.setItem("token", token);
+                localStorage.setItem("refreshToken", user.refreshToken);
                 console.log("AuthProvider\Token", token);
+                toast("onIdTokenChanged")
             }
         })
     }, []);
 
-    
+
     useEffect(() => {
         const handle = setInterval(async () => {
             const user = auth.currentUser;

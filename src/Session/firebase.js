@@ -32,8 +32,10 @@ const signInWithGoogle = async () => {
     try {
        // refreshToken();
         const res = await signInWithPopup(auth, googleProvider);
+        
         console.log(res);
         localStorage.setItem("token", res.user.accessToken)
+        localStorage.setItem("refreshtoken", res.user.refreshToken)
     } catch (err) {
         console.error(err);
         alert(err.message);
