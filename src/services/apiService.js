@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { config } from '../Consts';
 import { AuthService } from './authService.js'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 async function getDate() {
@@ -115,6 +115,7 @@ async function callAuthorizedEndpoint(call) {
                 if (error.response != null && error.response.status === 401) {
                     console.log("try to renew token");
                     console.log("more code needed");
+                    toast(error.response.status);
                 }
                 throw error;
             }
@@ -126,7 +127,7 @@ async function callAuthorizedEndpoint(call) {
     })
 }
 
-export default {
+const service= {
     getDate,
     GetTree,
     finish,
@@ -136,3 +137,5 @@ export default {
     moveElement,
     start
 }
+
+export default service

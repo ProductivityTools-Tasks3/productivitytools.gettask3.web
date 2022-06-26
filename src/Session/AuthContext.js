@@ -1,5 +1,4 @@
 import { createContext, useEffect, useContext, useState } from 'react'
-import { MdYoutubeSearchedFor } from 'react-icons/md';
 import { auth } from './firebase'
 import { toast } from 'react-toastify';
 
@@ -22,7 +21,7 @@ export function AuthProvider({ children }) {
                 setUser(user);
                 localStorage.setItem("token", token);
                 localStorage.setItem("refreshToken", user.refreshToken);
-                console.log("AuthProvider\Token", token);
+                console.log("AuthProvider - Token", token);
                 toast("onIdTokenChanged")
             }
         })

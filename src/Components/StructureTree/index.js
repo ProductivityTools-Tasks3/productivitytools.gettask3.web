@@ -1,11 +1,10 @@
-
-import React, { Component, useEffect, useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 
 import SvgIcon from '@material-ui/core/SvgIcon';
 
 import TreeView from '@material-ui/lab/TreeView';
 import TreeItem from '@material-ui/lab/TreeItem';
-import Collapse from '@material-ui/core/Collapse';
+//import Collapse from '@material-ui/core/Collapse';
 
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
@@ -14,7 +13,7 @@ import { useDrag, useDrop } from 'react-dnd'
 
 
 import ContextMenu from '../ContextMenu';
-import { FOCUSABLE_SELECTOR } from '@testing-library/user-event/dist/utils';
+//import { FOCUSABLE_SELECTOR } from '@testing-library/user-event/dist/utils';
 
 
 function MinusSquare(props) {
@@ -53,7 +52,7 @@ export default function StructureTree(props) {
     const containerRef = useRef(null);
 
     const itemChecked = (status) => {
-        if (status == 'Finished') {
+        if (status === 'Finished') {
             return true;
         }
         else {
@@ -118,15 +117,15 @@ export default function StructureTree(props) {
         setExpanded(nodeIds);
     };
 
-    function getLabel(x) {
-        let l = x.name + " [Id:" + x.id + "]";
-        return l;
-    }
+    // function getLabel(x) {
+    //     let l = x.name + " [Id:" + x.id + "]";
+    //     return l;
+    // }
 
-    const treeClick = (e, treeId) => {
-        e.stopPropagation();
-        props.setSelectedTreeNode(treeId);
-    }
+    // const treeClick = (e, treeId) => {
+    //     e.stopPropagation();
+    //     props.setSelectedTreeNode(treeId);
+    // }
 
     const changeparent = (element, targetElementId) => {
         console.log("changeParent from Structure tre")
@@ -138,7 +137,7 @@ export default function StructureTree(props) {
            //debugger;
            //what to do with id?
            //nodes.push({name:'New', elementId:null});
-            return (nodes.sort((x, y) => (x.type == "TaskBag" && y.type != "TaskBag") ? -1 : 1).map(x => {
+            return (nodes.sort((x, y) => (x.type === "TaskBag" && y.type !== "TaskBag") ? -1 : 1).map(x => {
                 //   console.log(x);
                 return (
                     // <StyledTreeItem nodeId={x.elementId.toString()} key={x.elementId} element={x}   >
@@ -183,7 +182,6 @@ export default function StructureTree(props) {
                     defaultEndIcon={<CloseSquare />}
                     onNodeToggle={handleToggle}
                     expanded={expanded}
-                    onNodeToggle={handleToggle}
                     onNodeSelect={nodeSelect}
                     className="tree"
 
