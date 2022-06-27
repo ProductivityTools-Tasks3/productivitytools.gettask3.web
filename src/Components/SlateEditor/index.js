@@ -1,7 +1,7 @@
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+//import Button from '@mui/material/Button';
+//import Stack from '@mui/material/Stack';
 import React, { useState, useCallback, useEffect, useMemo } from "react";
-import Moment from 'react-moment';
+//import Moment from 'react-moment';
 import './Editor.css'
 import withLinks from './Plugins/withLinks'
 import { Element } from './Parts/Element.js'
@@ -9,11 +9,11 @@ import { Leaf } from './Parts/Leaf.js'
 import {
     Transforms,
     createEditor,
-    Text,
+  //  Text,
     Node,
-    Editor,
-    Element as SlateElement,
-    Descendant,
+    //Editor,
+    //Element as SlateElement,
+   // Descendant,
 } from 'slate'
 
 
@@ -21,14 +21,14 @@ import {
 
 import { Slate, Editable, withReact } from 'slate-react'
 import Toolbar from './Toolbar'
-import { autocompleteClasses } from '@mui/material';
-import { useDebugValue } from 'react';
+//import { autocompleteClasses } from '@mui/material';
+//import { useDebugValue } from 'react';
 
 
 const withLayout = editor => {
     const { normalizeNode } = editor
     editor.normalizeNode = ([node, path]) => {
-        if (editor.changingContent == true) return;
+        if (editor.changingContent === true) return;
         debugger;
         if (path.length === 0) {
             if (editor.children.length < 1) {
@@ -50,13 +50,13 @@ const withLayout = editor => {
             for (const [child, childPath] of Node.children(editor, path)) {
                 const slateIndex = childPath[0]
 
-                if (slateIndex == 0) {
+                if (slateIndex === 0) {
 
                     Transforms.setNodes(editor, { type: 'title' }, {
                         at: childPath,
                     })
                 }
-                if (slateIndex > 0 && child.type == 'title') {
+                if (slateIndex > 0 && child.type === 'title') {
                     Transforms.setNodes(editor, { type: 'paragraph' }, {
                         at: childPath,
                     })
@@ -98,7 +98,7 @@ export default function SlateEditor(props) {
 
     const checkIfDetailsContainsTitle = (detailsObject, title) => {
         let detailsTitle = detailsObject[0].children[0].text;
-        if (detailsTitle != title) {
+        if (detailsTitle !== title) {
             detailsObject.unshift({
                 type: 'paragraph',
                 children: [{ text: title }],
