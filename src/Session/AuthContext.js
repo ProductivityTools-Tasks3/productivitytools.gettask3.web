@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
                 await user.getIdToken(true);
                 console.log(user);
             }
-        }, 4 * 6 * 1000);
+        }, 4 * 60 * 1000);
         return () => clearInterval(handle);
     }, [])
 
