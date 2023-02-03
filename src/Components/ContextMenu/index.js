@@ -26,11 +26,11 @@ const ContextMenu = ({ parentRef, items }) => {
             setY(event.clientY);
             console.log('show');
             console.log(event.path)
-            let reversedArray = event.path.reverse();
+            let reversedArray = event.composedPath().reverse();
             let li = reversedArray.find(e => e.nodeName == 'LI' && e.className.includes('MuiTreeItem-root styledTreeItem'));
             //let id=li.attributes.find(e=>e.name='xxxx')
             console.log(li.getAttribute('elementId'));
-            let elementId = event.path.find(e => e.nodeName == 'LI' && e.className.includes('MuiTreeItem-root styledTreeItem')).getAttribute('elementId');
+            let elementId = event.composedPath().find(e => e.nodeName == 'LI' && e.className.includes('MuiTreeItem-root styledTreeItem')).getAttribute('elementId');
             
             setSelectedTreeId(parseInt(elementId));
             console.log("selectet tree id")
