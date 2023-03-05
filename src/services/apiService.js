@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { config } from '../Consts';
-import { AuthService } from './authService.js'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -97,34 +96,15 @@ async function callAuthorizedEndpointWithToast(call, pendingMessage, successMess
 
 async function callAuthorizedEndpoint(call) {
     let token = localStorage.getItem('token')
-    console.log("token123",token)
-    let authService = new AuthService();
-    return await authService.getUser().then(async user => {
-        if (token) {
-            const header = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    FirebaseAuth: `${token}`
-                }
-            };
-            try {
-                const result = await call(header);
-                return result;
-            }
-            catch (error) {
-                if (error.response != null && error.response.status === 401) {
-                    console.log("try to renew token");
-                    console.log("more code needed");
-                    toast(error.response.status);
-                }
-                throw error;
-            }
-        }
-        else {
-            console.log("user not in the storage, cannot perform authorized call, trying normal call");
-            return await call();
-        }
-    })
+    //console.log("token from localstorage", token)
+    const header = { headers: { Authorization: `Bearer ${token}` } }
+    try {
+        const response = call(header);
+        return response;
+    } catch (error) {
+        console.log("Call endpoint");
+        console.log(error);
+    }
 }
 
 const service= {
