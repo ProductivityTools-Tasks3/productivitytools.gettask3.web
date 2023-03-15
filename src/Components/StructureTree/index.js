@@ -132,21 +132,14 @@ export default function StructureTree(props) {
         props.changeParentAction(element, targetElementId);
     }
 
-    function GetNode(nodes) {
-        if (nodes !== undefined) {
-           //debugger;
-           //what to do with id?
-           //nodes.push({name:'New', elementId:null});
-            return (nodes.sort((x, y) => (x.type === "TaskBag" && y.type !== "TaskBag") ? -1 : 1).map(x => {
-                //   console.log(x);
-                return (
-                    // <StyledTreeItem nodeId={x.elementId.toString()} key={x.elementId} element={x}   >
+    //return (nodes.sort((x, y) => (x.type === "TaskBag" && y.type !== "TaskBag") ? -1 : 1).map(x => {
+    function GetNode(node) {
+        if (node !== undefined) {
 
-                    <StyledTreeItem key={x.elementId.toString()} nodeId={x.elementId.toString()} element={x} changeParent={changeparent}  >
-                        {GetNode(x.elements)}
-                    </StyledTreeItem>
-                )
-            })
+            return (
+                <StyledTreeItem key={node.elementId.toString()} nodeId={node.elementId.toString()} element={node} changeParent={changeparent}  >
+                    {node?.elements?.sort((x, y) => (x.type === "TaskBag" && y.type !== "TaskBag") ? -1 : 1).map(x => GetNode(x))}
+                </StyledTreeItem>
             )
         }
     }
@@ -187,7 +180,7 @@ export default function StructureTree(props) {
 
 
                 >
-                    {GetNode(props.list.elements)}
+                    {GetNode(props.list)}
                 </TreeView>
                 <ContextMenu parentRef={containerRef} items={menuItems} />
 
