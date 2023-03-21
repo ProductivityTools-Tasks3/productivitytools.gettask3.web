@@ -60,12 +60,12 @@ export default function ItemDetails(props) {
                 <Button variant={`${props.finishAction ? 'contained' : 'disabled'}`} onClick={startElement}>Start</Button>
             </Stack>
 
-            <p><span>Name: </span><input type="text" name="name" value={props.selectedElement.name} onChange={handleChange} style={{ width: "90%" }} ></input></p>
-            <p><span>Status: </span><span>{props.selectedElement.status}</span></p>
+            {/* <p><span>Name: </span><input type="text" name="name" value={props.selectedElement.name} onChange={handleChange} style={{ width: "90%" }} ></input></p>
+            <p><span>Status: </span><span>{props.selectedElement.status}</span></p> */}
             <SlateEditor selectedElement={props.selectedElement} detailsChanged={detailsChanged} titleChanged={updateTitle}></SlateEditor>
 
 
-
+{/* 
             <p><span>Created: </span><span><Moment format={dateFormat}>{props.selectedElement.created}</Moment></span></p>
             <p><span>Started: </span><span><Moment format={dateFormat}>{props.selectedElement.started}</Moment></span></p>
             <p><span>Finished: </span><span><Moment format={dateFormat}> {props.selectedElement.finished}</Moment></span></p>
@@ -75,7 +75,7 @@ export default function ItemDetails(props) {
             <p><span>Details: </span><textarea name="details" value={props.selectedElement.details == null ? "" : props.selectedElement.details} onChange={handleChange} style={{ width: "90%" }} ></textarea></p>
             <p><span>Amout of child elements: </span><span>{props.selectedElement.elements.length}</span></p>
 
-            <p>{props.isSticky ? "sticky - glue to top" : "notsticy - not glue to top"}</p>
+            <p>{props.isSticky ? "sticky - glue to top" : "notsticy - not glue to top"}</p> */}
 
 
 

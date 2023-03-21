@@ -217,7 +217,6 @@ export default function SlateEditor(props) {
                     </div>
                 </Slate>
             </div>
-            <div>{title}</div>
         </div>
     )
 }
