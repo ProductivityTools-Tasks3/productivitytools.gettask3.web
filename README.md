@@ -8,3 +8,17 @@
         <img src="Images/Header/LogoTitle_green_500px.png" />
     </a>
 </p>
+
+## GetTask3 - Web
+
+Frontend for GetTask3 application. 
+
+GetTask3 - application to manage tasks. It has hierachical structure and details. It is open project so it allows for a lot of integrations. I did it mainly for the learning purpose. 
+
+
+<!--more-->
+
+First version was only powershell taks manager. Now it is 3rd version which has web, powershell version. 
+
+
+![](Images/2023-05-09-23-02-05.png)
