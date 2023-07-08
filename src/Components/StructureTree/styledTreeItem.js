@@ -1,15 +1,15 @@
 import TreeItem from "@material-ui/lab/TreeItem";
 //import Collapse from '@material-ui/core/Collapse';
-
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
-
+import { useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import { Menu, MenuItem } from "@mui/material";
 
 export default function StyledTreeItem(props) {
   // console.log("props");
   // console.log(props);
-  const {key,nodeId, element, changeParent, unDoneAction, finishAction, ...rest } = props;
+  const { key, nodeId, element, changeParent, unDoneAction, finishAction, openModal, ...rest } = props;
   // console.log("el");
   // console.log(element);
 
@@ -49,6 +49,27 @@ export default function StyledTreeItem(props) {
     }
   };
 
+  const [contextMenu, setContextMenu] = useState(null);
+  const handleContextMenu = (event) => {
+    setContextMenu(null);
+    console.log("handleContextMenu");
+    console.log(event);
+    event.preventDefault();
+    setContextMenu(contextMenu == null ? { mouseX: event.clientX + 2, mouseY: event.clientY - 6 } : null);
+  };
+
+  const handleClose = () => {
+    console.log(props);
+    setContextMenu(null);
+  };
+
+  const openNewModal = (event) => {
+    event.stopPropagation();
+    setContextMenu(null);
+    // props.setSelectedTreeNode(node);
+    openModal("new");
+  };
+
   return (
     <TreeItem
       ref={dragRef}
@@ -58,12 +79,21 @@ export default function StyledTreeItem(props) {
       nodeId={nodeId}
       key={key}
       label={
-        <Box ref={dropRef}>
+        <Box ref={dropRef} onContextMenu={handleContextMenu}>
+          <Menu
+            open={contextMenu !== null}
+            onClose={handleClose}
+            anchorReference="anchorPosition"
+            anchorPosition={contextMenu !== null ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
+          >
+            <MenuItem onClick={openNewModal}>New task under &nbsp;<b>{element.name}</b></MenuItem>
+          </Menu>
           <Checkbox
             className="checkbox"
             checked={itemChecked(element.status)}
             onChange={() => handleCheckboxChange(element.elementId, itemChecked(element.status))}
           />
+
           <span className={element.status + " " + element.type}>
             <span>[{element.status}] </span>
             <span>{element.name}</span>

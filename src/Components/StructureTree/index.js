@@ -5,6 +5,8 @@ import SvgIcon from "@material-ui/core/SvgIcon";
 import TreeView from "@material-ui/lab/TreeView";
 
 import StyledTreeItem from "./styledTreeItem";
+import NewModal from "./newModal";
+
 
 import ContextMenu from "../ContextMenu";
 //import { FOCUSABLE_SELECTOR } from '@testing-library/user-event/dist/utils';
@@ -40,6 +42,11 @@ export default function StructureTree(props) {
   const [expanded, setExpanded] = useState([]);
   const containerRef = useRef(null);
 
+  const [newModalOpen, setNewModalOpen] = useState(false);
+  const [renameModalOpen, setRenameModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+
   const handleToggle = (event, nodeIds) => {
     setExpanded(nodeIds);
   };
@@ -70,6 +77,7 @@ export default function StructureTree(props) {
           changeParent={changeparent}
           unDoneAction={props.unDoneAction}
           finishAction={props.finishAction}
+          openModal={openModal}
         >
           {node?.elements
             ?.sort((x, y) => (x.type === "TaskBag" && y.type !== "TaskBag" ? -1 : 1))
@@ -82,6 +90,39 @@ export default function StructureTree(props) {
   function nodeSelect(e, id) {
     console.log(id);
     props.nodeSelect(id);
+  }
+
+  
+  const closeModal = () => {
+    setDeleteModalOpen(false);
+     setRenameModalOpen(false);
+     setNewModalOpen(false);
+  }
+
+  const closeAndRefresh = () => {
+    // fetchData();
+    closeModal();
+  }
+
+
+  
+  const openModal = (type) => {
+    console.log("openModal);")
+    switch (type) {
+      case 'rename':
+        setRenameModalOpen(true);
+        break;
+      case 'delete':
+        setDeleteModalOpen(true);
+        break;
+      case 'new':
+        setNewModalOpen(true);
+        break;
+      default:
+        console.log("Not working!!!")
+    }
+    console.log("handleModalOpen");
+
   }
 
   const menuItems = [
@@ -121,7 +162,9 @@ export default function StructureTree(props) {
         >
           {GetNode(props.list)}
         </TreeView>
-        <ContextMenu parentRef={containerRef} items={menuItems} />
+        {/* <ContextMenu parentRef={containerRef} items={menuItems} /> */}
+        <NewModal  open={newModalOpen} closeModal={closeModal} closeAndRefresh={closeAndRefresh}  ></NewModal>
+
       </div>
     );
   } else {
