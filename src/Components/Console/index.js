@@ -143,7 +143,8 @@ export default function Console() {
     //     console.log(selectedElement)
     // }
 
-    function addElement(event, selectedTreeId) {
+    function addElement(selectedTreeId) {
+        debugger;
         let newElement = {
             "name": "New element",
             "type": 2,
@@ -205,7 +206,7 @@ export default function Console() {
             <p>{selectedElement && selectedElement.elementId}</p>
 
             <DndProvider backend={HTML5Backend}> {/* drag and drop */}
-                <StructureTree list={list} nodeSelect={nodeSelect} finishAction={finishItemById} unDoneAction={unDoneElementById} addAction={addElement} changeParentAction={changeParent} />
+                <StructureTree list={list} nodeSelect={nodeSelect} selectedElement={selectedElement} finishAction={finishItemById} unDoneAction={unDoneElementById} addAction={addElement} changeParentAction={changeParent} />
             </DndProvider>
             <div className={`${isSticky ? 'sticky-wrapper sticky' : ''}`} ref={ref} >
                 {renderItemDetails()}

@@ -100,6 +100,8 @@ export default function StructureTree(props) {
   }
 
   const closeAndRefresh = () => {
+    debugger;
+    props.addAction(props.selectedElement.elementId);
     // fetchData();
     closeModal();
   }
@@ -129,7 +131,7 @@ export default function StructureTree(props) {
     {
       text: "Add",
       onclick: (event, selectedTreeId) => {
-        props.addAction(event, selectedTreeId);
+        props.addAction(selectedTreeId);
         console.log(`Add element`);
       },
     },

@@ -53,6 +53,7 @@ async function start(elementId) {
 
 
 async function addElement(parentId, value, details) {
+    debugger;
     console.log("update element");
     console.log(value);
     let call = async (header) => {
