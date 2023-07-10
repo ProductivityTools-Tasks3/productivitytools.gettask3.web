@@ -144,7 +144,6 @@ export default function Console() {
     // }
 
     function addElement(selectedTreeId) {
-        debugger;
         let newElement = {
             "name": "New element",
             "type": 2,

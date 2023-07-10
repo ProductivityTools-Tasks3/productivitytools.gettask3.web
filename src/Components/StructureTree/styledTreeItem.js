@@ -9,7 +9,7 @@ import { Menu, MenuItem } from "@mui/material";
 export default function StyledTreeItem(props) {
   // console.log("props");
   // console.log(props);
-  const { key, nodeId, element, changeParent, unDoneAction, finishAction, openModal, ...rest } = props;
+  const { key, nodeId, element, changeParent, unDoneAction, finishAction, ...rest } = props;
   // console.log("el");
   // console.log(element);
 
@@ -64,10 +64,10 @@ export default function StyledTreeItem(props) {
   };
 
   const openNewModal = (event) => {
-    event.stopPropagation();
+    props.addAction();
     setContextMenu(null);
     // props.setSelectedTreeNode(node);
-    openModal("new");
+    event.preventDefault();
   };
 
   return (
