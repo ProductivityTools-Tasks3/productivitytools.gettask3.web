@@ -6,7 +6,6 @@ import TreeView from "@material-ui/lab/TreeView";
 
 import StyledTreeItem from "./styledTreeItem";
 
-import ContextMenu from "../ContextMenu";
 //import { FOCUSABLE_SELECTOR } from '@testing-library/user-event/dist/utils';
 
 function MinusSquare(props) {
@@ -85,27 +84,6 @@ export default function StructureTree(props) {
     props.nodeSelect(id);
   }
 
-  const menuItems = [
-    {
-      text: "Add",
-      onclick: (event, selectedTreeId) => {
-        props.addAction(selectedTreeId);
-        console.log(`Add element`);
-      },
-    },
-    {
-      text: "Add new tree item",
-      onclick: (treeId) => {
-        props.setSelectedTreeNode(treeId);
-      },
-    },
-    {
-      text: "Delete",
-      onclick: (treeId) => {
-        props.setSelectedTreeNode(treeId);
-      },
-    },
-  ];
 
   if (props && props.list && props.list.elements) {
     return (
@@ -122,7 +100,6 @@ export default function StructureTree(props) {
         >
           {GetNode(props.list)}
         </TreeView>
-        {/* <ContextMenu parentRef={containerRef} items={menuItems} /> */}
       </div>
     );
   } else {

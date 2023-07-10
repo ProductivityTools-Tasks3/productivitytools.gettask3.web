@@ -63,7 +63,7 @@ export default function StyledTreeItem(props) {
     setContextMenu(null);
   };
 
-  const openNewModal = (event) => {
+  const newTask = (event) => {
     props.addAction();
     setContextMenu(null);
     // props.setSelectedTreeNode(node);
@@ -86,7 +86,7 @@ export default function StyledTreeItem(props) {
             anchorReference="anchorPosition"
             anchorPosition={contextMenu !== null ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
           >
-            <MenuItem onClick={openNewModal}>New task under &nbsp;<b>{element.name}</b></MenuItem>
+            <MenuItem onClick={newTask}>New task under &nbsp;<b>{element.name}</b></MenuItem>
           </Menu>
           <Checkbox
             className="checkbox"
