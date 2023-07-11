@@ -1,87 +1,96 @@
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 import React, { useState, useCallback, useEffect } from "react";
-import Moment from 'react-moment';
+import Moment from "react-moment";
 
+import apiService from "../../services/apiService";
+import SlateEditor from "../SlateEditor";
+import { FormControlLabel, Switch } from "@mui/material";
 
-import apiService from '../../services/apiService';
-import SlateEditor from '../SlateEditor';
+export default function ItemDetails({ selectedElement, onChange, saveNewElement, finishAction, unDoneAction }) {
+  const dateFormat = "YYYY-MM-DD HH:MM:SS";
+  const [details, setDetails] = useState({});
 
+  const handleChange = (e, o) => {
+    // console.log("Item detials handle change");
+    // console.log(e);
+    // console.log(o);
+    // console.log(e.target.value);
+    // console.log(e.target.name);
+    onChange(e.target.name, e.target.value);
+  };
 
-export default function ItemDetails(props) {
+  const detailsChanged = (value) => {
+    setDetails(value);
+  };
 
-    const dateFormat = "YYYY-MM-DD HH:MM:SS";
-    const [details, setDetails] = useState({});
-
-
-
-    const handleChange = (e, o) => {
-
-        // console.log("Item detials handle change");
-        // console.log(e);
-        // console.log(o);
-        // console.log(e.target.value);
-        // console.log(e.target.name);
-        props.onChange(e.target.name, e.target.value);
+  const updateElement = async () => {
+    let newValue = JSON.stringify(details);
+    if (selectedElement.elementId === null) {
+      let newId = await apiService.addElement(selectedElement.parentId, selectedElement.name, newValue);
+      saveNewElement(newId, newValue);
+    } else {
+      apiService.updateElement(selectedElement.parentId, selectedElement.elementId, selectedElement.name, newValue);
     }
+  };
 
-    const detailsChanged = (value) => {
-        setDetails(value);
-    }
+  const startElement = (e) => {
+    onChange("status", "InProgress");
+    apiService.start(selectedElement.elementId);
+  };
 
-    const updateElement = async () => {
-        let newValue = JSON.stringify(details)
-        if (props.selectedElement.elementId === null) {
-            let newId = await apiService.addElement(props.selectedElement.parentId, props.selectedElement.name, newValue);
-            props.saveNewElement(newId, newValue);
-        }
-        else {
-            apiService.updateElement(props.selectedElement.parentId, props.selectedElement.elementId, props.selectedElement.name, newValue);
-        }
-    }
+  const updateTitle = (title) => {
+    onChange("name", title);
+  };
 
-    const startElement = (e) => {
-        props.onChange("status", "InProgress");
-        apiService.start(props.selectedElement.elementId);
-    }
+  const switchChanged = () => {
+    console.log("switchChanged");
+    console.log(details);
+  };
 
-    const updateTitle=(title)=>{
-        props.onChange('name',title)
-    }
+  console.log("rendering item details");
+  console.log(selectedElement);
+  if (selectedElement != null) {
+    return (
+      <div className="itemDetails sticky-inner">
+        <Stack spacing={2} direction="row">
+          <Button variant={`${finishAction ? "contained" : "disabled"}`} onClick={finishAction}>
+            Finish
+          </Button>
+          <Button variant={`${unDoneAction ? "contained" : "disabled"}`} onClick={unDoneAction}>
+            Undone
+          </Button>
+          <Button variant="contained" onClick={updateElement}>
+            Save
+          </Button>
+          <Button variant={`${finishAction ? "contained" : "disabled"}`} onClick={startElement}>
+            Start
+          </Button>
+          <FormControlLabel control={<Switch />} label="Bag" onChange={switchChanged}></FormControlLabel>
+        </Stack>
 
-    console.log("rendering item details");
-    console.log(props.selectedElement);
-    if (props.selectedElement != null) {
-        return (<div className='itemDetails sticky-inner'>
-            <Stack spacing={2} direction="row">
-                <Button variant={`${props.finishAction ? 'contained' : 'disabled'}`} onClick={props.finishAction}>Finish</Button>
-                <Button variant={`${props.unDoneAction ? 'contained' : 'disabled'}`} onClick={props.unDoneAction}>Undone</Button>
-                <Button variant="contained" onClick={updateElement}>Save</Button>
-                <Button variant={`${props.finishAction ? 'contained' : 'disabled'}`} onClick={startElement}>Start</Button>
-            </Stack>
+        {/* <p><span>Name: </span><input type="text" name="name" value={selectedElement.name} onChange={handleChange} style={{ width: "90%" }} ></input></p>
+            <p><span>Status: </span><span>{selectedElement.status}</span></p> */}
+        <SlateEditor
+          selectedElement={selectedElement}
+          detailsChanged={detailsChanged}
+          titleChanged={updateTitle}
+        ></SlateEditor>
 
-            {/* <p><span>Name: </span><input type="text" name="name" value={props.selectedElement.name} onChange={handleChange} style={{ width: "90%" }} ></input></p>
-            <p><span>Status: </span><span>{props.selectedElement.status}</span></p> */}
-            <SlateEditor selectedElement={props.selectedElement} detailsChanged={detailsChanged} titleChanged={updateTitle}></SlateEditor>
-
-
-{/* 
-            <p><span>Created: </span><span><Moment format={dateFormat}>{props.selectedElement.created}</Moment></span></p>
-            <p><span>Started: </span><span><Moment format={dateFormat}>{props.selectedElement.started}</Moment></span></p>
-            <p><span>Finished: </span><span><Moment format={dateFormat}> {props.selectedElement.finished}</Moment></span></p>
+        {/* 
+            <p><span>Created: </span><span><Moment format={dateFormat}>{selectedElement.created}</Moment></span></p>
+            <p><span>Started: </span><span><Moment format={dateFormat}>{selectedElement.started}</Moment></span></p>
+            <p><span>Finished: </span><span><Moment format={dateFormat}> {selectedElement.finished}</Moment></span></p>
             <hr />
-            <p><span>ElementId: </span><span>{props.selectedElement.elementId}</span></p>
-            <p><span>ParentId: </span><span>{props.selectedElement.parentId}</span></p>
-            <p><span>Details: </span><textarea name="details" value={props.selectedElement.details == null ? "" : props.selectedElement.details} onChange={handleChange} style={{ width: "90%" }} ></textarea></p>
-            <p><span>Amout of child elements: </span><span>{props.selectedElement.elements.length}</span></p>
+            <p><span>ElementId: </span><span>{selectedElement.elementId}</span></p>
+            <p><span>ParentId: </span><span>{selectedElement.parentId}</span></p>
+            <p><span>Details: </span><textarea name="details" value={selectedElement.details == null ? "" : selectedElement.details} onChange={handleChange} style={{ width: "90%" }} ></textarea></p>
+            <p><span>Amout of child elements: </span><span>{selectedElement.elements.length}</span></p>
 
             <p>{props.isSticky ? "sticky - glue to top" : "notsticy - not glue to top"}</p> */}
-
-
-
-        </div >)
-    }
-    else {
-        return <div>empty</div>
-    }
+      </div>
+    );
+  } else {
+    return <div>empty</div>;
+  }
 }
