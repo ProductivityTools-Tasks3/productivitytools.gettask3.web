@@ -46,6 +46,11 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
   const switchChanged = () => {
     console.log("switchChanged");
     console.log(details);
+    if (selectedElement.type == "TaskBag") {
+      apiService.changeType(selectedElement, "Task");
+    } else {
+      apiService.changeType(selectedElement.elementId, "TaskBag");
+    }
   };
 
   console.log("rendering item details");
@@ -66,7 +71,12 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
           <Button variant={`${finishAction ? "contained" : "disabled"}`} onClick={startElement}>
             Start
           </Button>
-          <FormControlLabel control={<Switch />} label="Bag" onChange={switchChanged}></FormControlLabel>
+          <FormControlLabel
+            control={<Switch />}
+            label="Bag"
+            checked={selectedElement.type == "TaskBag" || selectedElement.type == "User"}
+            onChange={switchChanged}
+          ></FormControlLabel>
         </Stack>
 
         {/* <p><span>Name: </span><input type="text" name="name" value={selectedElement.name} onChange={handleChange} style={{ width: "90%" }} ></input></p>

@@ -52,6 +52,18 @@ async function start(elementId) {
 }
 
 
+async function changeType(elementId, type) {
+    let call = async (header) => {
+        const data = { ElementId: elementId, Type:type };
+        const response = await axios.post(`${config.PATH_BASE}Task/ChangeType`, data, header);
+        return response.data;
+    }
+
+    return await callAuthorizedEndpointWithToast(call, "Request for changing type", "Task started on the server")
+}
+
+
+
 async function addElement(parentId, value, details) {
     console.log("update element");
     console.log(value);
@@ -115,7 +127,8 @@ const service= {
     updateElement,
     addElement,
     moveElement,
-    start
+    start,
+    changeType
 }
 
 export default service
