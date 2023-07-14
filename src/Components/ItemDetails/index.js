@@ -43,13 +43,17 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
     onChange("name", title);
   };
 
-  const switchChanged = () => {
-    console.log("switchChanged");
-    console.log(details);
+  const switchChanged = async () => {
     if (selectedElement.type == "TaskBag") {
-      apiService.changeType(selectedElement, "Task");
+      let result = await apiService.changeType(selectedElement.elementId, "Task");
+      if (result) {
+        onChange("type", "Task");
+      }
     } else {
-      apiService.changeType(selectedElement.elementId, "TaskBag");
+      let result = await apiService.changeType(selectedElement.elementId, "TaskBag");
+      if (result) {
+        onChange("type", "TaskBag");
+      }
     }
   };
 

@@ -59,7 +59,7 @@ async function changeType(elementId, type) {
         return response.data;
     }
 
-    return await callAuthorizedEndpointWithToast(call, "Request for changing type", "Task started on the server")
+    return await callAuthorizedEndpointWithToast(call, "Request for changing type", "Type changed on the server")
 }
 
 
