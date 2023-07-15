@@ -1,7 +1,6 @@
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import React, { useState, useCallback, useEffect } from "react";
-import Moment from "react-moment";
+import React, { useState } from "react";
 
 import apiService from "../../services/apiService";
 import SlateEditor from "../SlateEditor";
@@ -10,15 +9,6 @@ import { FormControlLabel, Switch } from "@mui/material";
 export default function ItemDetails({ selectedElement, onChange, saveNewElement, finishAction, unDoneAction }) {
   const dateFormat = "YYYY-MM-DD HH:MM:SS";
   const [details, setDetails] = useState({});
-
-  const handleChange = (e, o) => {
-    // console.log("Item detials handle change");
-    // console.log(e);
-    // console.log(o);
-    // console.log(e.target.value);
-    // console.log(e.target.name);
-    onChange(e.target.name, e.target.value);
-  };
 
   const detailsChanged = (value) => {
     setDetails(value);
@@ -44,7 +34,7 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
   };
 
   const switchChanged = async () => {
-    if (selectedElement.type == "TaskBag") {
+    if (selectedElement.type === "TaskBag") {
       let result = await apiService.changeType(selectedElement.elementId, "Task");
       if (result) {
         onChange("type", "Task");
@@ -78,7 +68,7 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
           <FormControlLabel
             control={<Switch />}
             label="Bag"
-            checked={selectedElement.type == "TaskBag" || selectedElement.type == "User"}
+            checked={selectedElement.type === "TaskBag" || selectedElement.type === "User"}
             onChange={switchChanged}
           ></FormControlLabel>
         </Stack>
