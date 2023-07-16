@@ -7,7 +7,7 @@ import SlateEditor from "../SlateEditor";
 import { FormControlLabel, Switch } from "@mui/material";
 
 export default function ItemDetails({ selectedElement, onChange, saveNewElement, finishAction, unDoneAction }) {
-  const dateFormat = "YYYY-MM-DD HH:MM:SS";
+  // const dateFormat = "YYYY-MM-DD HH:MM:SS";
   const [details, setDetails] = useState({});
 
   const detailsChanged = (value) => {

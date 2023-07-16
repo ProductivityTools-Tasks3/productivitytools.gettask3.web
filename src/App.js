@@ -1,8 +1,6 @@
-import logo from './logo.svg';
 import './App.css';
 import * as React from 'react';
 
-import ReactDOM from 'react-dom';
 
 import apiService from './services/apiService'
 import { useEffect, useState } from 'react';
