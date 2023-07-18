@@ -6,6 +6,9 @@ import apiService from "../../services/apiService";
 import SlateEditor from "../SlateEditor";
 import { FormControlLabel, Switch } from "@mui/material";
 
+import { PTPlate } from "productivitytools.plate";
+
+
 export default function ItemDetails({ selectedElement, onChange, saveNewElement, finishAction, unDoneAction }) {
   // const dateFormat = "YYYY-MM-DD HH:MM:SS";
   const [details, setDetails] = useState({});
@@ -80,7 +83,7 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
           detailsChanged={detailsChanged}
           titleChanged={updateTitle}
         ></SlateEditor>
-
+        <PTPlate></PTPlate>
         {/* 
             <p><span>Created: </span><span><Moment format={dateFormat}>{selectedElement.created}</Moment></span></p>
             <p><span>Started: </span><span><Moment format={dateFormat}>{selectedElement.started}</Moment></span></p>
