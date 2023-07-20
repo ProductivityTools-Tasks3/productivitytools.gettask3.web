@@ -53,6 +53,18 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
     }
   };
 
+  const getSlateStructureFromRawDetails = (rawDetails, title) => {
+    let template = [{
+        type: 'title',
+        children: [{ text: title || "Title" }],
+    }, {
+        type: 'paragraph',
+        children: [{ text: rawDetails || "No data" }],
+    },]
+    return template;
+}
+
+
   console.log("rendering item details");
   console.log(selectedElement);
   if (selectedElement != null) {
@@ -86,7 +98,7 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
           detailsChanged={detailsChanged}
           titleChanged={updateTitle}
         ></SlateEditor>
-        <PTPlate contentChanged={ptplateChanged}></PTPlate>
+        <PTPlate contentChanged={ptplateChanged} content={getSlateStructureFromRawDetails("dd","ddd")}></PTPlate>
         {/* 
             <p><span>Created: </span><span><Moment format={dateFormat}>{selectedElement.created}</Moment></span></p>
             <p><span>Started: </span><span><Moment format={dateFormat}>{selectedElement.started}</Moment></span></p>
