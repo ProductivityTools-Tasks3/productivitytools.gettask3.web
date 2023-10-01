@@ -37,6 +37,11 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
 
   const ptplateChanged = (e) => {
     console.log("PTPlateChanged");
+    console.log(e);
+    setDetails(e);
+    let title = e[0].children[0].text;
+    console.log(title);
+    onChange("name", title);
   };
 
   const switchChanged = async () => {
