@@ -98,12 +98,15 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
 
         {/* <p><span>Name: </span><input type="text" name="name" value={selectedElement.name} onChange={handleChange} style={{ width: "90%" }} ></input></p>
             <p><span>Status: </span><span>{selectedElement.status}</span></p> */}
-        <SlateEditor
+            {/* ================ */}
+        {/* <SlateEditor
           selectedElement={selectedElement}
           detailsChanged={detailsChanged}
           titleChanged={updateTitle}
-        ></SlateEditor>
-        <PTPlate contentChanged={ptplateChanged} content={getSlateStructureFromRawDetails("dd","ddd")}></PTPlate>
+        ></SlateEditor> */}
+        {/* <PTPlate contentChanged={ptplateChanged} content={getSlateStructureFromRawDetails("dd","ddd")}></PTPlate> */} 
+        <PTPlate contentChanged={ptplateChanged} content={selectedElement.details}  ></PTPlate>
+           {/* ================= */}
         {/* 
             <p><span>Created: </span><span><Moment format={dateFormat}>{selectedElement.created}</Moment></span></p>
             <p><span>Started: </span><span><Moment format={dateFormat}>{selectedElement.started}</Moment></span></p>
