@@ -1,6 +1,6 @@
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import apiService from "../../services/apiService";
 import SlateEditor from "../SlateEditor";
@@ -10,7 +10,17 @@ import { PTPlate } from "productivitytools.plate";
 
 export default function ItemDetails({ selectedElement, onChange, saveNewElement, finishAction, unDoneAction }) {
   // const dateFormat = "YYYY-MM-DD HH:MM:SS";
-  const [details, setDetails] = useState({});
+  const [details, setDetails] = useState(
+    JSON.parse(`[{"type":"title","children":[{"text":"x"}]},{"type":"p","children":[{"text":"empty"}]}]`)
+  );
+
+  const [initialValue, setInitialValue] = useState(
+    JSON.parse(`[{"type":"title","children":[{"text":"x"}]},{"type":"p","children":[{"text":"empty"}]}]`)
+  );
+
+  useEffect(() => {
+    setInitialValue(JSON.parse(selectedElement.details));
+  }, [selectedElement.elementId]);
 
   const detailsChanged = (value) => {
     setDetails(value);
@@ -59,16 +69,18 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
   };
 
   const getSlateStructureFromRawDetails = (rawDetails, title) => {
-    let template = [{
-        type: 'title',
+    let template = [
+      {
+        type: "title",
         children: [{ text: title || "Title" }],
-    }, {
-        type: 'paragraph',
+      },
+      {
+        type: "paragraph",
         children: [{ text: rawDetails || "No data" }],
-    },]
+      },
+    ];
     return template;
-}
-
+  };
 
   console.log("rendering item details");
   console.log(selectedElement);
@@ -98,15 +110,15 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
 
         {/* <p><span>Name: </span><input type="text" name="name" value={selectedElement.name} onChange={handleChange} style={{ width: "90%" }} ></input></p>
             <p><span>Status: </span><span>{selectedElement.status}</span></p> */}
-            {/* ================ */}
+        {/* ================ */}
         {/* <SlateEditor
           selectedElement={selectedElement}
           detailsChanged={detailsChanged}
           titleChanged={updateTitle}
         ></SlateEditor> */}
-        {/* <PTPlate contentChanged={ptplateChanged} content={getSlateStructureFromRawDetails("dd","ddd")}></PTPlate> */} 
-        <PTPlate contentChanged={ptplateChanged} content={selectedElement.details}  ></PTPlate>
-           {/* ================= */}
+        {/* <PTPlate contentChanged={ptplateChanged} content={getSlateStructureFromRawDetails("dd","ddd")}></PTPlate> */}
+        <PTPlate contentChanged={ptplateChanged} content={initialValue} forceResetContent={initialValue}></PTPlate>
+        {/* ================= */}
         {/* 
             <p><span>Created: </span><span><Moment format={dateFormat}>{selectedElement.created}</Moment></span></p>
             <p><span>Started: </span><span><Moment format={dateFormat}>{selectedElement.started}</Moment></span></p>

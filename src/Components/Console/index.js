@@ -188,6 +188,8 @@ export default function Console() {
 
     const renderItemDetails = () => {
 
+        console.log("selectedElement")
+        console.log(selectedElement);
         if (newElement == null) {
             return <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} onChange={updateElement} isSticky={isSticky} />
 
