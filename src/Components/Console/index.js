@@ -188,7 +188,7 @@ export default function Console() {
 
     const renderItemDetails = () => {
 
-        console.log("selectedElement")
+        console.log("selectedElementx1")
         console.log(selectedElement);
         if (newElement == null) {
             return <ItemDetails selectedElement={selectedElement} finishAction={finishItem} unDoneAction={unDoneElement} onChange={updateElement} isSticky={isSticky} />
@@ -210,7 +210,7 @@ export default function Console() {
                 <StructureTree list={list} nodeSelect={nodeSelect} selectedElement={selectedElement} finishAction={finishItemById} unDoneAction={unDoneElementById} addAction={addElement} changeParentAction={changeParent} />
             </DndProvider>
             <div className={`${isSticky ? 'sticky-wrapper sticky' : ''}`} ref={ref} >
-                {renderItemDetails()}
+                {selectedElement && renderItemDetails()}
             </div>
 
 

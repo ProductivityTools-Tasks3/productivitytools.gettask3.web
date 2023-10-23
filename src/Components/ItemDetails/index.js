@@ -10,6 +10,7 @@ import { PTPlate } from "productivitytools.plate";
 
 export default function ItemDetails({ selectedElement, onChange, saveNewElement, finishAction, unDoneAction }) {
   // const dateFormat = "YYYY-MM-DD HH:MM:SS";
+  console.log("Selectedelement", selectedElement);
   const [details, setDetails] = useState(
     JSON.parse(`[{"type":"title","children":[{"text":"x"}]},{"type":"p","children":[{"text":"empty"}]}]`)
   );
@@ -20,7 +21,7 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
 
   useEffect(() => {
     setInitialValue(JSON.parse(selectedElement.details));
-  }, [selectedElement.elementId]);
+  }, [selectedElement?.elementId]);
 
   const detailsChanged = (value) => {
     setDetails(value);
