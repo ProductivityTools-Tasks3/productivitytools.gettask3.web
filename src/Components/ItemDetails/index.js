@@ -20,7 +20,15 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
   );
 
   useEffect(() => {
-    setInitialValue(JSON.parse(selectedElement.details));
+    console.log("selectedElementdetails", selectedElement.details)
+    if (selectedElement.details==null)
+    {
+      setInitialValue(JSON.parse(`[{"type":"title","children":[{"text":"x"}]},{"type":"p","children":[{"text":"empty"}]}]`));
+    }
+    else{
+      setInitialValue(JSON.parse(selectedElement.details));
+    }
+    
   }, [selectedElement?.elementId]);
 
   const detailsChanged = (value) => {
