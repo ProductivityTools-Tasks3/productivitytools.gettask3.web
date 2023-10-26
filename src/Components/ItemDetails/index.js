@@ -122,28 +122,7 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
           ></FormControlLabel>
         </Stack>
 
-        {/* <p><span>Name: </span><input type="text" name="name" value={selectedElement.name} onChange={handleChange} style={{ width: "90%" }} ></input></p>
-            <p><span>Status: </span><span>{selectedElement.status}</span></p> */}
-        {/* ================ */}
-        {/* <SlateEditor
-          selectedElement={selectedElement}
-          detailsChanged={detailsChanged}
-          titleChanged={updateTitle}
-        ></SlateEditor> */}
-        {/* <PTPlate contentChanged={ptplateChanged} content={getSlateStructureFromRawDetails("dd","ddd")}></PTPlate> */}
         <PTPlate contentChanged={ptplateChanged} content={initialValue} forceResetContent={initialValue}></PTPlate>
-        {/* ================= */}
-        {/* 
-            <p><span>Created: </span><span><Moment format={dateFormat}>{selectedElement.created}</Moment></span></p>
-            <p><span>Started: </span><span><Moment format={dateFormat}>{selectedElement.started}</Moment></span></p>
-            <p><span>Finished: </span><span><Moment format={dateFormat}> {selectedElement.finished}</Moment></span></p>
-            <hr />
-            <p><span>ElementId: </span><span>{selectedElement.elementId}</span></p>
-            <p><span>ParentId: </span><span>{selectedElement.parentId}</span></p>
-            <p><span>Details: </span><textarea name="details" value={selectedElement.details == null ? "" : selectedElement.details} onChange={handleChange} style={{ width: "90%" }} ></textarea></p>
-            <p><span>Amout of child elements: </span><span>{selectedElement.elements.length}</span></p>
-
-            <p>{props.isSticky ? "sticky - glue to top" : "notsticy - not glue to top"}</p> */}
       </div>
     );
   } else {
