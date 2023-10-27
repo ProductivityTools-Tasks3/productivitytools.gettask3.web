@@ -21,19 +21,7 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
   useEffect(() => {
     console.log("selectedElementdetails", selectedElement.details);
     console.log("selectedElement", selectedElement);
-    if (selectedElement.details == null) {
-      console.log("XXXXXXXXXXXXXXXXXXXXXX Something i wrong I should not be here XXXXXXXXXXXXXXXXXXXXXXXXX")
-      //old element maybe update db
-      setInitialValue(
-        JSON.parse(
-          `[{"type":"title","children":[{"text":"` +
-            selectedElement.name +
-            `"}]}]`
-        )
-      );
-    } else {
-      setInitialValue(JSON.parse(selectedElement.details));
-    }
+    setInitialValue(JSON.parse(selectedElement.details));
   }, [selectedElement?.elementId]);
 
   const detailsChanged = (value) => {
