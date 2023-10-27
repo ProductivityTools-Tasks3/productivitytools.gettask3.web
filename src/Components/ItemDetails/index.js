@@ -9,7 +9,6 @@ import { FormControlLabel, Switch } from "@mui/material";
 import { PTPlate } from "productivitytools.plate";
 
 export default function ItemDetails({ selectedElement, onChange, saveNewElement, finishAction, unDoneAction }) {
-  // const dateFormat = "YYYY-MM-DD HH:MM:SS";
   console.log("Selectedelement", selectedElement);
   const [details, setDetails] = useState(
     JSON.parse(`[{"type":"title","children":[{"text":"x"}]},{"type":"p","children":[{"text":"empty"}]}]`)
@@ -23,12 +22,13 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
     console.log("selectedElementdetails", selectedElement.details);
     console.log("selectedElement", selectedElement);
     if (selectedElement.details == null) {
+      console.log("XXXXXXXXXXXXXXXXXXXXXX Something i wrong I should not be here XXXXXXXXXXXXXXXXXXXXXXXXX")
       //old element maybe update db
       setInitialValue(
         JSON.parse(
           `[{"type":"title","children":[{"text":"` +
             selectedElement.name +
-            `"}]},{"type":"p","children":[{"text":"empty"}]}]`
+            `"}]}]`
         )
       );
     } else {
@@ -55,9 +55,9 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
     apiService.start(selectedElement.elementId);
   };
 
-  const updateTitle = (title) => {
-    onChange("name", title);
-  };
+  // const updateTitle = (title) => {
+  //   onChange("name", title);
+  // };
 
   const ptplateChanged = (e) => {
     console.log("PTPlateChanged");
@@ -82,19 +82,19 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
     }
   };
 
-  const getSlateStructureFromRawDetails = (rawDetails, title) => {
-    let template = [
-      {
-        type: "title",
-        children: [{ text: title || "Title" }],
-      },
-      {
-        type: "paragraph",
-        children: [{ text: rawDetails || "No data" }],
-      },
-    ];
-    return template;
-  };
+  // const getSlateStructureFromRawDetails = (rawDetails, title) => {
+  //   let template = [
+  //     {
+  //       type: "title",
+  //       children: [{ text: title || "Title" }],
+  //     },
+  //     {
+  //       type: "paragraph",
+  //       children: [{ text: rawDetails || "No data" }],
+  //     },
+  //   ];
+  //   return template;
+  // };
 
   console.log("rendering item details");
   console.log(selectedElement);
@@ -126,6 +126,6 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
       </div>
     );
   } else {
-    return <div>empty</div>;
+    return <div>Select element to see details</div>;
   }
 }
