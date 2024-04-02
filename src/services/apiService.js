@@ -52,6 +52,17 @@ async function start(elementId) {
 }
 
 
+async function remove(elementId) {
+    let call = async (header) => {
+        const data = { ElementId: elementId };
+        const response = await axios.post(`${config.PATH_BASE}Task/Remove`, data, header);
+        return response.data;
+    }
+
+    return await callAuthorizedEndpointWithToast(call, "Request for delete task", "Task deleted on the server")
+}
+
+
 async function changeType(elementId, type) {
     let call = async (header) => {
         const data = { ElementId: elementId, Type:type };
@@ -123,6 +134,7 @@ const service= {
     getDate,
     GetTree,
     finish,
+    remove,
     unDone,
     updateElement,
     addElement,

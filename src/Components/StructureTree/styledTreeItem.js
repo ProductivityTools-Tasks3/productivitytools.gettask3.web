@@ -5,6 +5,8 @@ import Checkbox from "@mui/material/Checkbox";
 import { useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { Menu, MenuItem } from "@mui/material";
+import apiService from "../../services/apiService";
+
 
 export default function StyledTreeItem(props) {
   // console.log("props");
@@ -70,6 +72,11 @@ export default function StyledTreeItem(props) {
     event.preventDefault();
   };
 
+  const remove = (elementId) => {
+    console.log("remove", elementId);
+    apiService.remove(elementId)
+  }
+
   return (
     <TreeItem
       ref={dragRef}
@@ -87,6 +94,8 @@ export default function StyledTreeItem(props) {
             anchorPosition={contextMenu !== null ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
           >
             <MenuItem onClick={newTask}>New task under &nbsp;<b>{element.name}</b></MenuItem>
+            <MenuItem onClick={() => remove(element.elementId)}>Remove &nbsp;<b>{element.name}</b></MenuItem>
+
           </Menu>
           <Checkbox
             className="checkbox"
@@ -102,7 +111,7 @@ export default function StyledTreeItem(props) {
             <span> {isOver && <span>Drop Here!</span>}</span>
           </span>
           {/* <span className='elementId'>{element.elementId}</span> */}
-        </Box>
+        </ Box>
       }
     ></TreeItem>
   );
