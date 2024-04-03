@@ -70,6 +70,7 @@ export default function StructureTree(props) {
           unDoneAction={props.unDoneAction}
           finishAction={props.finishAction}
           addAction={() => props.addAction(node.elementId)}
+          removeAction={props.removeAction}
         >
           {node?.elements
             ?.sort((x, y) => (x.type === "TaskBag" && y.type !== "TaskBag" ? -1 : 1))

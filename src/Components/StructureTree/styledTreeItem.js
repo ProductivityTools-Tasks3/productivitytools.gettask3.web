@@ -72,9 +72,10 @@ export default function StyledTreeItem(props) {
     event.preventDefault();
   };
 
-  const remove = (elementId) => {
-    console.log("remove", elementId);
-    apiService.remove(elementId)
+  const remove = (element) => {
+    console.log("remove", element);
+    apiService.remove(element.elementId)
+    props.removeAction(element)
   }
 
   return (
@@ -94,7 +95,7 @@ export default function StyledTreeItem(props) {
             anchorPosition={contextMenu !== null ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
           >
             <MenuItem onClick={newTask}>New task under &nbsp;<b>{element.name}</b></MenuItem>
-            <MenuItem onClick={() => remove(element.elementId)}>Remove &nbsp;<b>{element.name}</b></MenuItem>
+            <MenuItem onClick={() => remove(element)}>Remove &nbsp;<b>{element.name}</b></MenuItem>
 
           </Menu>
           <Checkbox

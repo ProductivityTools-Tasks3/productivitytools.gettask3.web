@@ -182,6 +182,12 @@ export default function Console() {
     parent.elements.push(element);
   }
 
+  function removeElementFromTheTree(element) {
+    let parent = findElement(list, element.parentId);
+    var index = parent.elements.indexOf(element);
+    parent.elements.splice(index, 1);
+  }
+
   const renderItemDetails = () => {
     console.log("selectedElementx1", selectedElement);
     console.log("newElement", newElement);
@@ -224,6 +230,7 @@ export default function Console() {
           finishAction={finishItemById}
           unDoneAction={unDoneElementById}
           addAction={addElement}
+          removeAction={removeElementFromTheTree}
           changeParentAction={changeParent}
         />
       </DndProvider>
