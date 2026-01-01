@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "pt-tasks"
+    "site": "pt-tasks",
     "public": "public",
     "ignore": [
       "firebase.json",
