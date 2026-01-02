@@ -12,13 +12,21 @@ import {
 } from "firebase/auth";
 
 // Your web app's Firebase configuration
+// const firebaseConfig = {
+//     apiKey: "AIzaSyAsTK9yDdOT-mdSOs7yfo7Om8bsoBmech0",
+//     authDomain: "ptgettasks3prod.firebaseapp.com",
+//     projectId: "ptgettasks3prod",
+//     storageBucket: "ptgettasks3prod.appspot.com",
+//     messagingSenderId: "854454902563",
+//     appId: "1:854454902563:web:b9233fd0b0161fa6837696"
+// };
 const firebaseConfig = {
-    apiKey: "AIzaSyAsTK9yDdOT-mdSOs7yfo7Om8bsoBmech0",
-    authDomain: "ptgettasks3prod.firebaseapp.com",
-    projectId: "ptgettasks3prod",
-    storageBucket: "ptgettasks3prod.appspot.com",
-    messagingSenderId: "854454902563",
-    appId: "1:854454902563:web:b9233fd0b0161fa6837696"
+    apiKey: "AIzaSyA5rZKf-dVt6mKGvMHa9pgJ_P6gohdmLeo",
+    authDomain: "ptprojectsweb.firebaseapp.com",
+    projectId: "ptprojectsweb",
+    storageBucket: "ptprojectsweb.firebasestorage.app",
+    messagingSenderId: "93484780890",
+    appId: "1:93484780890:web:0e9f7b8629d308ff9ff763"
 };
 
 // Initialize Firebase
