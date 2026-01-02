@@ -6,6 +6,10 @@ on:
   push:
     branches:
       - master
+permissions:
+  checks: write
+  contents: read
+  pull-requests: write
 env:
   CI: false
 jobs:
@@ -13,10 +17,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: yarn install && yarn run build
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'yarn'
+      - name: Install dependencies and build
+        run: yarn install && yarn run build
+        env:
+          REACT_APP_PATH_BASE: 'https://tasks-api.productivitytools.top/api/'
+          REACT_APP_STS_AUTHORITY: 'https://identityserver.productivitytools.top:8010/'
+          REACT_APP_CLIENT_ROOT: 'https://pt-tasks.web.app/'
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PTPROJECTSWEB }}
           channelId: live
           projectId: ptprojectsweb
+

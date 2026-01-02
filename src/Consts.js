@@ -11,9 +11,9 @@ const dev = {
 
 const prod = {
     clientId: "prodtasks3web",
-    PATH_BASE: 'https://tasks-api.productivitytools.top/api/',
-    stsAuthority: 'https://identityserver.productivitytools.top:8010/',
-    clientRoot: 'https://task3web.z13.web.core.windows.net/',
+    PATH_BASE: process.env.REACT_APP_PATH_BASE || 'https://tasks-api.productivitytools.top/api/',
+    stsAuthority: process.env.REACT_APP_STS_AUTHORITY || 'https://identityserver.productivitytools.top:8010/',
+    clientRoot: process.env.REACT_APP_CLIENT_ROOT || 'https://pt-tasks.web.app/',
     clientScope : 'openid profile GetTask3.API'
 }
 
