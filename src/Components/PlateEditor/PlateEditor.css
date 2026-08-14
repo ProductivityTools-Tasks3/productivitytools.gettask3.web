@@ -1,0 +1,73 @@
+/* Plate Editor & Toolbar Styles */
+
+.plate-editor-wrapper {
+  margin-top: 6px;
+}
+
+.plate-toolbar-container {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  padding: 2px 0;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+/* Override HeadingToolbar */
+.slate-HeadingToolbar {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  gap: 2px !important;
+}
+
+/* Toolbar Buttons */
+.slate-ToolbarButton {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 2px !important;
+  padding: 2px !important;
+  margin: 0 1px !important;
+  cursor: pointer !important;
+  color: #8c8c8c !important;
+  min-width: 22px !important;
+  height: 22px !important;
+  box-sizing: border-box !important;
+  transition: color 0.15s ease, opacity 0.15s ease !important;
+}
+
+.slate-ToolbarButton:hover {
+  background: transparent !important;
+  color: #444444 !important;
+  opacity: 0.85;
+}
+
+.slate-ToolbarButton[data-active="true"],
+.slate-ToolbarButton.active {
+  background: transparent !important;
+  color: #1976d2 !important;
+}
+
+.slate-ToolbarButton svg,
+.slate-ToolbarButton .StyledIconBase {
+  width: 17px !important;
+  height: 17px !important;
+  fill: currentColor !important;
+}
+
+/* Editable content area */
+.plate-editor-wrapper [contenteditable="true"] {
+  outline: none;
+  min-height: 150px;
+  padding: 4px 0;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.5;
+}

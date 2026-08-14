@@ -3,10 +3,8 @@ import Stack from "@mui/material/Stack";
 import React, { useEffect, useState } from "react";
 
 import apiService from "../../services/apiService";
-import SlateEditor from "../SlateEditor";
 import { FormControlLabel, Switch } from "@mui/material";
-
-import { PTPlate } from "productivitytools.plate";
+import PlateEditor from "../PlateEditor";
 
 export default function ItemDetails({ selectedElement, onChange, saveNewElement, finishAction, unDoneAction }) {
   console.log("Selectedelement", selectedElement);
@@ -21,12 +19,14 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
   useEffect(() => {
     console.log("selectedElementdetails", selectedElement.details);
     console.log("selectedElement", selectedElement);
-    setInitialValue(JSON.parse(selectedElement.details));
+    if (selectedElement?.details) {
+      try {
+        setInitialValue(JSON.parse(selectedElement.details));
+      } catch (err) {
+        console.error("Failed to parse details JSON", err);
+      }
+    }
   }, [selectedElement?.elementId]);
-
-  const detailsChanged = (value) => {
-    setDetails(value);
-  };
 
   const updateElement = async () => {
     let newValue = JSON.stringify(details);
@@ -43,17 +43,15 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
     apiService.start(selectedElement.elementId);
   };
 
-  // const updateTitle = (title) => {
-  //   onChange("name", title);
-  // };
-
-  const ptplateChanged = (e) => {
-    console.log("PTPlateChanged");
+  const plateChanged = (e) => {
+    console.log("PlateChanged");
     console.log(e);
     setDetails(e);
-    let title = e[0].children[0].text;
+    let title = e?.[0]?.children?.[0]?.text;
     console.log(title);
-    onChange("name", title);
+    if (title !== undefined) {
+      onChange("name", title);
+    }
   };
 
   const switchChanged = async () => {
@@ -70,47 +68,50 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
     }
   };
 
-  // const getSlateStructureFromRawDetails = (rawDetails, title) => {
-  //   let template = [
-  //     {
-  //       type: "title",
-  //       children: [{ text: title || "Title" }],
-  //     },
-  //     {
-  //       type: "paragraph",
-  //       children: [{ text: rawDetails || "No data" }],
-  //     },
-  //   ];
-  //   return template;
-  // };
-
   console.log("rendering item details");
   console.log(selectedElement);
   if (selectedElement != null) {
     return (
       <div className="itemDetails sticky-inner">
-        <Stack spacing={2} direction="row">
-          <Button variant={`${finishAction ? "contained" : "disabled"}`} onClick={finishAction}>
-            Finish
+        <Stack spacing={1.5} direction="row" alignItems="center" className="itemDetails-actions">
+          <Button
+            variant={`${finishAction ? "contained" : "disabled"}`}
+            onClick={finishAction}
+            className="action-btn"
+          >
+            FINISH
           </Button>
-          <Button variant={`${unDoneAction ? "contained" : "disabled"}`} onClick={unDoneAction}>
-            Undone
+          <Button
+            variant={`${unDoneAction ? "contained" : "disabled"}`}
+            onClick={unDoneAction}
+            className="action-btn"
+          >
+            UNDONE
           </Button>
-          <Button variant="contained" onClick={updateElement}>
-            Save
+          <Button
+            variant="contained"
+            onClick={updateElement}
+            className="action-btn"
+          >
+            SAVE
           </Button>
-          <Button variant={`${finishAction ? "contained" : "disabled"}`} onClick={startElement}>
-            Start
+          <Button
+            variant={`${finishAction ? "contained" : "disabled"}`}
+            onClick={startElement}
+            className="action-btn"
+          >
+            START
           </Button>
           <FormControlLabel
-            control={<Switch />}
+            control={<Switch color="primary" />}
             label="Bag"
+            className="bag-switch"
             checked={selectedElement.type === "TaskBag" || selectedElement.type === "User"}
             onChange={switchChanged}
           ></FormControlLabel>
         </Stack>
 
-        <PTPlate contentChanged={ptplateChanged} content={initialValue} forceResetContent={initialValue}></PTPlate>
+        <PlateEditor contentChanged={plateChanged} content={initialValue} forceResetContent={initialValue}></PlateEditor>
       </div>
     );
   } else {

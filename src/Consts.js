@@ -17,4 +17,4 @@ const prod = {
     clientScope : 'openid profile GetTask3.API'
 }
 
-export const config = process.env.NODE_ENV === 'development' ? dev : prod;
+export const config = process.env.NODE_ENV === 'development' ? prod : prod;
