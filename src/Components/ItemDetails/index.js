@@ -17,14 +17,23 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
   );
 
   useEffect(() => {
-    console.log("selectedElementdetails", selectedElement.details);
+    console.log("selectedElementdetails", selectedElement?.details);
     console.log("selectedElement", selectedElement);
     if (selectedElement?.details) {
       try {
-        setInitialValue(JSON.parse(selectedElement.details));
+        const parsed = JSON.parse(selectedElement.details);
+        setDetails(parsed);
+        setInitialValue(parsed);
       } catch (err) {
         console.error("Failed to parse details JSON", err);
       }
+    } else if (selectedElement) {
+      const defaultVal = [
+        { type: "title", children: [{ text: selectedElement.name || "" }] },
+        { type: "p", children: [{ text: "" }] },
+      ];
+      setDetails(defaultVal);
+      setInitialValue(defaultVal);
     }
   }, [selectedElement?.elementId]);
 
@@ -34,7 +43,8 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
       let newId = await apiService.addElement(selectedElement.parentId, selectedElement.name, newValue);
       saveNewElement(newId, newValue);
     } else {
-      apiService.updateElement(selectedElement.parentId, selectedElement.elementId, selectedElement.name, newValue);
+      await apiService.updateElement(selectedElement.parentId, selectedElement.elementId, selectedElement.name, newValue);
+      onChange("details", newValue);
     }
   };
 

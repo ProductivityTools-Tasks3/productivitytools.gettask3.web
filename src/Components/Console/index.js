@@ -57,19 +57,25 @@ export default function Console() {
   }
 
   function updateStatus(elementToUpdate, newStatus) {
-    setSelectedElement({ ...elementToUpdate, status: newStatus });
+    if (!elementToUpdate) return;
+    setSelectedElement((prev) => (prev ? { ...prev, status: newStatus } : prev));
 
-    let newList = list;
-    let newElement = findElement(newList, elementToUpdate.elementId);
-    newElement.status = newStatus;
+    let newList = { ...list };
+    let element = findElement(newList, elementToUpdate.elementId);
+    if (element) {
+      element.status = newStatus;
+    }
     setList(newList);
   }
 
   function updateElementInList(elementToUpdate, propertyName, propertyValue) {
-    setSelectedElement({ ...elementToUpdate, [propertyName]: propertyValue });
-    let newList = list;
-    let newElement = findElement(newList, elementToUpdate.elementId);
-    newElement[propertyName] = propertyValue;
+    if (!elementToUpdate) return;
+    setSelectedElement((prev) => (prev ? { ...prev, [propertyName]: propertyValue } : prev));
+    let newList = { ...list };
+    let element = findElement(newList, elementToUpdate.elementId);
+    if (element) {
+      element[propertyName] = propertyValue;
+    }
     setList(newList);
   }
 
