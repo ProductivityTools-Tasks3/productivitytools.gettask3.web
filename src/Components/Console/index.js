@@ -109,25 +109,21 @@ export default function Console() {
     apiService.unDone(elementToUpdate.elementId);
   }
 
+  const [mobileView, setMobileView] = useState("tree");
+
   function nodeSelect(nodeId) {
-    // console.log(list);
     var se = findElement(list, nodeId);
     console.log("Set selected element", se);
     setSelectedElement(se);
+    setMobileView("details");
   }
 
   function updateElement(propertyName, propertyValue) {
     console.log("Console update element" + propertyName);
     updateElementInList(selectedElement, propertyName, propertyValue);
-    // console.log(propertyName);
-    // console.log(propertyValue);
   }
 
   function changeParent(child, newParentId) {
-    // console.log("childId");
-    // console.log(childId);
-    // console.log("newParentId");
-    // console.log(newParentId);
     var childobject = findElement(list, child.elementId);
     var currentparent = findElement(list, child.parentId);
     currentparent.elements = currentparent.elements.filter((item) => item !== childobject);
@@ -136,14 +132,6 @@ export default function Console() {
     updateElementInList(child, "parentId", newParentId);
     apiService.moveElement(child.elementId, newParentId);
   }
-
-  // const updateSelectedElementId = (id) => {
-  //     let updatedElement = { ...selectedElement, elementId: 1 };
-  //     debugger;
-  //     console.log(updatedElement);
-  //     setSelectedElement(updatedElement, addElementToTree);
-  //     console.log(selectedElement)
-  // }
 
   function addElement(selectedTreeId) {
     let newElement = {
@@ -163,7 +151,12 @@ export default function Console() {
     };
 
     setNewElement(newElement);
+    setMobileView("details");
   }
+
+  const handleBackToTree = () => {
+    setMobileView("tree");
+  };
 
   const updateNewElement = (propertyName, propertyValue) => {
     setNewElement({ ...newElement, [propertyName]: propertyValue });
@@ -205,6 +198,7 @@ export default function Console() {
           unDoneAction={unDoneElement}
           onChange={updateElement}
           isSticky={isSticky}
+          onBack={handleBackToTree}
         />
       );
     } else {
@@ -214,6 +208,7 @@ export default function Console() {
           onChange={updateNewElement}
           saveNewElement={saveNewElement}
           isSticky={isSticky}
+          onBack={handleBackToTree}
         />
       );
     }
@@ -221,27 +216,31 @@ export default function Console() {
 
   return (
     <div className="console">
-      <p>Console</p>
-      <p>{newElement && newElement.details}</p>
+      <div className={`console-layout ${mobileView === "details" ? "show-details" : "show-tree"}`}>
+        <div className="tree-column">
+          <DndProvider backend={HTML5Backend}>
+            <StructureTree
+              list={list}
+              nodeSelect={nodeSelect}
+              selectedElement={selectedElement}
+              finishAction={finishItemById}
+              unDoneAction={unDoneElementById}
+              addAction={addElement}
+              removeAction={removeElementFromTheTree}
+              changeParentAction={changeParent}
+            />
+          </DndProvider>
+        </div>
 
-      <p>{selectedElement && selectedElement.elementId}</p>
-
-      <DndProvider backend={HTML5Backend}>
-        {" "}
-        {/* drag and drop */}
-        <StructureTree
-          list={list}
-          nodeSelect={nodeSelect}
-          selectedElement={selectedElement}
-          finishAction={finishItemById}
-          unDoneAction={unDoneElementById}
-          addAction={addElement}
-          removeAction={removeElementFromTheTree}
-          changeParentAction={changeParent}
-        />
-      </DndProvider>
-      <div className={`${isSticky ? "sticky-wrapper sticky" : ""}`} ref={ref}>
-        {selectedElement && renderItemDetails()}
+        <div className="details-column">
+          <div className={`${isSticky ? "sticky-wrapper sticky" : ""}`} ref={ref}>
+            {(selectedElement || newElement) ? (
+              renderItemDetails()
+            ) : (
+              <div className="select-placeholder">Select a task from the tree to view details</div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

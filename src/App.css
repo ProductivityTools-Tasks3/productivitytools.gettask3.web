@@ -1,7 +1,6 @@
 .App {
-  font-family:  "Roboto", "Helvetica", "Arial", sans-serif;;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
-
 
 .App-header {
   background-color: #282c34;
@@ -14,32 +13,67 @@
   color: white;
 }
 
-.tree{
- text-align: left
+.tree {
+  text-align: left;
 }
 
-.MuiTreeItem-label{
- padding-left: 25px;
+.MuiTreeItem-label {
+  padding-left: 25px;
 }
 
-.console{
+.console {
   border: 1px solid black;
   overflow: hidden;
 }
 
-.structureTree{
-  width: 50%;
-  float:left;
+/* Desktop: 50/50 Split */
+.console-layout {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.itemDetails{
-  color:black;
+.tree-column {
+  width: 50%;
+  max-width: 50%;
+  flex: 0 0 50%;
+  box-sizing: border-box;
+}
+
+.details-column {
+  width: 50%;
+  max-width: 50%;
+  flex: 0 0 50%;
+  box-sizing: border-box;
+}
+
+.structureTree {
+  width: 100%;
+}
+
+.itemDetails {
+  color: black;
   overflow: hidden;
 }
 
+/* Action Buttons & Switch */
 .itemDetails-actions {
   margin-bottom: 8px;
   padding: 4px 0;
+  display: flex;
+  align-items: center;
+}
+
+.itemDetails-actions .back-btn {
+  display: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: none;
+  color: #1976d2 !important;
+  border-color: #90caf9 !important;
+  padding: 5px 12px !important;
+  margin-right: 6px;
 }
 
 .itemDetails-actions .action-btn {
@@ -70,6 +104,39 @@
   opacity: 0.7;
 }
 
+/* Status Badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: capitalize;
+  margin: 0 6px;
+  white-space: nowrap;
+}
+
+.status-badge.status-new {
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #bbdefb;
+}
+
+.status-badge.status-inprogress {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+.status-badge.status-finished {
+  background-color: #f5f5f5;
+  color: #616161;
+  border: 1px solid #e0e0e0;
+}
+
 .itemDetails-actions .bag-switch {
   margin-left: 8px;
 }
@@ -80,29 +147,20 @@
   font-weight: 400;
 }
 
+/* Sticky Wrapper */
 .sticky-wrapper {
   position: relative;
-  left:50%;
-  height: 100px; /* We need to change this value */
-  
+  width: 100%;
 }
 
 .sticky .sticky-inner {
   position: fixed;
   top: 0;
-  /* left: 0; */
-  /* right: 0; */
   z-index: 1;
 }
 
-
-/* .sticky{
-  position: fixed;
-  top: 0;
-  left:50%;
-} */
-
-.styledTreeItem .MuiTreeItem-group{
+/* Tree Item Original Styles */
+.styledTreeItem .MuiTreeItem-group {
   border-left: gray;
   border-left: dashed;
   border-width: 1px;
@@ -110,18 +168,68 @@
   margin-left: 8px;
 }
 
-.styledTreeItem .checkbox{
+.styledTreeItem .checkbox {
   height: 10px;
 }
 
-.styledTreeItem .InProgress{
+.styledTreeItem .InProgress {
   color: green;
 }
 
-.styledTreeItem .TaskBag{
+.styledTreeItem .TaskBag {
   font-weight: bold;
 }
 
-.styledTreeItem .Finished{
-  color: gray
+.styledTreeItem .Finished {
+  color: gray;
+}
+
+.styledTreeItem .task-name-span,
+.styledTreeItem .task-name-span:hover,
+.styledTreeItem .task-name-span:active,
+.styledTreeItem .task-name-span:focus {
+  text-decoration: none !important;
+}
+
+/* Mobile: Master-Detail Full-Width Switching */
+@media (max-width: 767px) {
+  .console-layout {
+    display: block;
+  }
+
+  .console-layout.show-tree .tree-column {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    flex: none;
+  }
+
+  .console-layout.show-tree .details-column {
+    display: none;
+  }
+
+  .console-layout.show-details .tree-column {
+    display: none;
+  }
+
+  .console-layout.show-details .details-column {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    flex: none;
+  }
+
+  .itemDetails-actions .back-btn {
+    display: inline-flex !important;
+  }
+
+  .sticky-wrapper {
+    position: static !important;
+    left: 0 !important;
+    height: auto !important;
+  }
+
+  .sticky .sticky-inner {
+    position: static !important;
+  }
 }

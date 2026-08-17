@@ -6,7 +6,7 @@ import apiService from "../../services/apiService";
 import { FormControlLabel, Switch } from "@mui/material";
 import PlateEditor from "../PlateEditor";
 
-export default function ItemDetails({ selectedElement, onChange, saveNewElement, finishAction, unDoneAction }) {
+export default function ItemDetails({ selectedElement, onChange, saveNewElement, finishAction, unDoneAction, onBack }) {
   console.log("Selectedelement", selectedElement);
   const [details, setDetails] = useState(
     JSON.parse(`[{"type":"title","children":[{"text":"x"}]},{"type":"p","children":[{"text":"empty"}]}]`)
@@ -83,7 +83,16 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
   if (selectedElement != null) {
     return (
       <div className="itemDetails sticky-inner">
-        <Stack spacing={1.5} direction="row" alignItems="center" className="itemDetails-actions">
+        <Stack spacing={1} direction="row" alignItems="center" className="itemDetails-actions" flexWrap="wrap">
+          {onBack && (
+            <Button
+              variant="outlined"
+              onClick={onBack}
+              className="back-btn"
+            >
+              ← Tasks
+            </Button>
+          )}
           <Button
             variant={`${finishAction ? "contained" : "disabled"}`}
             onClick={finishAction}
@@ -112,6 +121,13 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
           >
             START
           </Button>
+
+          {selectedElement?.status && (
+            <span className={`status-badge status-${selectedElement.status.toLowerCase()}`}>
+              {selectedElement.status}
+            </span>
+          )}
+
           <FormControlLabel
             control={<Switch color="primary" />}
             label="Bag"

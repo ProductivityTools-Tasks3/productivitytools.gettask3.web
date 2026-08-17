@@ -71,6 +71,7 @@ export default function StructureTree(props) {
           finishAction={props.finishAction}
           addAction={() => props.addAction(node.elementId)}
           removeAction={props.removeAction}
+          onNodeSelect={props.nodeSelect}
         >
           {node?.elements
             ?.sort((x, y) => (x.type === "TaskBag" && y.type !== "TaskBag" ? -1 : 1))
@@ -80,23 +81,15 @@ export default function StructureTree(props) {
     }
   }
 
-  function nodeSelect(e, id) {
-    console.log(id);
-    props.nodeSelect(id);
-  }
-
-
   if (props && props.list && props.list.elements) {
     return (
       <div ref={containerRef} className="structureTree">
-        <p>treeview below</p>
         <TreeView
           defaultCollapseIcon={<MinusSquare />}
           defaultExpandIcon={<PlusSquare />}
           defaultEndIcon={<CloseSquare />}
           onNodeToggle={handleToggle}
           expanded={expanded}
-          onNodeSelect={nodeSelect}
           className="tree"
         >
           {GetNode(props.list)}

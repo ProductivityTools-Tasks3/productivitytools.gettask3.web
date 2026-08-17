@@ -9,11 +9,7 @@ import apiService from "../../services/apiService";
 
 
 export default function StyledTreeItem(props) {
-  // console.log("props");
-  // console.log(props);
-  const { key, nodeId, element, changeParent, unDoneAction, finishAction, ...rest } = props;
-  // console.log("el");
-  // console.log(element);
+  const { key, nodeId, element, changeParent, unDoneAction, finishAction, onNodeSelect, ...rest } = props;
 
   const [{ isDragging }, dragRef] = useDrag({
     type: "pet",
@@ -68,15 +64,25 @@ export default function StyledTreeItem(props) {
   const newTask = (event) => {
     props.addAction();
     setContextMenu(null);
-    // props.setSelectedTreeNode(node);
     event.preventDefault();
   };
 
   const remove = (element) => {
     console.log("remove", element);
-    apiService.remove(element.elementId)
-    props.removeAction(element)
-  }
+    apiService.remove(element.elementId);
+    props.removeAction(element);
+  };
+
+  const handleNameClick = (e) => {
+    e.stopPropagation();
+    if (onNodeSelect) {
+      onNodeSelect(element.elementId);
+    }
+  };
+
+  const handleCheckboxClick = (e) => {
+    e.stopPropagation();
+  };
 
   return (
     <TreeItem
@@ -96,23 +102,24 @@ export default function StyledTreeItem(props) {
           >
             <MenuItem onClick={newTask}>New task under &nbsp;<b>{element.name}</b></MenuItem>
             <MenuItem onClick={() => remove(element)}>Remove &nbsp;<b>{element.name}</b></MenuItem>
-
           </Menu>
           <Checkbox
             className="checkbox"
             checked={itemChecked(element.status)}
+            onClick={handleCheckboxClick}
             onChange={() => handleCheckboxChange(element.elementId, itemChecked(element.status))}
           />
 
-          <span className={element.status + " " + element.type}>
-            <span>[{element.status}] </span>
+          <span
+            className={element.status + " " + element.type + " task-name-span"}
+            onClick={handleNameClick}
+          >
             <span>{element.name}</span>
-            <span>[{element.elements.length}]</span>
+            <span> [{element.elements.length}]</span>
             <span>{isDragging && "😱"}</span>
             <span> {isOver && <span>Drop Here!</span>}</span>
           </span>
-          {/* <span className='elementId'>{element.elementId}</span> */}
-        </ Box>
+        </Box>
       }
     ></TreeItem>
   );

@@ -71,3 +71,10 @@
   font-size: 15px;
   line-height: 1.5;
 }
+
+/* Hide toolbar on mobile */
+@media (max-width: 767px) {
+  .plate-toolbar-container {
+    display: none !important;
+  }
+}
