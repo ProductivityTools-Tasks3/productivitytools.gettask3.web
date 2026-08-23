@@ -3,7 +3,15 @@ import Stack from "@mui/material/Stack";
 import React, { useEffect, useState } from "react";
 
 import apiService from "../../services/apiService";
-import { FormControlLabel, Switch } from "@mui/material";
+import {
+  FormControlLabel,
+  Switch,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+} from "@mui/material";
 import PlateEditor from "../PlateEditor";
 
 export default function ItemDetails({ selectedElement, onChange, saveNewElement, finishAction, unDoneAction, onBack }) {
@@ -15,6 +23,9 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
   const [initialValue, setInitialValue] = useState(
     JSON.parse(`[{"type":"title","children":[{"text":"x"}]},{"type":"p","children":[{"text":"empty"}]}]`)
   );
+
+  const [inboxDialogOpen, setInboxDialogOpen] = useState(false);
+  const [inboxNameInput, setInboxNameInput] = useState("");
 
   useEffect(() => {
     console.log("selectedElementdetails", selectedElement?.details);
@@ -78,6 +89,40 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
     }
   };
 
+  const handleOpenInboxDialog = () => {
+    setInboxNameInput(selectedElement?.inboxName || "");
+    setInboxDialogOpen(true);
+  };
+
+  const handleCloseInboxDialog = () => {
+    setInboxDialogOpen(false);
+  };
+
+  const handleSaveInboxName = async () => {
+    const trimmed = inboxNameInput.trim();
+    if (selectedElement?.elementId !== null && selectedElement?.elementId !== undefined) {
+      if (trimmed) {
+        await apiService.setInboxName(selectedElement.elementId, trimmed);
+        onChange("inboxName", trimmed);
+      } else {
+        await apiService.clearInboxName(selectedElement.elementId);
+        onChange("inboxName", null);
+      }
+    } else {
+      onChange("inboxName", trimmed || null);
+    }
+    setInboxDialogOpen(false);
+  };
+
+  const handleClearInboxName = async () => {
+    if (selectedElement?.elementId !== null && selectedElement?.elementId !== undefined) {
+      await apiService.clearInboxName(selectedElement.elementId);
+    }
+    onChange("inboxName", null);
+    setInboxNameInput("");
+    setInboxDialogOpen(false);
+  };
+
   console.log("rendering item details");
   console.log(selectedElement);
   if (selectedElement != null) {
@@ -135,9 +180,47 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
             checked={selectedElement.type === "TaskBag" || selectedElement.type === "User"}
             onChange={switchChanged}
           ></FormControlLabel>
+
+          <Button
+            variant="outlined"
+            onClick={handleOpenInboxDialog}
+            className="inbox-name-btn"
+          >
+            {selectedElement.inboxName ? selectedElement.inboxName : "Set inbox name"}
+          </Button>
         </Stack>
 
         <PlateEditor contentChanged={plateChanged} content={initialValue} forceResetContent={initialValue}></PlateEditor>
+
+        <Dialog open={inboxDialogOpen} onClose={handleCloseInboxDialog} maxWidth="xs" fullWidth>
+          <DialogTitle>Set Inbox Name</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Inbox Name"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={inboxNameInput}
+              onChange={(e) => setInboxNameInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSaveInboxName();
+                }
+              }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClearInboxName} color="error">
+              Clear
+            </Button>
+            <Button onClick={handleCloseInboxDialog}>Cancel</Button>
+            <Button onClick={handleSaveInboxName} variant="contained" color="primary">
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   } else {

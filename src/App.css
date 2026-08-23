@@ -147,6 +147,26 @@
   font-weight: 400;
 }
 
+.itemDetails-actions .inbox-name-btn {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: none;
+  border-radius: 4px;
+  padding: 4px 12px;
+  margin-left: 6px;
+  border-color: #8faee0 !important;
+  color: #3f51b5 !important;
+  background-color: #f0f4fc;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.08);
+  white-space: nowrap;
+}
+
+.itemDetails-actions .inbox-name-btn:hover {
+  background-color: #e2ecfa;
+  border-color: #6d93d4 !important;
+}
+
 /* Sticky Wrapper */
 .sticky-wrapper {
   position: relative;

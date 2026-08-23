@@ -130,6 +130,24 @@ async function callAuthorizedEndpoint(call) {
     }
 }
 
+async function setInboxName(elementId, inboxName) {
+    let call = async (header) => {
+        const data = { ElementId: elementId, InboxName: inboxName };
+        const response = await axios.post(`${config.PATH_BASE}Task/SetInboxName`, data, header);
+        return response.data;
+    }
+    return await callAuthorizedEndpointWithToast(call, "Request to set inbox name", "Inbox name updated on the server");
+}
+
+async function clearInboxName(elementId) {
+    let call = async (header) => {
+        const data = { ElementId: elementId };
+        const response = await axios.post(`${config.PATH_BASE}Task/ClearInboxName`, data, header);
+        return response.data;
+    }
+    return await callAuthorizedEndpointWithToast(call, "Request to clear inbox name", "Inbox name cleared on the server");
+}
+
 const service= {
     getDate,
     GetTree,
@@ -140,7 +158,9 @@ const service= {
     addElement,
     moveElement,
     start,
-    changeType
+    changeType,
+    setInboxName,
+    clearInboxName
 }
 
 export default service
