@@ -1,5 +1,11 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import TextField from "@mui/material/TextField";
 import apiService from "../../services/apiService";
 import { signInWithGoogle } from "../../Session/firebase";
 
@@ -253,6 +259,56 @@ export default function Console() {
     nodeSelect(elementId);
   };
 
+  const [addTasksDialogOpen, setAddTasksDialogOpen] = useState(false);
+  const [targetInboxItem, setTargetInboxItem] = useState(null);
+  const [tasksInputText, setTasksInputText] = useState("");
+  const [isAddingTasks, setIsAddingTasks] = useState(false);
+
+  const handleOpenAddTasksDialog = (inboxItem) => {
+    handleInboxClick(inboxItem.elementId);
+    setTargetInboxItem(inboxItem);
+    setTasksInputText("");
+    setAddTasksDialogOpen(true);
+  };
+
+  const handleCloseAddTasksDialog = () => {
+    if (isAddingTasks) return;
+    setAddTasksDialogOpen(false);
+    setTargetInboxItem(null);
+    setTasksInputText("");
+  };
+
+  const handleAddTasksToInbox = async () => {
+    if (!targetInboxItem || !tasksInputText.trim()) return;
+    const lines = tasksInputText
+      .split("\n")
+      .map((l) => l.trim())
+      .filter((l) => l.length > 0);
+
+    if (lines.length === 0) return;
+
+    setIsAddingTasks(true);
+    try {
+      for (const line of lines) {
+        const details = JSON.stringify([
+          { type: "title", children: [{ text: line }] },
+          { type: "p", children: [{ text: "" }] },
+        ]);
+        await apiService.addElement(targetInboxItem.elementId, line, details);
+      }
+      const updatedTree = await apiService.GetTree();
+      setList(updatedTree);
+      handleInboxClick(targetInboxItem.elementId);
+      setAddTasksDialogOpen(false);
+      setTargetInboxItem(null);
+      setTasksInputText("");
+    } catch (err) {
+      console.error("Error adding tasks to inbox", err);
+    } finally {
+      setIsAddingTasks(false);
+    }
+  };
+
   const renderItemDetails = () => {
     console.log("selectedElementx1", selectedElement);
     console.log("newElement", newElement);
@@ -285,15 +341,29 @@ export default function Console() {
       <div className="top-bar">
         <div className="inbox-buttons-container">
           {inboxElements.map((item) => (
-            <Button
+            <ButtonGroup
               key={item.elementId}
-              variant="outlined"
               size="small"
-              className={`inbox-shortcut-btn ${selectedElement?.elementId === item.elementId ? "active" : ""}`}
-              onClick={() => handleInboxClick(item.elementId)}
+              className="inbox-button-group"
+              variant="outlined"
             >
-              {item.inboxName}
-            </Button>
+              <Button
+                className={`inbox-shortcut-btn ${selectedElement?.elementId === item.elementId ? "active" : ""}`}
+                onClick={() => handleInboxClick(item.elementId)}
+              >
+                {item.inboxName}
+              </Button>
+              <Button
+                className="inbox-add-btn"
+                title={`Add tasks to ${item.inboxName}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenAddTasksDialog(item);
+                }}
+              >
+                +
+              </Button>
+            </ButtonGroup>
           ))}
         </div>
         <div className="top-bar-right">
@@ -336,6 +406,46 @@ export default function Console() {
           </div>
         </div>
       </div>
+
+      <Dialog
+        open={addTasksDialogOpen}
+        onClose={handleCloseAddTasksDialog}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>
+          Add tasks to {targetInboxItem?.inboxName || "Inbox"}
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Tasks (one per line)"
+            type="text"
+            fullWidth
+            multiline
+            minRows={4}
+            maxRows={10}
+            variant="outlined"
+            placeholder="Task 1&#10;Task 2&#10;Task 3"
+            value={tasksInputText}
+            onChange={(e) => setTasksInputText(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAddTasksDialog} disabled={isAddingTasks}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleAddTasksToInbox}
+            variant="contained"
+            color="primary"
+            disabled={isAddingTasks || !tasksInputText.trim()}
+          >
+            {`Add tasks to the ${targetInboxItem?.inboxName || ""}`}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

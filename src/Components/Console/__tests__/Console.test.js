@@ -113,4 +113,69 @@ describe("Console top bar and inbox buttons", () => {
       expect(screen.getAllByText("Personal Child Task").length).toBeGreaterThanOrEqual(1);
     });
   });
+
+  it("opens add tasks popup when + button is clicked and adds multiple tasks on submit", async () => {
+    render(<Console />);
+
+    await waitFor(() => {
+      expect(screen.getByText("DeepInbox")).toBeInTheDocument();
+    });
+
+    const addBtn = screen.getByTitle("Add tasks to DeepInbox");
+    fireEvent.click(addBtn);
+
+    expect(screen.getByText("Add tasks to DeepInbox")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Add tasks to the DeepInbox" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument();
+
+    // Verify tree is expanded and node is selected right away when + is clicked
+    expect(screen.getAllByText("Deep Inbox Task").length).toBeGreaterThanOrEqual(1);
+
+    const multilineInput = screen.getByLabelText("Tasks (one per line)");
+    fireEvent.change(multilineInput, {
+      target: { value: "Task Line 1\nTask Line 2\n\nTask Line 3" },
+    });
+
+    const submitBtn = screen.getByRole("button", { name: "Add tasks to the DeepInbox" });
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(apiService.addElement).toHaveBeenCalledWith(
+        101,
+        "Task Line 1",
+        expect.stringContaining("Task Line 1")
+      );
+      expect(apiService.addElement).toHaveBeenCalledWith(
+        101,
+        "Task Line 2",
+        expect.stringContaining("Task Line 2")
+      );
+      expect(apiService.addElement).toHaveBeenCalledWith(
+        101,
+        "Task Line 3",
+        expect.stringContaining("Task Line 3")
+      );
+      expect(apiService.addElement).toHaveBeenCalledTimes(3);
+    });
+  });
+
+  it("closes add tasks popup when Cancel button is clicked", async () => {
+    render(<Console />);
+
+    await waitFor(() => {
+      expect(screen.getByText("DeepInbox")).toBeInTheDocument();
+    });
+
+    const addBtn = screen.getByTitle("Add tasks to DeepInbox");
+    fireEvent.click(addBtn);
+
+    expect(screen.getByText("Add tasks to DeepInbox")).toBeInTheDocument();
+
+    const cancelBtn = screen.getByRole("button", { name: "Cancel" });
+    fireEvent.click(cancelBtn);
+
+    await waitFor(() => {
+      expect(screen.queryByText("Add tasks to DeepInbox")).not.toBeInTheDocument();
+    });
+  });
 });

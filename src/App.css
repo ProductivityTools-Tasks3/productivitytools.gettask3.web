@@ -45,12 +45,17 @@
   align-items: center;
 }
 
-.inbox-shortcut-btn {
+.inbox-button-group {
+  display: inline-flex;
+  border-radius: 4px;
+}
+
+.inbox-button-group .inbox-shortcut-btn {
   font-family: inherit;
   font-size: 13px !important;
   font-weight: 500 !important;
   text-transform: none !important;
-  border-radius: 4px !important;
+  border-radius: 4px 0 0 4px !important;
   padding: 4px 12px !important;
   color: #1976d2 !important;
   border-color: #90caf9 !important;
@@ -59,15 +64,35 @@
   transition: all 0.2s ease !important;
 }
 
-.inbox-shortcut-btn:hover {
+.inbox-button-group .inbox-shortcut-btn:hover {
   background-color: #e3f0fd !important;
   border-color: #1976d2 !important;
 }
 
-.inbox-shortcut-btn.active {
+.inbox-button-group .inbox-shortcut-btn.active {
   background-color: #1976d2 !important;
   color: #ffffff !important;
   border-color: #1565c0 !important;
+}
+
+.inbox-button-group .inbox-add-btn {
+  font-family: inherit;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  min-width: 28px !important;
+  padding: 4px 8px !important;
+  border-radius: 0 4px 4px 0 !important;
+  color: #1976d2 !important;
+  border-color: #90caf9 !important;
+  background-color: #f4f8fd !important;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.06) !important;
+  border-left: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.inbox-button-group .inbox-add-btn:hover {
+  background-color: #e3f0fd !important;
+  border-color: #1976d2 !important;
 }
 
 .top-bar-right {
