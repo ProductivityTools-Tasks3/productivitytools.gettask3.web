@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
-
+import React, { useEffect, useState, useRef, useMemo } from "react";
+import Button from "@mui/material/Button";
 import apiService from "../../services/apiService";
+import { signInWithGoogle } from "../../Session/firebase";
 
 import StructureTree from "../StructureTree";
 import ItemDetails from "../ItemDetails";
@@ -8,10 +9,63 @@ import ItemDetails from "../ItemDetails";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
+function getInboxElements(nodeOrList) {
+  if (!nodeOrList) return [];
+  let result = [];
+  if (Array.isArray(nodeOrList)) {
+    for (const item of nodeOrList) {
+      result = result.concat(getInboxElements(item));
+    }
+    return result;
+  }
+  if (nodeOrList.inboxName && typeof nodeOrList.inboxName === "string" && nodeOrList.inboxName.trim() !== "") {
+    result.push(nodeOrList);
+  }
+  if (nodeOrList.elements && Array.isArray(nodeOrList.elements)) {
+    for (const child of nodeOrList.elements) {
+      result = result.concat(getInboxElements(child));
+    }
+  }
+  return result;
+}
+
+function getPathToElement(root, targetId) {
+  if (!root || targetId === null || targetId === undefined) return [];
+  const targetIdStr = targetId.toString();
+
+  function findPath(node) {
+    if (!node) return null;
+    const currentIdStr = node.elementId !== undefined && node.elementId !== null ? node.elementId.toString() : "";
+    if (currentIdStr === targetIdStr) {
+      return [currentIdStr];
+    }
+    if (node.elements && Array.isArray(node.elements)) {
+      for (const child of node.elements) {
+        const subPath = findPath(child);
+        if (subPath) {
+          return [currentIdStr, ...subPath];
+        }
+      }
+    }
+    return null;
+  }
+
+  if (Array.isArray(root)) {
+    for (const item of root) {
+      const p = findPath(item);
+      if (p) return p;
+    }
+    return [];
+  }
+
+  return findPath(root) || [];
+}
+
 export default function Console() {
   const [list, setList] = useState([]);
   const [selectedElement, setSelectedElement] = useState();
   const [newElement, setNewElement] = useState(null);
+  const [expandedNodes, setExpandedNodes] = useState([]);
 
   const [isSticky, setSticky] = useState(false);
   const ref = useRef(null);
@@ -187,6 +241,18 @@ export default function Console() {
     parent.elements.splice(index, 1);
   }
 
+  const inboxElements = useMemo(() => getInboxElements(list), [list]);
+
+  const handleNodeToggle = (event, nodeIds) => {
+    setExpandedNodes(nodeIds);
+  };
+
+  const handleInboxClick = (elementId) => {
+    const pathIds = getPathToElement(list, elementId);
+    setExpandedNodes(pathIds);
+    nodeSelect(elementId);
+  };
+
   const renderItemDetails = () => {
     console.log("selectedElementx1", selectedElement);
     console.log("newElement", newElement);
@@ -216,6 +282,32 @@ export default function Console() {
 
   return (
     <div className="console">
+      <div className="top-bar">
+        <div className="inbox-buttons-container">
+          {inboxElements.map((item) => (
+            <Button
+              key={item.elementId}
+              variant="outlined"
+              size="small"
+              className={`inbox-shortcut-btn ${selectedElement?.elementId === item.elementId ? "active" : ""}`}
+              onClick={() => handleInboxClick(item.elementId)}
+            >
+              {item.inboxName}
+            </Button>
+          ))}
+        </div>
+        <div className="top-bar-right">
+          <Button
+            variant="contained"
+            size="small"
+            onClick={signInWithGoogle}
+            className="login-btn"
+          >
+            fLogin
+          </Button>
+        </div>
+      </div>
+
       <div className={`console-layout ${mobileView === "details" ? "show-details" : "show-tree"}`}>
         <div className="tree-column">
           <DndProvider backend={HTML5Backend}>
@@ -223,6 +315,8 @@ export default function Console() {
               list={list}
               nodeSelect={nodeSelect}
               selectedElement={selectedElement}
+              expanded={expandedNodes}
+              onToggle={handleNodeToggle}
               finishAction={finishItemById}
               unDoneAction={unDoneElementById}
               addAction={addElement}

@@ -1,17 +1,5 @@
-import React, { useState } from 'react'
-import { signInWithGoogle } from '../../Session/firebase'
-
-
+import React from 'react';
 
 export default function Home() {
-    const flogin = () => {
-        signInWithGoogle();
-    };
-
-    return (
-        <div>
-            <p>This is home screen. v4</p>
-            <button onClick={flogin}>fLogin</button>
-        </div>
-    )
+    return null;
 }

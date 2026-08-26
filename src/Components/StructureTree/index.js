@@ -36,11 +36,17 @@ function CloseSquare(props) {
 }
 
 export default function StructureTree(props) {
-  const [expanded, setExpanded] = useState([]);
+  const [internalExpanded, setInternalExpanded] = useState([]);
   const containerRef = useRef(null);
 
+  const expanded = props.expanded !== undefined ? props.expanded : internalExpanded;
+
   const handleToggle = (event, nodeIds) => {
-    setExpanded(nodeIds);
+    if (props.onToggle) {
+      props.onToggle(event, nodeIds);
+    } else {
+      setInternalExpanded(nodeIds);
+    }
   };
 
   // function getLabel(x) {

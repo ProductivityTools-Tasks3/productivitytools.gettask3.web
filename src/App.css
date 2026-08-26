@@ -26,6 +26,70 @@
   overflow: hidden;
 }
 
+/* Top Bar: Inbox shortcuts on the left, Login on the right */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #fafafa;
+  border-bottom: 1px solid #e0e0e0;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.inbox-buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.inbox-shortcut-btn {
+  font-family: inherit;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  border-radius: 4px !important;
+  padding: 4px 12px !important;
+  color: #1976d2 !important;
+  border-color: #90caf9 !important;
+  background-color: #f4f8fd !important;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.06) !important;
+  transition: all 0.2s ease !important;
+}
+
+.inbox-shortcut-btn:hover {
+  background-color: #e3f0fd !important;
+  border-color: #1976d2 !important;
+}
+
+.inbox-shortcut-btn.active {
+  background-color: #1976d2 !important;
+  color: #ffffff !important;
+  border-color: #1565c0 !important;
+}
+
+.top-bar-right {
+  margin-left: auto;
+}
+
+.top-bar-right .login-btn {
+  font-family: inherit;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  border-radius: 4px !important;
+  padding: 5px 16px !important;
+  background-color: #8faee0 !important;
+  color: #ffffff !important;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15) !important;
+}
+
+.top-bar-right .login-btn:hover {
+  background-color: #7a9ed6 !important;
+}
+
 /* Desktop: 50/50 Split */
 .console-layout {
   display: flex;
