@@ -84,6 +84,8 @@ export default function StyledTreeItem(props) {
     e.stopPropagation();
   };
 
+  const hasInboxName = Boolean(element?.inboxName?.trim());
+
   return (
     <TreeItem
       ref={dragRef}
@@ -111,7 +113,7 @@ export default function StyledTreeItem(props) {
           />
 
           <span
-            className={element.status + " " + element.type + " task-name-span"}
+            className={`${element.status} ${element.type} task-name-span ${hasInboxName ? "has-inbox-name" : ""}`}
             onClick={handleNameClick}
           >
             <span>{element.name}</span>

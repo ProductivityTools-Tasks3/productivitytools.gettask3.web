@@ -204,6 +204,11 @@
   color: gray;
 }
 
+.styledTreeItem .has-inbox-name,
+.styledTreeItem .has-inbox-name span {
+  color: #1976d2 !important;
+}
+
 .styledTreeItem .task-name-span,
 .styledTreeItem .task-name-span:hover,
 .styledTreeItem .task-name-span:active,
