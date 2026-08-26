@@ -15,7 +15,7 @@ function App() {
           <DateCheck />
         </header>
         <Console />
-        <ToastContainer />
+        <ToastContainer position="bottom-right" autoClose={2500} />
       </div>
     </AuthProvider>
   );

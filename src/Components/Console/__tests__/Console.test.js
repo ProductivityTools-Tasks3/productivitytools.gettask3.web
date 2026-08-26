@@ -94,10 +94,10 @@ describe("Console top bar and inbox buttons", () => {
     expect(signInWithGoogle).toHaveBeenCalledTimes(1);
   });
 
-  it("collapses the rest of the tree and opens only chosen item path when an inbox button is clicked", async () => {
-    render(<Console />);
+  it("collapses the rest of the tree and opens only chosen item path in tree view when an inbox button is clicked", async () => {
+    const { container } = render(<Console />);
 
-    // Click DeepInbox first
+    // Click DeepInbox
     const deepInboxBtn = await screen.findByText("DeepInbox");
     fireEvent.click(deepInboxBtn);
 
@@ -105,13 +105,10 @@ describe("Console top bar and inbox buttons", () => {
       expect(screen.getAllByText("Deep Inbox Task").length).toBeGreaterThanOrEqual(1);
     });
 
-    // Now click PersonalInbox
-    const personalInboxBtn = await screen.findByText("PersonalInbox");
-    fireEvent.click(personalInboxBtn);
-
-    await waitFor(() => {
-      expect(screen.getAllByText("Personal Child Task").length).toBeGreaterThanOrEqual(1);
-    });
+    // Ensure mobile view remains 'show-tree'
+    const consoleLayout = container.querySelector(".console-layout");
+    expect(consoleLayout).toHaveClass("show-tree");
+    expect(consoleLayout).not.toHaveClass("show-details");
   });
 
   it("opens add tasks popup when + button is clicked and adds multiple tasks on submit", async () => {

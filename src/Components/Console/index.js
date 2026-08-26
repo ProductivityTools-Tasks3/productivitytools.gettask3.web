@@ -256,7 +256,10 @@ export default function Console() {
   const handleInboxClick = (elementId) => {
     const pathIds = getPathToElement(list, elementId);
     setExpandedNodes(pathIds);
-    nodeSelect(elementId);
+    var se = findElement(list, elementId);
+    console.log("Set selected element", se);
+    setSelectedElement(se);
+    setMobileView("tree");
   };
 
   const [addTasksDialogOpen, setAddTasksDialogOpen] = useState(false);
