@@ -2,6 +2,7 @@ import axios from 'axios'
 import { config } from '../Consts';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getAuthToken, auth } from '../Session/firebase';
 
 async function getDate() {
     const response = await axios.post(`${config.PATH_BASE}Task/Date`)
@@ -118,15 +119,24 @@ async function callAuthorizedEndpointWithToast(call, pendingMessage, successMess
 }
 
 async function callAuthorizedEndpoint(call) {
-    let token = localStorage.getItem('token')
-    //console.log("token from localstorage", token)
-    const header = { headers: { Authorization: `Bearer ${token}` } }
+    let token = await getAuthToken();
+    const header = { headers: { Authorization: `Bearer ${token}` } };
     try {
-        const response = call(header);
+        const response = await call(header);
         return response;
     } catch (error) {
-        console.log("Call endpoint");
-        console.log(error);
+        if (error?.response?.status === 401 && auth.currentUser) {
+            console.log("401 Unauthorized received, force refreshing token...");
+            try {
+                const refreshedToken = await getAuthToken(true);
+                const retryHeader = { headers: { Authorization: `Bearer ${refreshedToken}` } };
+                return await call(retryHeader);
+            } catch (retryError) {
+                console.error("Retry after token refresh failed", retryError);
+            }
+        }
+        console.log("Call endpoint error:", error);
+        throw error;
     }
 }
 

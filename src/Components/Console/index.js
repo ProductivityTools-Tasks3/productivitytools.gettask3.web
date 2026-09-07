@@ -7,7 +7,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
 import apiService from "../../services/apiService";
-import { signInWithGoogle } from "../../Session/firebase";
+import { signInWithGoogle, logout } from "../../Session/firebase";
+import { useAuth } from "../../Session/AuthContext";
 
 import StructureTree from "../StructureTree";
 import ItemDetails from "../ItemDetails";
@@ -68,6 +69,7 @@ function getPathToElement(root, targetId) {
 }
 
 export default function Console() {
+  const { user } = useAuth();
   const [list, setList] = useState([]);
   const [selectedElement, setSelectedElement] = useState();
   const [newElement, setNewElement] = useState(null);
@@ -88,16 +90,19 @@ export default function Console() {
     };
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      console.log("call apiservice");
-      const r = await apiService.GetTree();
-      console.log(r);
+  const fetchTree = async () => {
+    console.log("call apiservice");
+    const r = await apiService.GetTree();
+    console.log(r);
+    if (r) {
       setList(r);
-    };
-    fetchData();
+    }
+  };
+
+  useEffect(() => {
+    fetchTree();
     console.log("useeffect");
-  }, []);
+  }, [user]);
 
   function findElement(candidateElement, nodeId) {
     var candidateElementId = candidateElement.elementId.toString();
@@ -371,12 +376,28 @@ export default function Console() {
         </div>
         <div className="top-bar-right">
           <Button
+            variant="outlined"
+            size="small"
+            onClick={fetchTree}
+            className="refresh-btn"
+          >
+            Refresh
+          </Button>
+          <Button
             variant="contained"
             size="small"
             onClick={signInWithGoogle}
             className="login-btn"
           >
-            fLogin
+            Login
+          </Button>
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={logout}
+            className="logout-btn"
+          >
+            Logout
           </Button>
         </div>
       </div>

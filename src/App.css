@@ -97,6 +97,31 @@
 
 .top-bar-right {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.top-bar-right .refresh-btn,
+.top-bar-right .logout-btn {
+  font-family: inherit;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  border-radius: 4px !important;
+  padding: 5px 14px !important;
+  color: #1976d2 !important;
+  border-color: #90caf9 !important;
+  background-color: #ffffff !important;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.06) !important;
+  transition: all 0.2s ease !important;
+}
+
+.top-bar-right .refresh-btn:hover,
+.top-bar-right .logout-btn:hover {
+  background-color: #e3f0fd !important;
+  border-color: #1976d2 !important;
 }
 
 .top-bar-right .login-btn {

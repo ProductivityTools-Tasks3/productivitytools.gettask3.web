@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import Console from "../index";
 import apiService from "../../../services/apiService";
-import { signInWithGoogle } from "../../../Session/firebase";
+import { signInWithGoogle, logout } from "../../../Session/firebase";
 
 jest.mock("../../../services/apiService", () => ({
   GetTree: jest.fn(),
@@ -18,6 +18,7 @@ jest.mock("../../../services/apiService", () => ({
 
 jest.mock("../../../Session/firebase", () => ({
   signInWithGoogle: jest.fn(),
+  logout: jest.fn(),
 }));
 
 describe("Console top bar and inbox buttons", () => {
@@ -70,10 +71,11 @@ describe("Console top bar and inbox buttons", () => {
   };
 
   beforeEach(() => {
+    jest.clearAllMocks();
     apiService.GetTree.mockResolvedValue(mockTree);
   });
 
-  it("renders inbox buttons on the left and login button on the right", async () => {
+  it("renders inbox buttons on the left and Login, Logout, and Refresh buttons on the right", async () => {
     render(<Console />);
 
     await waitFor(() => {
@@ -81,17 +83,45 @@ describe("Console top bar and inbox buttons", () => {
       expect(screen.getByText("PersonalInbox")).toBeInTheDocument();
     });
 
-    const loginBtn = screen.getByText("fLogin");
+    const refreshBtn = screen.getByText("Refresh");
+    expect(refreshBtn).toBeInTheDocument();
+    expect(refreshBtn.closest(".top-bar-right")).toBeInTheDocument();
+
+    const loginBtn = screen.getByText("Login");
     expect(loginBtn).toBeInTheDocument();
     expect(loginBtn.closest(".top-bar-right")).toBeInTheDocument();
+
+    const logoutBtn = screen.getByText("Logout");
+    expect(logoutBtn).toBeInTheDocument();
+    expect(logoutBtn.closest(".top-bar-right")).toBeInTheDocument();
   });
 
   it("calls signInWithGoogle when login button is clicked", async () => {
     render(<Console />);
 
-    const loginBtn = await screen.findByText("fLogin");
+    const loginBtn = await screen.findByText("Login");
     fireEvent.click(loginBtn);
     expect(signInWithGoogle).toHaveBeenCalledTimes(1);
+  });
+
+  it("calls logout when logout button is clicked", async () => {
+    render(<Console />);
+
+    const logoutBtn = await screen.findByText("Logout");
+    fireEvent.click(logoutBtn);
+    expect(logout).toHaveBeenCalledTimes(1);
+  });
+
+  it("calls apiService.GetTree when refresh button is clicked", async () => {
+    render(<Console />);
+
+    const refreshBtn = await screen.findByText("Refresh");
+    const initialCallCount = apiService.GetTree.mock.calls.length;
+    fireEvent.click(refreshBtn);
+
+    await waitFor(() => {
+      expect(apiService.GetTree).toHaveBeenCalledTimes(initialCallCount + 1);
+    });
   });
 
   it("collapses the rest of the tree and opens only chosen item path in tree view when an inbox button is clicked", async () => {
