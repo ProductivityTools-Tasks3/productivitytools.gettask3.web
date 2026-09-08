@@ -16,7 +16,7 @@ export const plateUI = createPlateUI({
         margin: "0 0 0 0",
         fontSize: "25px",
         fontWeight: "1000",
-        color: "gray",
+        color: "black",
       },
     },
   }),
