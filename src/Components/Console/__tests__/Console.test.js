@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import Console from "../index";
 import apiService from "../../../services/apiService";
 import { signInWithGoogle, logout } from "../../../Session/firebase";
+import { useAuth } from "../../../Session/AuthContext";
 
 jest.mock("../../../services/apiService", () => ({
   GetTree: jest.fn(),
@@ -19,6 +20,10 @@ jest.mock("../../../services/apiService", () => ({
 jest.mock("../../../Session/firebase", () => ({
   signInWithGoogle: jest.fn(),
   logout: jest.fn(),
+}));
+
+jest.mock("../../../Session/AuthContext", () => ({
+  useAuth: jest.fn(),
 }));
 
 describe("Console top bar and inbox buttons", () => {
@@ -73,9 +78,10 @@ describe("Console top bar and inbox buttons", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     apiService.GetTree.mockResolvedValue(mockTree);
+    useAuth.mockReturnValue({ user: null, loading: false });
   });
 
-  it("renders inbox buttons on the left and Login, Logout, and Refresh buttons on the right", async () => {
+  it("renders inbox buttons on the left and Login, Logout, and Refresh buttons on the right when logged out", async () => {
     render(<Console />);
 
     await waitFor(() => {
@@ -94,6 +100,15 @@ describe("Console top bar and inbox buttons", () => {
     const logoutBtn = screen.getByText("Logout");
     expect(logoutBtn).toBeInTheDocument();
     expect(logoutBtn.closest(".top-bar-right")).toBeInTheDocument();
+  });
+
+  it("does not render login button when user is logged in", async () => {
+    useAuth.mockReturnValue({ user: { uid: "user-123" }, loading: false });
+    render(<Console />);
+
+    expect(screen.queryByText("Login")).not.toBeInTheDocument();
+    expect(screen.getByText("Logout")).toBeInTheDocument();
+    expect(screen.getByText("Refresh")).toBeInTheDocument();
   });
 
   it("calls signInWithGoogle when login button is clicked", async () => {

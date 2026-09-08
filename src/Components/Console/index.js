@@ -383,14 +383,16 @@ export default function Console() {
           >
             Refresh
           </Button>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={signInWithGoogle}
-            className="login-btn"
-          >
-            Login
-          </Button>
+          {!user && (
+            <Button
+              variant="contained"
+              size="small"
+              onClick={signInWithGoogle}
+              className="login-btn"
+            >
+              Login
+            </Button>
+          )}
           <Button
             variant="outlined"
             size="small"
