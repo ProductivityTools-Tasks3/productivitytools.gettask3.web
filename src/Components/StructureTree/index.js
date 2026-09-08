@@ -41,6 +41,13 @@ export default function StructureTree(props) {
 
   const expanded = props.expanded !== undefined ? props.expanded : internalExpanded;
 
+  const selected =
+    props.selectedElement?.elementId != null
+      ? props.selectedElement.elementId.toString()
+      : props.selected != null
+      ? props.selected.toString()
+      : "";
+
   const handleToggle = (event, nodeIds) => {
     if (props.onToggle) {
       props.onToggle(event, nodeIds);
@@ -96,6 +103,7 @@ export default function StructureTree(props) {
           defaultEndIcon={<CloseSquare />}
           onNodeToggle={handleToggle}
           expanded={expanded}
+          selected={selected}
           className="tree"
         >
           {GetNode(props.list)}

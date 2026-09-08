@@ -95,7 +95,7 @@ export default function StyledTreeItem(props) {
       nodeId={nodeId}
       key={key}
       label={
-        <Box ref={dropRef} onContextMenu={handleContextMenu}>
+        <Box ref={dropRef} onClick={handleNameClick} onContextMenu={handleContextMenu}>
           <Menu
             open={contextMenu !== null}
             onClose={handleClose}
