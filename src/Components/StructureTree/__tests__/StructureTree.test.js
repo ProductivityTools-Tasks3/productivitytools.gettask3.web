@@ -130,4 +130,24 @@ describe("StructureTree", () => {
     child1Checkbox.click();
     expect(handleSelect).not.toHaveBeenCalled();
   });
+
+  it("displays count badge only when elements.length > 0", () => {
+    const { container } = render(
+      <DndProvider backend={HTML5Backend}>
+        <StructureTree
+          list={multiNodeTree}
+          expanded={["1"]}
+          nodeSelect={jest.fn()}
+        />
+      </DndProvider>
+    );
+
+    // Root is TaskBag with 2 children
+    const rootBox = container.querySelector('[elementid="1"] .tree-node-box');
+    expect(rootBox.querySelector(".task-count-badge")).toHaveTextContent("2");
+
+    // Child 1 is Task with 0 children
+    const child1Box = container.querySelector('[elementid="10"] .tree-node-box');
+    expect(child1Box.querySelector(".task-count-badge")).not.toBeInTheDocument();
+  });
 });

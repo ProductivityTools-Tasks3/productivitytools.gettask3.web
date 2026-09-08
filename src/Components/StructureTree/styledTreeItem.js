@@ -95,7 +95,7 @@ export default function StyledTreeItem(props) {
       nodeId={nodeId}
       key={key}
       label={
-        <Box ref={dropRef} onClick={handleNameClick} onContextMenu={handleContextMenu}>
+        <Box ref={dropRef} onClick={handleNameClick} onContextMenu={handleContextMenu} className="tree-node-box">
           <Menu
             open={contextMenu !== null}
             onClose={handleClose}
@@ -106,7 +106,8 @@ export default function StyledTreeItem(props) {
             <MenuItem onClick={() => remove(element)}>Remove &nbsp;<b>{element.name}</b></MenuItem>
           </Menu>
           <Checkbox
-            className="checkbox"
+            className="checkbox task-checkbox"
+            size="small"
             checked={itemChecked(element.status)}
             onClick={handleCheckboxClick}
             onChange={() => handleCheckboxChange(element.elementId, itemChecked(element.status))}
@@ -116,10 +117,12 @@ export default function StyledTreeItem(props) {
             className={`${element.status} ${element.type} task-name-span ${hasInboxName ? "has-inbox-name" : ""}`}
             onClick={handleNameClick}
           >
-            <span>{element.name}</span>
-            <span> [{element.elements.length}]</span>
-            <span>{isDragging && "😱"}</span>
-            <span> {isOver && <span>Drop Here!</span>}</span>
+            <span className="task-name-text">{element.name}</span>
+            {element.elements && element.elements.length > 0 && (
+              <span className="task-count-badge">{element.elements.length}</span>
+            )}
+            {isDragging && <span> 😱</span>}
+            {isOver && <span className="drop-indicator">Drop Here!</span>}
           </span>
         </Box>
       }
