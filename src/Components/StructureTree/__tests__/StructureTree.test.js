@@ -150,4 +150,40 @@ describe("StructureTree", () => {
     const child1Box = container.querySelector('[elementid="10"] .tree-node-box');
     expect(child1Box.querySelector(".task-count-badge")).not.toBeInTheDocument();
   });
+
+  it("renders InProgress task with InProgress class when selected", () => {
+    const treeWithInProgress = {
+      elementId: 1,
+      name: "Root",
+      status: "New",
+      type: "TaskBag",
+      elements: [
+        {
+          elementId: 10,
+          parentId: 1,
+          name: "In Progress Task",
+          status: "InProgress",
+          type: "Task",
+          elements: [],
+        },
+      ],
+    };
+
+    const { container } = render(
+      <DndProvider backend={HTML5Backend}>
+        <StructureTree
+          list={treeWithInProgress}
+          expanded={["1"]}
+          selectedElement={{ elementId: 10 }}
+          nodeSelect={jest.fn()}
+        />
+      </DndProvider>
+    );
+
+    const taskItem = container.querySelector('[elementid="10"]');
+    expect(taskItem).toHaveClass("Mui-selected");
+    const taskSpan = taskItem.querySelector(".task-name-span");
+    expect(taskSpan).toHaveClass("InProgress");
+    expect(taskSpan.querySelector(".task-name-text")).toHaveTextContent("In Progress Task");
+  });
 });

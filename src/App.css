@@ -432,10 +432,21 @@
 }
 
 /* Statuses */
+.styledTreeItem.Mui-selected > .MuiTreeItem-content .InProgress .task-name-text,
+.styledTreeItem.Mui-selected > .MuiTreeItem-content .InProgress,
 .styledTreeItem .InProgress .task-name-text,
 .styledTreeItem .InProgress {
-  color: #1b873f;
+  color: #1b873f !important;
   font-weight: 500;
+}
+
+.styledTreeItem.Mui-selected > .MuiTreeItem-content:has(.InProgress) {
+  box-shadow: inset 3px 0 0 #1b873f;
+}
+
+.styledTreeItem.Mui-selected > .MuiTreeItem-content .InProgress .task-count-badge {
+  background-color: #e8f5e9;
+  color: #1b873f;
 }
 
 .styledTreeItem .TaskBag .task-name-text,
