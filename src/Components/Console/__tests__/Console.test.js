@@ -33,6 +33,7 @@ describe("Console top bar and inbox buttons", () => {
     status: "New",
     type: "TaskBag",
     inboxName: null,
+    created: "2024-01-10T10:00:00",
     elements: [
       {
         elementId: 10,
@@ -41,6 +42,7 @@ describe("Console top bar and inbox buttons", () => {
         status: "New",
         type: "TaskBag",
         inboxName: null,
+        created: "2024-02-20T12:30:00",
         elements: [
           {
             elementId: 101,
@@ -49,6 +51,7 @@ describe("Console top bar and inbox buttons", () => {
             status: "New",
             type: "Task",
             inboxName: "DeepInbox",
+            created: "2024-03-05T09:15:00",
             elements: [],
           },
         ],
@@ -60,6 +63,7 @@ describe("Console top bar and inbox buttons", () => {
         status: "InProgress",
         type: "TaskBag",
         inboxName: null,
+        created: "2024-04-12T16:45:00",
         elements: [
           {
             elementId: 201,
@@ -68,6 +72,7 @@ describe("Console top bar and inbox buttons", () => {
             status: "New",
             type: "Task",
             inboxName: "PersonalInbox",
+            created: "2024-05-18T11:20:00",
             elements: [],
           },
         ],
@@ -219,5 +224,33 @@ describe("Console top bar and inbox buttons", () => {
     await waitFor(() => {
       expect(screen.queryByText("Add tasks to DeepInbox")).not.toBeInTheDocument();
     });
+  });
+
+  it("toggles creation dates on and off for all tree elements using the top bar Dates switch", async () => {
+    const { container } = render(<Console />);
+
+    const personalInboxBtn = await screen.findByText("PersonalInbox");
+    fireEvent.click(personalInboxBtn);
+
+    await waitFor(() => {
+      expect(screen.getByText("2024-01-10")).toBeInTheDocument();
+      expect(screen.getByText("2024-04-12")).toBeInTheDocument();
+      expect(screen.getByText("2024-05-18")).toBeInTheDocument();
+    });
+
+    const datesSwitch = screen.getByRole("checkbox", { name: "Dates" });
+    expect(datesSwitch).toBeChecked();
+
+    fireEvent.click(datesSwitch);
+
+    expect(datesSwitch).not.toBeChecked();
+    expect(container.querySelectorAll(".task-created-date").length).toBe(0);
+
+    fireEvent.click(datesSwitch);
+
+    expect(datesSwitch).toBeChecked();
+    expect(screen.getByText("2024-01-10")).toBeInTheDocument();
+    expect(screen.getByText("2024-04-12")).toBeInTheDocument();
+    expect(screen.getByText("2024-05-18")).toBeInTheDocument();
   });
 });

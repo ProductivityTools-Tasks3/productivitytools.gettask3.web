@@ -186,4 +186,66 @@ describe("StructureTree", () => {
     expect(taskSpan).toHaveClass("InProgress");
     expect(taskSpan.querySelector(".task-name-text")).toHaveTextContent("In Progress Task");
   });
+
+  it("displays creation date in yyyy-MM-dd format and hides it when showCreatedDate is false", () => {
+    const treeWithDates = {
+      elementId: 1,
+      name: "Root With Date",
+      status: "New",
+      type: "TaskBag",
+      created: "2024-05-15T14:30:00.000Z",
+      elements: [
+        {
+          elementId: 10,
+          parentId: 1,
+          name: "Child With Date",
+          status: "New",
+          type: "Task",
+          created: "2026-03-01T08:05:12.123",
+          elements: [],
+        },
+        {
+          elementId: 20,
+          parentId: 1,
+          name: "Child With MinValue Date",
+          status: "New",
+          type: "Task",
+          created: "0001-01-01T00:00:00",
+          elements: [],
+        },
+      ],
+    };
+
+    const { rerender, container } = render(
+      <DndProvider backend={HTML5Backend}>
+        <StructureTree
+          list={treeWithDates}
+          expanded={["1"]}
+          nodeSelect={jest.fn()}
+        />
+      </DndProvider>
+    );
+
+    const rootDate = container.querySelector('[elementid="1"] .task-created-date');
+    expect(rootDate).toHaveTextContent("2024-05-15");
+
+    const childDate = container.querySelector('[elementid="10"] .task-created-date');
+    expect(childDate).toHaveTextContent("2026-03-01");
+
+    const minValueChildDate = container.querySelector('[elementid="20"] .task-created-date');
+    expect(minValueChildDate).not.toBeInTheDocument();
+
+    rerender(
+      <DndProvider backend={HTML5Backend}>
+        <StructureTree
+          list={treeWithDates}
+          expanded={["1"]}
+          showCreatedDate={false}
+          nodeSelect={jest.fn()}
+        />
+      </DndProvider>
+    );
+
+    expect(container.querySelector(".task-created-date")).not.toBeInTheDocument();
+  });
 });

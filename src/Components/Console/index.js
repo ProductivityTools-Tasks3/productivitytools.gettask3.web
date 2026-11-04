@@ -6,6 +6,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 import apiService from "../../services/apiService";
 import { signInWithGoogle, logout } from "../../Session/firebase";
 import { useAuth } from "../../Session/AuthContext";
@@ -74,6 +76,7 @@ export default function Console() {
   const [selectedElement, setSelectedElement] = useState();
   const [newElement, setNewElement] = useState(null);
   const [expandedNodes, setExpandedNodes] = useState([]);
+  const [showCreatedDate, setShowCreatedDate] = useState(true);
 
   const [isSticky, setSticky] = useState(false);
   const ref = useRef(null);
@@ -199,14 +202,15 @@ export default function Console() {
   }
 
   function addElement(selectedTreeId) {
+    const nowIso = new Date().toISOString();
     let newElement = {
       name: "New element",
       type: 2,
       elementId: null,
       parentId: selectedTreeId,
       status: "New",
-      created: "2021-11-08T07:17:32.639432",
-      initialization: "2021-11-08T07:17:32.6394877",
+      created: nowIso,
+      initialization: nowIso,
       started: "0001-01-01T00:00:00",
       finished: null,
       category: null,
@@ -375,6 +379,18 @@ export default function Console() {
           ))}
         </div>
         <div className="top-bar-right">
+          <FormControlLabel
+            control={
+              <Switch
+                size="small"
+                color="primary"
+                checked={showCreatedDate}
+                onChange={(e) => setShowCreatedDate(e.target.checked)}
+              />
+            }
+            label="Dates"
+            className="show-dates-switch"
+          />
           <Button
             variant="outlined"
             size="small"
@@ -418,6 +434,7 @@ export default function Console() {
               addAction={addElement}
               removeAction={removeElementFromTheTree}
               changeParentAction={changeParent}
+              showCreatedDate={showCreatedDate}
             />
           </DndProvider>
         </div>

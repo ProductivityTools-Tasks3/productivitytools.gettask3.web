@@ -8,8 +8,36 @@ import { Menu, MenuItem } from "@mui/material";
 import apiService from "../../services/apiService";
 
 
+function formatCreatedDate(created) {
+  if (!created) return null;
+  if (typeof created === "string") {
+    const trimmed = created.trim();
+    if (trimmed.startsWith("0001-01-01")) return null;
+    const match = trimmed.match(/^(\d{4}-\d{2}-\d{2})/);
+    if (match) {
+      return match[1];
+    }
+  }
+  const date = new Date(created);
+  if (isNaN(date.getTime()) || date.getFullYear() <= 1) return null;
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 export default function StyledTreeItem(props) {
-  const { key, nodeId, element, changeParent, unDoneAction, finishAction, onNodeSelect, ...rest } = props;
+  const {
+    key,
+    nodeId,
+    element,
+    changeParent,
+    unDoneAction,
+    finishAction,
+    onNodeSelect,
+    showCreatedDate = true,
+    ...rest
+  } = props;
 
   const [{ isDragging }, dragRef] = useDrag({
     type: "pet",
@@ -85,6 +113,7 @@ export default function StyledTreeItem(props) {
   };
 
   const hasInboxName = Boolean(element?.inboxName?.trim());
+  const createdDate = formatCreatedDate(element?.created || element?.Created);
 
   return (
     <TreeItem
@@ -120,6 +149,9 @@ export default function StyledTreeItem(props) {
             <span className="task-name-text">{element.name}</span>
             {element.elements && element.elements.length > 0 && (
               <span className="task-count-badge">{element.elements.length}</span>
+            )}
+            {showCreatedDate && createdDate && (
+              <span className="task-created-date">{createdDate}</span>
             )}
             {isDragging && <span> 😱</span>}
             {isOver && <span className="drop-indicator">Drop Here!</span>}

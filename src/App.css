@@ -105,6 +105,18 @@
   flex-wrap: wrap;
 }
 
+.top-bar-right .show-dates-switch {
+  margin-right: 4px;
+  margin-left: 0;
+  user-select: none;
+}
+
+.top-bar-right .show-dates-switch .MuiFormControlLabel-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1976d2;
+}
+
 .top-bar-right .refresh-btn,
 .top-bar-right .logout-btn {
   font-family: inherit;
@@ -429,6 +441,18 @@
   margin-left: 5px;
   flex-shrink: 0;
   transition: all 0.15s ease;
+}
+
+/* Task created date */
+.styledTreeItem .task-created-date {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 400 !important;
+  color: #718096 !important;
+  margin-left: 6px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 /* Statuses */

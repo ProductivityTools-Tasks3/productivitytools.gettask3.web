@@ -39,6 +39,8 @@ export default function StructureTree(props) {
     props.changeParentAction(element, targetElementId);
   };
 
+  const showCreatedDate = props.showCreatedDate !== undefined ? props.showCreatedDate : true;
+
   //return (nodes.sort((x, y) => (x.type === "TaskBag" && y.type !== "TaskBag") ? -1 : 1).map(x => {
   function GetNode(node) {
     if (node !== undefined) {
@@ -53,6 +55,7 @@ export default function StructureTree(props) {
           addAction={() => props.addAction(node.elementId)}
           removeAction={props.removeAction}
           onNodeSelect={props.nodeSelect}
+          showCreatedDate={showCreatedDate}
         >
           {node?.elements
             ?.sort((x, y) => (x.type === "TaskBag" && y.type !== "TaskBag" ? -1 : 1))
