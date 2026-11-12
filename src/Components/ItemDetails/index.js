@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import PlateEditor from "../PlateEditor";
 
-export default function ItemDetails({ selectedElement, onChange, saveNewElement, finishAction, unDoneAction, onBack }) {
+export default function ItemDetails({ selectedElement, isRoot = false, onChange, saveNewElement, finishAction, unDoneAction, onBack }) {
   console.log("Selectedelement", selectedElement);
   const [details, setDetails] = useState(
     JSON.parse(`[{"type":"title","children":[{"text":"x"}]},{"type":"p","children":[{"text":"empty"}]}]`)
@@ -125,6 +125,7 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
 
   console.log("rendering item details");
   console.log(selectedElement);
+  const isRootNode = Boolean(isRoot || selectedElement?.type === "User" || selectedElement?.parentId === null);
   if (selectedElement != null) {
     return (
       <div className="itemDetails sticky-inner">
@@ -139,14 +140,16 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
             </Button>
           )}
           <Button
-            variant={`${finishAction ? "contained" : "disabled"}`}
+            variant="contained"
+            disabled={!finishAction || isRootNode}
             onClick={finishAction}
             className="action-btn"
           >
             FINISH
           </Button>
           <Button
-            variant={`${unDoneAction ? "contained" : "disabled"}`}
+            variant="contained"
+            disabled={!unDoneAction}
             onClick={unDoneAction}
             className="action-btn"
           >
@@ -160,7 +163,8 @@ export default function ItemDetails({ selectedElement, onChange, saveNewElement,
             SAVE
           </Button>
           <Button
-            variant={`${finishAction ? "contained" : "disabled"}`}
+            variant="contained"
+            disabled={!finishAction}
             onClick={startElement}
             className="action-btn"
           >

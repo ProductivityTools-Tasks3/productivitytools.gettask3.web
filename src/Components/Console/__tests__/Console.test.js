@@ -253,4 +253,20 @@ describe("Console top bar and inbox buttons", () => {
     expect(screen.getByText("2024-04-12")).toBeInTheDocument();
     expect(screen.getByText("2024-05-18")).toBeInTheDocument();
   });
+
+  it("blocks completing the main root node in both tree checkbox and item details", async () => {
+    const { container } = render(<Console />);
+
+    const rootName = await screen.findByText("Root");
+    const rootCheckbox = container.querySelector('[elementid="1"] input[type="checkbox"]');
+    expect(rootCheckbox).toBeDisabled();
+
+    fireEvent.click(rootName);
+
+    const finishBtn = await screen.findByRole("button", { name: "FINISH" });
+    expect(finishBtn).toBeDisabled();
+
+    fireEvent.click(finishBtn);
+    expect(apiService.finish).not.toHaveBeenCalled();
+  });
 });

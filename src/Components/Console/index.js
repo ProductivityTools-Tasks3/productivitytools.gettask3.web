@@ -147,6 +147,15 @@ export default function Console() {
     setList(newList);
   }
 
+  function isRootElement(element) {
+    if (!element) return false;
+    return (
+      element.type === "User" ||
+      element.parentId === null ||
+      (list && list.elementId !== undefined && element.elementId === list.elementId)
+    );
+  }
+
   function finishItem() {
     finishThisItem(selectedElement);
   }
@@ -157,6 +166,7 @@ export default function Console() {
   }
 
   function finishThisItem(elementToUpdate) {
+    if (!elementToUpdate || isRootElement(elementToUpdate)) return;
     console.log("Finish.thisitem");
     updateStatus(elementToUpdate, "Finished");
     apiService.finish(elementToUpdate.elementId);
@@ -328,6 +338,7 @@ export default function Console() {
       return (
         <ItemDetails
           selectedElement={selectedElement}
+          isRoot={isRootElement(selectedElement)}
           finishAction={finishItem}
           unDoneAction={unDoneElement}
           onChange={updateElement}

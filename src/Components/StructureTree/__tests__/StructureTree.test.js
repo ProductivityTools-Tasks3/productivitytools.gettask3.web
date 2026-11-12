@@ -248,4 +248,49 @@ describe("StructureTree", () => {
 
     expect(container.querySelector(".task-created-date")).not.toBeInTheDocument();
   });
+
+  it("disables checkbox on root (User/email) node and keeps child task checkboxes enabled", () => {
+    const handleFinish = jest.fn();
+    const userRootTree = {
+      elementId: 1,
+      parentId: null,
+      name: "user@example.com",
+      status: "New",
+      type: "User",
+      elements: [
+        {
+          elementId: 10,
+          parentId: 1,
+          name: "Child Task",
+          status: "New",
+          type: "Task",
+          elements: [],
+        },
+      ],
+    };
+
+    const { container } = render(
+      <DndProvider backend={HTML5Backend}>
+        <StructureTree
+          list={userRootTree}
+          expanded={["1"]}
+          nodeSelect={jest.fn()}
+          finishAction={handleFinish}
+          unDoneAction={jest.fn()}
+        />
+      </DndProvider>
+    );
+
+    const rootCheckbox = container.querySelector('[elementid="1"] input[type="checkbox"]');
+    const childCheckbox = container.querySelector('[elementid="10"] input[type="checkbox"]');
+
+    expect(rootCheckbox).toBeDisabled();
+    expect(childCheckbox).not.toBeDisabled();
+
+    rootCheckbox.click();
+    expect(handleFinish).not.toHaveBeenCalled();
+
+    childCheckbox.click();
+    expect(handleFinish).toHaveBeenCalledWith(10, "Finished");
+  });
 });

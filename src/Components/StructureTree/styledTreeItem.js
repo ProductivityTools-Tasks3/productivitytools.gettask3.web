@@ -31,6 +31,7 @@ export default function StyledTreeItem(props) {
     key,
     nodeId,
     element,
+    isRoot = false,
     changeParent,
     unDoneAction,
     finishAction,
@@ -38,6 +39,8 @@ export default function StyledTreeItem(props) {
     showCreatedDate = true,
     ...rest
   } = props;
+
+  const isRootNode = Boolean(isRoot || element?.type === "User" || element?.parentId === null);
 
   const [{ isDragging }, dragRef] = useDrag({
     type: "pet",
@@ -67,6 +70,7 @@ export default function StyledTreeItem(props) {
   };
 
   const handleCheckboxChange = (elementId, value) => {
+    if (isRootNode) return;
     if (value) {
       console.log("undone1");
       unDoneAction(elementId, "New");
@@ -137,6 +141,7 @@ export default function StyledTreeItem(props) {
           <Checkbox
             className="checkbox task-checkbox"
             size="small"
+            disabled={isRootNode}
             checked={itemChecked(element.status)}
             onClick={handleCheckboxClick}
             onChange={() => handleCheckboxChange(element.elementId, itemChecked(element.status))}

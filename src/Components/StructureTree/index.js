@@ -42,13 +42,14 @@ export default function StructureTree(props) {
   const showCreatedDate = props.showCreatedDate !== undefined ? props.showCreatedDate : true;
 
   //return (nodes.sort((x, y) => (x.type === "TaskBag" && y.type !== "TaskBag") ? -1 : 1).map(x => {
-  function GetNode(node) {
+  function GetNode(node, isRoot = false) {
     if (node !== undefined) {
       return (
         <StyledTreeItem
           key={node.elementId.toString()}
           nodeId={node.elementId.toString()}
           element={node}
+          isRoot={isRoot}
           changeParent={changeparent}
           unDoneAction={props.unDoneAction}
           finishAction={props.finishAction}
@@ -59,7 +60,7 @@ export default function StructureTree(props) {
         >
           {node?.elements
             ?.sort((x, y) => (x.type === "TaskBag" && y.type !== "TaskBag" ? -1 : 1))
-            .map((x) => GetNode(x))}
+            .map((x) => GetNode(x, false))}
         </StyledTreeItem>
       );
     }
@@ -77,7 +78,7 @@ export default function StructureTree(props) {
           selected={selected}
           className="tree"
         >
-          {GetNode(props.list)}
+          {GetNode(props.list, true)}
         </TreeView>
       </div>
     );

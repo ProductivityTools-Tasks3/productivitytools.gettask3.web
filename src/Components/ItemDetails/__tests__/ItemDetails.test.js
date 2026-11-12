@@ -136,4 +136,43 @@ describe("ItemDetails", () => {
     expect(screen.getByText("Finished")).toBeInTheDocument();
     expect(screen.getByText("SecondInbox")).toBeInTheDocument();
   });
+
+  it("disables FINISH button for root (User/email) element and enables it for regular tasks", () => {
+    const handleFinish = jest.fn();
+    const rootElement = {
+      elementId: 1,
+      parentId: null,
+      name: "user@example.com",
+      type: "User",
+      status: "New",
+    };
+
+    const { rerender } = render(
+      <ItemDetails
+        selectedElement={rootElement}
+        isRoot={true}
+        finishAction={handleFinish}
+        onChange={jest.fn()}
+      />
+    );
+
+    const finishBtn = screen.getByRole("button", { name: "FINISH" });
+    expect(finishBtn).toBeDisabled();
+    fireEvent.click(finishBtn);
+    expect(handleFinish).not.toHaveBeenCalled();
+
+    rerender(
+      <ItemDetails
+        selectedElement={initialTask}
+        isRoot={false}
+        finishAction={handleFinish}
+        onChange={jest.fn()}
+      />
+    );
+
+    const enabledFinishBtn = screen.getByRole("button", { name: "FINISH" });
+    expect(enabledFinishBtn).not.toBeDisabled();
+    fireEvent.click(enabledFinishBtn);
+    expect(handleFinish).toHaveBeenCalledTimes(1);
+  });
 });

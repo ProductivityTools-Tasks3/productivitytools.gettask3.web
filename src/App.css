@@ -402,6 +402,11 @@
   color: #1976d2 !important;
 }
 
+.styledTreeItem .task-checkbox.Mui-disabled {
+  color: #cbd5e0 !important;
+  opacity: 0.45;
+}
+
 /* Task Name Span */
 .styledTreeItem .task-name-span {
   display: inline-flex;
