@@ -77,6 +77,7 @@ export default function Console() {
   const [newElement, setNewElement] = useState(null);
   const [expandedNodes, setExpandedNodes] = useState([]);
   const [showCreatedDate, setShowCreatedDate] = useState(true);
+  const [treeVersion, setTreeVersion] = useState(0);
 
   const [isSticky, setSticky] = useState(false);
   const ref = useRef(null);
@@ -99,6 +100,7 @@ export default function Console() {
     console.log(r);
     if (r) {
       setList(r);
+      setTreeVersion((v) => v + 1);
     }
   };
 
@@ -169,7 +171,9 @@ export default function Console() {
     if (!elementToUpdate || isRootElement(elementToUpdate)) return;
     console.log("Finish.thisitem");
     updateStatus(elementToUpdate, "Finished");
-    apiService.finish(elementToUpdate.elementId);
+    Promise.resolve(apiService.finish(elementToUpdate.elementId)).finally(() => {
+      setTreeVersion((v) => v + 1);
+    });
   }
 
   function unDoneElement() {
@@ -184,7 +188,9 @@ export default function Console() {
 
   function unDoneThisElement(elementToUpdate) {
     updateStatus(elementToUpdate, "New");
-    apiService.unDone(elementToUpdate.elementId);
+    Promise.resolve(apiService.unDone(elementToUpdate.elementId)).finally(() => {
+      setTreeVersion((v) => v + 1);
+    });
   }
 
   const [mobileView, setMobileView] = useState("tree");
@@ -208,7 +214,9 @@ export default function Console() {
     var parentobject = findElement(list, newParentId);
     parentobject.elements.push(childobject);
     updateElementInList(child, "parentId", newParentId);
-    apiService.moveElement(child.elementId, newParentId);
+    Promise.resolve(apiService.moveElement(child.elementId, newParentId)).finally(() => {
+      setTreeVersion((v) => v + 1);
+    });
   }
 
   function addElement(selectedTreeId) {
@@ -258,12 +266,14 @@ export default function Console() {
   function addElementToTree(element) {
     let parent = findElement(list, element.parentId);
     parent.elements.push(element);
+    setTreeVersion((v) => v + 1);
   }
 
   function removeElementFromTheTree(element) {
     let parent = findElement(list, element.parentId);
     var index = parent.elements.indexOf(element);
     parent.elements.splice(index, 1);
+    setTreeVersion((v) => v + 1);
   }
 
   const inboxElements = useMemo(() => getInboxElements(list), [list]);
@@ -320,6 +330,7 @@ export default function Console() {
       }
       const updatedTree = await apiService.GetTree();
       setList(updatedTree);
+      setTreeVersion((v) => v + 1);
       handleInboxClick(targetInboxItem.elementId);
       setAddTasksDialogOpen(false);
       setTargetInboxItem(null);
@@ -339,6 +350,7 @@ export default function Console() {
         <ItemDetails
           selectedElement={selectedElement}
           isRoot={isRootElement(selectedElement)}
+          treeVersion={treeVersion}
           finishAction={finishItem}
           unDoneAction={unDoneElement}
           onChange={updateElement}

@@ -7,6 +7,7 @@ import { useAuth } from "../../../Session/AuthContext";
 
 jest.mock("../../../services/apiService", () => ({
   GetTree: jest.fn(),
+  getLast7DaysTree: jest.fn().mockResolvedValue(null),
   updateElement: jest.fn().mockResolvedValue({}),
   addElement: jest.fn().mockResolvedValue(123),
   finish: jest.fn().mockResolvedValue({}),
@@ -268,5 +269,20 @@ describe("Console top bar and inbox buttons", () => {
 
     fireEvent.click(finishBtn);
     expect(apiService.finish).not.toHaveBeenCalled();
+  });
+
+  it("displays the two 7-day bar charts below the editor when a bag node is selected", async () => {
+    apiService.getLast7DaysTree.mockResolvedValue(mockTree);
+    render(<Console />);
+
+    const rootName = await screen.findByText("Root");
+    fireEvent.click(rootName);
+
+    expect(await screen.findByTestId("bag-charts")).toBeInTheDocument();
+    expect(screen.getByText("Completed tasks (last 7 days)")).toBeInTheDocument();
+    expect(screen.getByText("Tasks to do (last 7 days)")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(apiService.getLast7DaysTree).toHaveBeenCalledWith(1);
+    });
   });
 });

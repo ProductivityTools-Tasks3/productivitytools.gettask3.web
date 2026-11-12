@@ -10,6 +10,7 @@ jest.mock("../../../services/apiService", () => ({
   changeType: jest.fn().mockResolvedValue(true),
   setInboxName: jest.fn().mockResolvedValue({}),
   clearInboxName: jest.fn().mockResolvedValue({}),
+  getLast7DaysTree: jest.fn().mockResolvedValue(null),
 }));
 
 describe("ItemDetails", () => {
@@ -174,5 +175,37 @@ describe("ItemDetails", () => {
     expect(enabledFinishBtn).not.toBeDisabled();
     fireEvent.click(enabledFinishBtn);
     expect(handleFinish).toHaveBeenCalledTimes(1);
+  });
+
+  it("renders two 7-day bar charts below the editor for TaskBag and User nodes, but not for Task nodes", async () => {
+    const bagElement = {
+      elementId: 30,
+      parentId: 1,
+      name: "Work Bag",
+      type: "TaskBag",
+      status: "New",
+      elements: [],
+    };
+    const userRootElement = {
+      elementId: 1,
+      parentId: null,
+      name: "user@example.com",
+      type: "User",
+      status: "New",
+      elements: [],
+    };
+
+    const { rerender } = render(
+      <ItemDetails selectedElement={initialTask} onChange={jest.fn()} />
+    );
+    expect(screen.queryByTestId("bag-charts")).not.toBeInTheDocument();
+
+    rerender(<ItemDetails selectedElement={bagElement} onChange={jest.fn()} />);
+    expect(await screen.findByTestId("bag-charts")).toBeInTheDocument();
+    expect(screen.getByText("Completed tasks (last 7 days)")).toBeInTheDocument();
+    expect(screen.getByText("Tasks to do (last 7 days)")).toBeInTheDocument();
+
+    rerender(<ItemDetails selectedElement={userRootElement} isRoot={true} onChange={jest.fn()} />);
+    expect(await screen.findByTestId("bag-charts")).toBeInTheDocument();
   });
 });

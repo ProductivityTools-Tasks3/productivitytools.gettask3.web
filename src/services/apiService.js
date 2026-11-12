@@ -23,6 +23,15 @@ async function GetTree() {
     // return response.data;
 }
 
+async function getLast7DaysTree(elementId = null) {
+    let call = async (header) => {
+        const data = { ElementId: elementId, Path: '' };
+        const response = await axios.post(`${config.PATH_BASE}Task/Last7DaysList`, data, header);
+        return response.data;
+    };
+    return await callAuthorizedEndpoint(call);
+}
+
 async function finish(elementId) {
     let call = async (header) => {
         const data = { ElementId: elementId }
@@ -161,6 +170,7 @@ async function clearInboxName(elementId) {
 const service= {
     getDate,
     GetTree,
+    getLast7DaysTree,
     finish,
     remove,
     unDone,

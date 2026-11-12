@@ -13,8 +13,9 @@ import {
   TextField,
 } from "@mui/material";
 import PlateEditor from "../PlateEditor";
+import BagCharts from "../BagCharts";
 
-export default function ItemDetails({ selectedElement, isRoot = false, onChange, saveNewElement, finishAction, unDoneAction, onBack }) {
+export default function ItemDetails({ selectedElement, isRoot = false, treeVersion = 0, onChange, saveNewElement, finishAction, unDoneAction, onBack }) {
   console.log("Selectedelement", selectedElement);
   const [details, setDetails] = useState(
     JSON.parse(`[{"type":"title","children":[{"text":"x"}]},{"type":"p","children":[{"text":"empty"}]}]`)
@@ -126,6 +127,7 @@ export default function ItemDetails({ selectedElement, isRoot = false, onChange,
   console.log("rendering item details");
   console.log(selectedElement);
   const isRootNode = Boolean(isRoot || selectedElement?.type === "User" || selectedElement?.parentId === null);
+  const isBagNode = selectedElement?.type === "TaskBag" || selectedElement?.type === "User";
   if (selectedElement != null) {
     return (
       <div className="itemDetails sticky-inner">
@@ -195,6 +197,10 @@ export default function ItemDetails({ selectedElement, isRoot = false, onChange,
         </Stack>
 
         <PlateEditor contentChanged={plateChanged} content={initialValue} forceResetContent={initialValue}></PlateEditor>
+
+        {isBagNode && selectedElement.elementId !== null && selectedElement.elementId !== undefined && (
+          <BagCharts bagElement={selectedElement} treeVersion={treeVersion} />
+        )}
 
         <Dialog open={inboxDialogOpen} onClose={handleCloseInboxDialog} maxWidth="xs" fullWidth>
           <DialogTitle>Set Inbox Name</DialogTitle>
