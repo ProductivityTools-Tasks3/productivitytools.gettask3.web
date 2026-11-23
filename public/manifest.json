@@ -23,5 +23,20 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#3F51B5",
-  "background_color": "#f8fafc"
+  "background_color": "#f8fafc",
+  "shortcuts": [
+    {
+      "name": "Quick Add Task",
+      "short_name": "Quick Add",
+      "description": "Quickly add tasks to your last used inbox",
+      "url": "/?quickAdd=1",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
 }

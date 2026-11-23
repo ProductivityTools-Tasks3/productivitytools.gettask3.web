@@ -20,6 +20,10 @@ import {
   clearCachedInboxes,
   loadPendingInboxTasks,
   savePendingInboxTasks,
+  loadLastUsedInboxId,
+  saveLastUsedInboxId,
+  clearLastUsedInboxId,
+  resolveQuickAddInbox,
 } from "./inboxStorage";
 
 import { DndProvider } from "react-dnd";
@@ -77,6 +81,40 @@ function getPathToElement(root, targetId) {
   return findPath(root) || [];
 }
 
+function parseQuickAddFromUrl() {
+  if (typeof window === "undefined" || !window.location) return null;
+  const params = new URLSearchParams(window.location.search);
+  if (!params.has("quickAdd") && !params.has("add")) {
+    return null;
+  }
+  const addVal = params.get("add");
+  const quickAddVal = params.get("quickAdd");
+  const rawTarget = addVal !== null ? addVal : quickAddVal;
+  const isGenericFlag =
+    rawTarget === null ||
+    rawTarget.trim() === "" ||
+    rawTarget.trim() === "1" ||
+    rawTarget.trim().toLowerCase() === "true";
+
+  return {
+    active: true,
+    target: isGenericFlag ? null : rawTarget.trim(),
+  };
+}
+
+function clearQuickAddParamsFromUrl() {
+  if (typeof window === "undefined" || !window.history?.replaceState) return;
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.delete("quickAdd");
+    url.searchParams.delete("add");
+    const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+    window.history.replaceState({}, "", nextUrl);
+  } catch (err) {
+    console.error("Failed to clean Quick Add URL params", err);
+  }
+}
+
 export default function Console() {
   const { user, loading: authLoading } = useAuth();
   const [list, setList] = useState([]);
@@ -88,6 +126,7 @@ export default function Console() {
   const [isTreeLoading, setIsTreeLoading] = useState(false);
 
   const [cachedInboxes, setCachedInboxes] = useState(() => loadCachedInboxes());
+  const [lastUsedInboxId, setLastUsedInboxId] = useState(() => loadLastUsedInboxId());
   const [pendingQueueCount, setPendingQueueCount] = useState(() => loadPendingInboxTasks().length);
   const [isSyncingQueue, setIsSyncingQueue] = useState(false);
 
@@ -97,6 +136,8 @@ export default function Console() {
   const isFlushingRef = useRef(false);
   const pendingFocusInboxIdRef = useRef(null);
   const lastFetchedUidRef = useRef(undefined);
+  const pendingUrlQuickAddRef = useRef(parseQuickAddFromUrl());
+  const tasksInputRef = useRef(null);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -438,12 +479,62 @@ export default function Console() {
   const [targetInboxItem, setTargetInboxItem] = useState(null);
   const [tasksInputText, setTasksInputText] = useState("");
 
+  const rememberLastUsedInbox = (elementId) => {
+    if (elementId === undefined || elementId === null) return;
+    saveLastUsedInboxId(elementId);
+    setLastUsedInboxId(String(elementId));
+  };
+
   const handleOpenAddTasksDialog = (inboxItem) => {
+    if (!inboxItem) return;
+    rememberLastUsedInbox(inboxItem.elementId);
     handleInboxClick(inboxItem.elementId);
     setTargetInboxItem(inboxItem);
     setTasksInputText("");
     setAddTasksDialogOpen(true);
   };
+
+  const handleQuickAddClick = () => {
+    const resolved = resolveQuickAddInbox(inboxElements, null, lastUsedInboxId);
+    if (resolved) {
+      handleOpenAddTasksDialog(resolved);
+    }
+  };
+
+  const handleSwitchDialogInbox = (inboxItem) => {
+    if (!inboxItem) return;
+    rememberLastUsedInbox(inboxItem.elementId);
+    handleInboxClick(inboxItem.elementId);
+    setTargetInboxItem(inboxItem);
+    setTimeout(() => {
+      tasksInputRef.current?.focus();
+    }, 0);
+  };
+
+  useEffect(() => {
+    const request = pendingUrlQuickAddRef.current;
+    if (!request?.active || inboxElements.length === 0) return;
+
+    if (request.target) {
+      const lower = request.target.toLowerCase();
+      const exactMatch = inboxElements.find(
+        (item) =>
+          item.inboxName?.trim().toLowerCase() === lower ||
+          String(item.elementId) === request.target
+      );
+      if (!exactMatch && !hasTreeLoaded) {
+        // Wait for fresh tree in case the requested inbox isn't in localStorage yet
+        return;
+      }
+    }
+
+    const targetInbox = resolveQuickAddInbox(inboxElements, request.target, lastUsedInboxId);
+    if (targetInbox) {
+      pendingUrlQuickAddRef.current = null;
+      clearQuickAddParamsFromUrl();
+      handleOpenAddTasksDialog(targetInbox);
+    }
+  }, [inboxElements, hasTreeLoaded, lastUsedInboxId]);
 
   const handleCloseAddTasksDialog = () => {
     setAddTasksDialogOpen(false);
@@ -459,6 +550,8 @@ export default function Console() {
       .filter((l) => l.length > 0);
 
     if (lines.length === 0) return;
+
+    rememberLastUsedInbox(targetInboxItem.elementId);
 
     const now = Date.now();
     const newQueuedTasks = lines.map((line, index) => ({
@@ -489,8 +582,10 @@ export default function Console() {
 
   const handleLogout = () => {
     clearCachedInboxes();
+    clearLastUsedInboxId();
     savePendingInboxTasks([]);
     setCachedInboxes([]);
+    setLastUsedInboxId(null);
     setPendingQueueCount(0);
     logout();
   };
@@ -528,6 +623,18 @@ export default function Console() {
     <div className="console">
       <div className="top-bar">
         <div className="inbox-buttons-container">
+          {inboxElements.length > 0 && (
+            <Button
+              size="small"
+              variant="contained"
+              className="quick-add-btn"
+              data-testid="quick-add-btn"
+              title="Quick add tasks to your last used inbox"
+              onClick={handleQuickAddClick}
+            >
+              + Quick Add
+            </Button>
+          )}
           {inboxElements.map((item) => (
             <ButtonGroup
               key={item.elementId}
@@ -643,6 +750,11 @@ export default function Console() {
       <Dialog
         open={addTasksDialogOpen}
         onClose={handleCloseAddTasksDialog}
+        TransitionProps={{
+          onEntered: () => {
+            tasksInputRef.current?.focus();
+          },
+        }}
         maxWidth="sm"
         fullWidth
       >
@@ -650,8 +762,26 @@ export default function Console() {
           Add tasks to {targetInboxItem?.inboxName || "Inbox"}
         </DialogTitle>
         <DialogContent>
+          {inboxElements.length > 1 && (
+            <div className="dialog-inbox-selector" data-testid="dialog-inbox-selector">
+              {inboxElements.map((item) => {
+                const isSelected = targetInboxItem?.elementId === item.elementId;
+                return (
+                  <button
+                    key={item.elementId}
+                    type="button"
+                    className={`dialog-inbox-chip ${isSelected ? "selected" : ""}`}
+                    onClick={() => handleSwitchDialogInbox(item)}
+                  >
+                    {item.inboxName}
+                  </button>
+                );
+              })}
+            </div>
+          )}
           <TextField
             autoFocus
+            inputRef={tasksInputRef}
             margin="dense"
             label="Tasks (one per line)"
             type="text"

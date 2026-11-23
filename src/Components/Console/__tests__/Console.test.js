@@ -84,6 +84,7 @@ describe("Console top bar and inbox buttons", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     localStorage.clear();
+    window.history.pushState({}, "", "/");
     apiService.GetTree.mockResolvedValue(mockTree);
     apiService.addElement.mockResolvedValue(123);
     useAuth.mockReturnValue({ user: null, loading: false });
@@ -408,5 +409,71 @@ describe("Console top bar and inbox buttons", () => {
     await waitFor(() => {
       expect(apiService.GetTree).toHaveBeenCalledTimes(1);
     });
+  });
+
+  it("auto-opens add tasks modal immediately on ?quickAdd=1 (PWA shortcut) targeting last used inbox", async () => {
+    localStorage.setItem(
+      "gt3_cached_inboxes",
+      JSON.stringify([
+        { elementId: 101, inboxName: "DeepInbox" },
+        { elementId: 201, inboxName: "PersonalInbox" },
+      ])
+    );
+    localStorage.setItem("gt3_last_used_inbox", "201");
+    window.history.pushState({}, "", "/?quickAdd=1");
+
+    // Keep GetTree unresolved to verify 0 ms instant modal opening
+    apiService.GetTree.mockImplementationOnce(() => new Promise(() => {}));
+
+    render(<Console />);
+
+    expect(await screen.findByText("Add tasks to PersonalInbox")).toBeInTheDocument();
+    expect(screen.getByLabelText("Tasks (one per line)")).toHaveFocus();
+    expect(window.location.search).toBe("");
+  });
+
+  it("auto-opens add tasks modal for a specific inbox when ?add=<InboxName> URL param is used", async () => {
+    localStorage.setItem(
+      "gt3_cached_inboxes",
+      JSON.stringify([
+        { elementId: 101, inboxName: "DeepInbox" },
+        { elementId: 201, inboxName: "PersonalInbox" },
+      ])
+    );
+    window.history.pushState({}, "", "/?add=personalinbox");
+
+    render(<Console />);
+
+    expect(await screen.findByText("Add tasks to PersonalInbox")).toBeInTheDocument();
+    expect(window.location.search).toBe("");
+  });
+
+  it("remembers last used inbox for + Quick Add button and allows switching inbox via modal chips", async () => {
+    render(<Console />);
+
+    const quickAddBtn = await screen.findByTestId("quick-add-btn");
+    fireEvent.click(quickAddBtn);
+
+    // Defaults to first inbox when none used yet
+    expect(screen.getByText("Add tasks to DeepInbox")).toBeInTheDocument();
+
+    // Switch target inbox directly inside the modal via selector chip
+    const selector = screen.getByTestId("dialog-inbox-selector");
+    const personalChip = Array.from(selector.querySelectorAll("button")).find(
+      (btn) => btn.textContent === "PersonalInbox"
+    );
+    fireEvent.click(personalChip);
+
+    expect(screen.getByText("Add tasks to PersonalInbox")).toBeInTheDocument();
+    expect(localStorage.getItem("gt3_last_used_inbox")).toBe("201");
+
+    // Close and re-open via + Quick Add -> opens directly on PersonalInbox
+    fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+    await waitFor(() => {
+      expect(screen.queryByText("Add tasks to PersonalInbox")).not.toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByTestId("quick-add-btn"));
+    expect(screen.getByText("Add tasks to PersonalInbox")).toBeInTheDocument();
   });
 });
