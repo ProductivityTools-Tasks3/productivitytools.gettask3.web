@@ -14,6 +14,13 @@ import { useAuth } from "../../Session/AuthContext";
 
 import StructureTree from "../StructureTree";
 import ItemDetails from "../ItemDetails";
+import {
+  loadCachedInboxes,
+  saveCachedInboxes,
+  clearCachedInboxes,
+  loadPendingInboxTasks,
+  savePendingInboxTasks,
+} from "./inboxStorage";
 
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -71,13 +78,32 @@ function getPathToElement(root, targetId) {
 }
 
 export default function Console() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [list, setList] = useState([]);
   const [selectedElement, setSelectedElement] = useState();
   const [newElement, setNewElement] = useState(null);
   const [expandedNodes, setExpandedNodes] = useState([]);
   const [showCreatedDate, setShowCreatedDate] = useState(true);
   const [treeVersion, setTreeVersion] = useState(0);
+  const [isTreeLoading, setIsTreeLoading] = useState(false);
+
+  const [cachedInboxes, setCachedInboxes] = useState(() => loadCachedInboxes());
+  const [pendingQueueCount, setPendingQueueCount] = useState(() => loadPendingInboxTasks().length);
+  const [isSyncingQueue, setIsSyncingQueue] = useState(false);
+
+  const isMountedRef = useRef(true);
+  const fetchSeqRef = useRef(0);
+  const mutationSeqRef = useRef(0);
+  const isFlushingRef = useRef(false);
+  const pendingFocusInboxIdRef = useRef(null);
+  const lastFetchedUidRef = useRef(undefined);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const [isSticky, setSticky] = useState(false);
   const ref = useRef(null);
@@ -90,32 +116,18 @@ export default function Console() {
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener("scroll", () => handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
-  const fetchTree = async () => {
-    console.log("call apiservice");
-    const r = await apiService.GetTree();
-    console.log(r);
-    if (r) {
-      setList(r);
-      setTreeVersion((v) => v + 1);
-    }
-  };
-
-  useEffect(() => {
-    fetchTree();
-    console.log("useeffect");
-  }, [user]);
-
   function findElement(candidateElement, nodeId) {
+    if (!candidateElement || candidateElement.elementId === undefined || candidateElement.elementId === null) {
+      return null;
+    }
     var candidateElementId = candidateElement.elementId.toString();
-    //console.log(candidateElement.elementId);
-    // console.log(candidateElementId);
     if (candidateElementId == nodeId) {
       return candidateElement;
-    } else {
+    } else if (Array.isArray(candidateElement.elements)) {
       for (var i = 0; i < candidateElement.elements.length; i += 1) {
         var newCandidateElement = candidateElement.elements[i];
         var result = findElement(newCandidateElement, nodeId);
@@ -124,7 +136,124 @@ export default function Console() {
         }
       }
     }
+    return null;
   }
+
+  const applyInboxSelection = (treeRoot, targetId) => {
+    const se = findElement(treeRoot, targetId);
+    if (!se) return false;
+    const pathIds = getPathToElement(treeRoot, targetId);
+    setExpandedNodes(pathIds);
+    console.log("Set selected element", se);
+    setSelectedElement(se);
+    setMobileView("tree");
+    return true;
+  };
+
+  const fetchTree = async () => {
+    console.log("call apiservice");
+    const currentFetchSeq = ++fetchSeqRef.current;
+    const mutationAtStart = mutationSeqRef.current;
+    if (isMountedRef.current) {
+      setIsTreeLoading(true);
+    }
+    try {
+      const r = await apiService.GetTree();
+      console.log(r);
+      if (!isMountedRef.current || currentFetchSeq !== fetchSeqRef.current) {
+        return;
+      }
+      if (r) {
+        setList(r);
+        setTreeVersion((v) => v + 1);
+        if (pendingFocusInboxIdRef.current !== null) {
+          const focusId = pendingFocusInboxIdRef.current;
+          pendingFocusInboxIdRef.current = null;
+          applyInboxSelection(r, focusId);
+        }
+        if (mutationSeqRef.current !== mutationAtStart && !isFlushingRef.current) {
+          fetchTree();
+        }
+      }
+    } finally {
+      if (isMountedRef.current && currentFetchSeq === fetchSeqRef.current) {
+        setIsTreeLoading(false);
+      }
+    }
+  };
+
+  const flushPendingInboxTasks = async () => {
+    if (isFlushingRef.current) return;
+    if (loadPendingInboxTasks().length === 0) return;
+
+    isFlushingRef.current = true;
+    if (isMountedRef.current) {
+      setIsSyncingQueue(true);
+    }
+
+    let anySucceeded = false;
+    let lastParentId = null;
+
+    try {
+      while (true) {
+        const currentQueue = loadPendingInboxTasks();
+        if (currentQueue.length === 0) break;
+
+        const nextTask = currentQueue[0];
+        try {
+          await apiService.addElement(nextTask.parentId, nextTask.name, nextTask.details);
+          anySucceeded = true;
+          lastParentId = nextTask.parentId;
+          mutationSeqRef.current += 1;
+
+          const latestQueue = loadPendingInboxTasks().filter((item) => item.clientId !== nextTask.clientId);
+          savePendingInboxTasks(latestQueue);
+          if (isMountedRef.current) {
+            setPendingQueueCount(latestQueue.length);
+          }
+        } catch (err) {
+          console.error("Error adding queued task to inbox, keeping in queue for retry", err);
+          break;
+        }
+      }
+    } finally {
+      isFlushingRef.current = false;
+      if (isMountedRef.current) {
+        setIsSyncingQueue(false);
+      }
+    }
+
+    if (anySucceeded && isMountedRef.current) {
+      if (lastParentId !== null && pendingFocusInboxIdRef.current === null) {
+        pendingFocusInboxIdRef.current = lastParentId;
+      }
+      await fetchTree();
+    }
+  };
+
+  useEffect(() => {
+    if (authLoading) return;
+    const uid = user?.uid ?? null;
+    if (lastFetchedUidRef.current === uid) return;
+    lastFetchedUidRef.current = uid;
+    fetchTree();
+    if (loadPendingInboxTasks().length > 0) {
+      flushPendingInboxTasks();
+    }
+    console.log("useeffect");
+  }, [user, authLoading]);
+
+  useEffect(() => {
+    const handleOnline = () => {
+      if (loadPendingInboxTasks().length > 0) {
+        flushPendingInboxTasks();
+      }
+    };
+    window.addEventListener("online", handleOnline);
+    return () => {
+      window.removeEventListener("online", handleOnline);
+    };
+  }, []);
 
   function updateStatus(elementToUpdate, newStatus) {
     if (!elementToUpdate) return;
@@ -276,25 +405,38 @@ export default function Console() {
     setTreeVersion((v) => v + 1);
   }
 
-  const inboxElements = useMemo(() => getInboxElements(list), [list]);
+  const hasTreeLoaded = Boolean(list && !Array.isArray(list) && list.elementId !== undefined);
+  const liveInboxElements = useMemo(() => (hasTreeLoaded ? getInboxElements(list) : []), [hasTreeLoaded, list]);
+
+  useEffect(() => {
+    if (!hasTreeLoaded) return;
+    const compact = liveInboxElements.map((item) => ({
+      elementId: item.elementId,
+      inboxName: item.inboxName,
+    }));
+    saveCachedInboxes(compact);
+    setCachedInboxes(compact);
+  }, [hasTreeLoaded, liveInboxElements]);
+
+  const inboxElements = hasTreeLoaded ? liveInboxElements : cachedInboxes;
 
   const handleNodeToggle = (event, nodeIds) => {
     setExpandedNodes(nodeIds);
   };
 
   const handleInboxClick = (elementId) => {
-    const pathIds = getPathToElement(list, elementId);
-    setExpandedNodes(pathIds);
-    var se = findElement(list, elementId);
-    console.log("Set selected element", se);
-    setSelectedElement(se);
-    setMobileView("tree");
+    if (hasTreeLoaded) {
+      pendingFocusInboxIdRef.current = null;
+      applyInboxSelection(list, elementId);
+    } else {
+      pendingFocusInboxIdRef.current = elementId;
+      setMobileView("tree");
+    }
   };
 
   const [addTasksDialogOpen, setAddTasksDialogOpen] = useState(false);
   const [targetInboxItem, setTargetInboxItem] = useState(null);
   const [tasksInputText, setTasksInputText] = useState("");
-  const [isAddingTasks, setIsAddingTasks] = useState(false);
 
   const handleOpenAddTasksDialog = (inboxItem) => {
     handleInboxClick(inboxItem.elementId);
@@ -304,13 +446,12 @@ export default function Console() {
   };
 
   const handleCloseAddTasksDialog = () => {
-    if (isAddingTasks) return;
     setAddTasksDialogOpen(false);
     setTargetInboxItem(null);
     setTasksInputText("");
   };
 
-  const handleAddTasksToInbox = async () => {
+  const handleAddTasksToInbox = () => {
     if (!targetInboxItem || !tasksInputText.trim()) return;
     const lines = tasksInputText
       .split("\n")
@@ -319,27 +460,39 @@ export default function Console() {
 
     if (lines.length === 0) return;
 
-    setIsAddingTasks(true);
-    try {
-      for (const line of lines) {
-        const details = JSON.stringify([
-          { type: "title", children: [{ text: line }] },
-          { type: "p", children: [{ text: "" }] },
-        ]);
-        await apiService.addElement(targetInboxItem.elementId, line, details);
-      }
-      const updatedTree = await apiService.GetTree();
-      setList(updatedTree);
-      setTreeVersion((v) => v + 1);
-      handleInboxClick(targetInboxItem.elementId);
-      setAddTasksDialogOpen(false);
-      setTargetInboxItem(null);
-      setTasksInputText("");
-    } catch (err) {
-      console.error("Error adding tasks to inbox", err);
-    } finally {
-      setIsAddingTasks(false);
-    }
+    const now = Date.now();
+    const newQueuedTasks = lines.map((line, index) => ({
+      clientId: `${now}-${index}-${Math.random().toString(36).slice(2, 8)}`,
+      parentId: targetInboxItem.elementId,
+      inboxName: targetInboxItem.inboxName,
+      name: line,
+      details: JSON.stringify([
+        { type: "title", children: [{ text: line }] },
+        { type: "p", children: [{ text: "" }] },
+      ]),
+      createdAt: new Date().toISOString(),
+    }));
+
+    const updatedQueue = [...loadPendingInboxTasks(), ...newQueuedTasks];
+    savePendingInboxTasks(updatedQueue);
+    setPendingQueueCount(updatedQueue.length);
+    pendingFocusInboxIdRef.current = targetInboxItem.elementId;
+    mutationSeqRef.current += 1;
+
+    // Close modal immediately so the user can keep adding or move on right away
+    setAddTasksDialogOpen(false);
+    setTargetInboxItem(null);
+    setTasksInputText("");
+
+    flushPendingInboxTasks();
+  };
+
+  const handleLogout = () => {
+    clearCachedInboxes();
+    savePendingInboxTasks([]);
+    setCachedInboxes([]);
+    setPendingQueueCount(0);
+    logout();
   };
 
   const renderItemDetails = () => {
@@ -402,6 +555,19 @@ export default function Console() {
           ))}
         </div>
         <div className="top-bar-right">
+          {pendingQueueCount > 0 && (
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={flushPendingInboxTasks}
+              disabled={isSyncingQueue}
+              className="pending-sync-btn"
+              data-testid="pending-sync-indicator"
+              title={isSyncingQueue ? "Sending tasks in background..." : "Tap to retry sending queued tasks"}
+            >
+              {isSyncingQueue ? `Syncing (${pendingQueueCount})...` : `Pending (${pendingQueueCount}) ↻`}
+            </Button>
+          )}
           <FormControlLabel
             control={
               <Switch
@@ -435,7 +601,7 @@ export default function Console() {
           <Button
             variant="outlined"
             size="small"
-            onClick={logout}
+            onClick={handleLogout}
             className="logout-btn"
           >
             Logout
@@ -448,6 +614,7 @@ export default function Console() {
           <DndProvider backend={HTML5Backend}>
             <StructureTree
               list={list}
+              isLoading={isTreeLoading}
               nodeSelect={nodeSelect}
               selectedElement={selectedElement}
               expanded={expandedNodes}
@@ -499,14 +666,14 @@ export default function Console() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseAddTasksDialog} disabled={isAddingTasks}>
+          <Button onClick={handleCloseAddTasksDialog}>
             Cancel
           </Button>
           <Button
             onClick={handleAddTasksToInbox}
             variant="contained"
             color="primary"
-            disabled={isAddingTasks || !tasksInputText.trim()}
+            disabled={!tasksInputText.trim()}
           >
             {`Add tasks to the ${targetInboxItem?.inboxName || ""}`}
           </Button>

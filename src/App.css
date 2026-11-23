@@ -105,6 +105,24 @@
   flex-wrap: wrap;
 }
 
+.top-bar-right .pending-sync-btn {
+  font-family: inherit;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  border-radius: 14px !important;
+  padding: 3px 12px !important;
+  color: #b7791f !important;
+  border-color: #f6ad55 !important;
+  background-color: #fffaf0 !important;
+}
+
+.top-bar-right .pending-sync-btn.Mui-disabled {
+  color: #2b6cb0 !important;
+  border-color: #90cdf4 !important;
+  background-color: #ebf8ff !important;
+}
+
 .top-bar-right .show-dates-switch {
   margin-right: 4px;
   margin-left: 0;
@@ -443,6 +461,31 @@
   width: 100%;
   padding: 4px 6px 12px 4px;
   box-sizing: border-box;
+}
+
+.tree-loading-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 14px;
+  font-size: 14px;
+  color: #4a5568;
+}
+
+.tree-loading-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #cbd5e0;
+  border-top-color: #1976d2;
+  border-radius: 50%;
+  animation: gt3-spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes gt3-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Hierarchy guide lines */

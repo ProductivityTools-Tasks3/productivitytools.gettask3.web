@@ -83,7 +83,9 @@ describe("Console top bar and inbox buttons", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    localStorage.clear();
     apiService.GetTree.mockResolvedValue(mockTree);
+    apiService.addElement.mockResolvedValue(123);
     useAuth.mockReturnValue({ user: null, loading: false });
   });
 
@@ -283,6 +285,128 @@ describe("Console top bar and inbox buttons", () => {
     expect(screen.getByText("Tasks to do (last 7 days)")).toBeInTheDocument();
     await waitFor(() => {
       expect(apiService.getLast7DaysTree).toHaveBeenCalledWith(1);
+    });
+  });
+
+  it("renders cached inbox buttons immediately while GetTree is still loading and allows instant non-blocking task creation", async () => {
+    localStorage.setItem(
+      "gt3_cached_inboxes",
+      JSON.stringify([
+        { elementId: 101, inboxName: "DeepInbox" },
+        { elementId: 201, inboxName: "PersonalInbox" },
+      ])
+    );
+
+    let resolveInitialTree;
+    let resolveAddTask;
+    apiService.GetTree
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            resolveInitialTree = resolve;
+          })
+      )
+      .mockResolvedValue(mockTree);
+
+    apiService.addElement.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveAddTask = resolve;
+        })
+    );
+
+    render(<Console />);
+
+    // Inbox buttons are rendered synchronously before GetTree finishes
+    expect(screen.getByText("DeepInbox")).toBeInTheDocument();
+    expect(screen.getByText("PersonalInbox")).toBeInTheDocument();
+    expect(screen.getByTestId("tree-loading")).toBeInTheDocument();
+
+    // Open + dialog while tree is still loading in the background
+    const addBtn = screen.getByTitle("Add tasks to DeepInbox");
+    fireEvent.click(addBtn);
+
+    const multilineInput = screen.getByLabelText("Tasks (one per line)");
+    fireEvent.change(multilineInput, {
+      target: { value: "Quick Mobile Task" },
+    });
+
+    const submitBtn = screen.getByRole("button", { name: "Add tasks to the DeepInbox" });
+    fireEvent.click(submitBtn);
+
+    // Dialog closes immediately even though addElement & GetTree are still pending
+    await waitFor(() => {
+      expect(screen.queryByText("Add tasks to DeepInbox")).not.toBeInTheDocument();
+    });
+    expect(screen.getByTestId("pending-sync-indicator")).toHaveTextContent("Syncing (1)...");
+
+    // Resolve background addElement and initial GetTree
+    resolveAddTask(555);
+    resolveInitialTree(mockTree);
+
+    await waitFor(() => {
+      expect(apiService.addElement).toHaveBeenCalledWith(
+        101,
+        "Quick Mobile Task",
+        expect.stringContaining("Quick Mobile Task")
+      );
+      expect(screen.queryByTestId("pending-sync-indicator")).not.toBeInTheDocument();
+      expect(screen.getAllByText("Deep Inbox Task").length).toBeGreaterThanOrEqual(1);
+    });
+  });
+
+  it("persists failed inbox tasks in localStorage and retries automatically when connection comes back online", async () => {
+    const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    apiService.addElement
+      .mockRejectedValueOnce(new Error("Offline"))
+      .mockResolvedValueOnce(777);
+
+    render(<Console />);
+
+    const addBtn = await screen.findByTitle("Add tasks to DeepInbox");
+    fireEvent.click(addBtn);
+
+    fireEvent.change(screen.getByLabelText("Tasks (one per line)"), {
+      target: { value: "Offline Elevator Task" },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Add tasks to the DeepInbox" }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("pending-sync-indicator")).toHaveTextContent("Pending (1)");
+    });
+    expect(JSON.parse(localStorage.getItem("gt3_pending_inbox_tasks"))).toHaveLength(1);
+
+    // Simulate phone regaining network connectivity
+    window.dispatchEvent(new Event("online"));
+
+    await waitFor(() => {
+      expect(apiService.addElement).toHaveBeenCalledTimes(2);
+      expect(screen.queryByTestId("pending-sync-indicator")).not.toBeInTheDocument();
+      expect(localStorage.getItem("gt3_pending_inbox_tasks")).toBeNull();
+    });
+
+    consoleErrorSpy.mockRestore();
+  });
+
+  it("avoids duplicate GetTree call while Firebase auth is still initializing", async () => {
+    localStorage.setItem(
+      "gt3_cached_inboxes",
+      JSON.stringify([{ elementId: 101, inboxName: "DeepInbox" }])
+    );
+
+    useAuth.mockReturnValue({ user: null, loading: true });
+    const { rerender } = render(<Console />);
+
+    // Cached inbox is already interactive while auth is loading, and GetTree hasn't fired prematurely
+    expect(screen.getByText("DeepInbox")).toBeInTheDocument();
+    expect(apiService.GetTree).not.toHaveBeenCalled();
+
+    useAuth.mockReturnValue({ user: { uid: "user-123" }, loading: false });
+    rerender(<Console />);
+
+    await waitFor(() => {
+      expect(apiService.GetTree).toHaveBeenCalledTimes(1);
     });
   });
 });

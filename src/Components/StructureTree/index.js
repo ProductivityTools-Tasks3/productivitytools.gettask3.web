@@ -82,6 +82,13 @@ export default function StructureTree(props) {
         </TreeView>
       </div>
     );
+  } else if (props && props.isLoading) {
+    return (
+      <div className="tree-loading-state" data-testid="tree-loading">
+        <span className="tree-loading-spinner" aria-hidden="true" />
+        <span>Loading tasks in background...</span>
+      </div>
+    );
   } else {
     return <div>still nothing</div>;
   }
