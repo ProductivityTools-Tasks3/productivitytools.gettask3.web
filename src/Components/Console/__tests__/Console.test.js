@@ -476,4 +476,16 @@ describe("Console top bar and inbox buttons", () => {
     fireEvent.click(screen.getByTestId("quick-add-btn"));
     expect(screen.getByText("Add tasks to PersonalInbox")).toBeInTheDocument();
   });
+
+  it("renders a sticky top bar containing Refresh and Logout buttons and sets --top-bar-offset", async () => {
+    const { container } = render(<Console />);
+
+    const topBar = await screen.findByTestId("top-bar");
+    expect(topBar).toHaveClass("top-bar", "sticky-top-bar");
+    expect(topBar).toContainElement(screen.getByText("Refresh"));
+    expect(topBar).toContainElement(screen.getByText("Logout"));
+
+    const consoleRoot = container.querySelector(".console");
+    expect(consoleRoot.style.getPropertyValue("--top-bar-offset")).toBe("48px");
+  });
 });

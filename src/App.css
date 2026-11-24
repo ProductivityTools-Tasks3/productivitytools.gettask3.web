@@ -25,17 +25,21 @@
 
 .console {
   border: 1px solid black;
-  overflow: hidden;
+  overflow-x: clip;
 }
 
-/* Top Bar: Inbox shortcuts on the left, Login on the right */
+/* Top Bar: Pinned/sticky at the top of viewport so Refresh & Logout remain visible on long task lists */
 .top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 12px;
   background-color: #fafafa;
   border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   gap: 12px;
   flex-wrap: wrap;
 }
@@ -363,16 +367,16 @@
 
 /* Sticky Wrapper */
 .sticky-wrapper {
-  position: relative;
+  position: sticky;
+  top: var(--top-bar-offset, 48px);
   width: 100%;
+  max-height: calc(100vh - var(--top-bar-offset, 48px));
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .sticky .sticky-inner {
-  position: fixed;
-  top: 0;
-  z-index: 1;
-  max-height: 100vh;
-  overflow-y: auto;
+  width: 100%;
 }
 
 /* Bag 7-day Bar Charts */
@@ -767,8 +771,11 @@
 
   .sticky-wrapper {
     position: static !important;
+    top: auto !important;
     left: 0 !important;
     height: auto !important;
+    max-height: none !important;
+    overflow-y: visible !important;
   }
 
   .sticky .sticky-inner {

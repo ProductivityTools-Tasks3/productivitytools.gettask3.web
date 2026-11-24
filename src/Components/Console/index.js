@@ -147,17 +147,37 @@ export default function Console() {
   }, []);
 
   const [isSticky, setSticky] = useState(false);
+  const [topBarHeight, setTopBarHeight] = useState(48);
+  const topBarRef = useRef(null);
   const ref = useRef(null);
-  const handleScroll = () => {
-    if (ref.current) {
-      setSticky(ref.current.getBoundingClientRect().top <= 0);
-    }
-  };
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+    const updateStickyPosition = () => {
+      const measuredHeight = topBarRef.current?.offsetHeight || 48;
+      setTopBarHeight(measuredHeight);
+      if (ref.current) {
+        setSticky(ref.current.getBoundingClientRect().top <= measuredHeight);
+      }
+    };
+
+    updateStickyPosition();
+    window.addEventListener("scroll", updateStickyPosition);
+    window.addEventListener("resize", updateStickyPosition);
+
+    let resizeObserver;
+    if (typeof ResizeObserver !== "undefined" && topBarRef.current) {
+      resizeObserver = new ResizeObserver(() => {
+        updateStickyPosition();
+      });
+      resizeObserver.observe(topBarRef.current);
+    }
+
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", updateStickyPosition);
+      window.removeEventListener("resize", updateStickyPosition);
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
     };
   }, []);
 
@@ -620,8 +640,8 @@ export default function Console() {
   };
 
   return (
-    <div className="console">
-      <div className="top-bar">
+    <div className="console" style={{ "--top-bar-offset": `${topBarHeight}px` }}>
+      <div className="top-bar sticky-top-bar" ref={topBarRef} data-testid="top-bar">
         <div className="inbox-buttons-container">
           {inboxElements.length > 0 && (
             <Button
@@ -737,7 +757,7 @@ export default function Console() {
         </div>
 
         <div className="details-column">
-          <div className={`${isSticky ? "sticky-wrapper sticky" : ""}`} ref={ref}>
+          <div className={`sticky-wrapper ${isSticky ? "sticky" : ""}`} ref={ref}>
             {(selectedElement || newElement) ? (
               renderItemDetails()
             ) : (
