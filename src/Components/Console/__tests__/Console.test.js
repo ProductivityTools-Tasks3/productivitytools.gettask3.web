@@ -448,14 +448,20 @@ describe("Console top bar and inbox buttons", () => {
     expect(window.location.search).toBe("");
   });
 
-  it("remembers last used inbox for + Quick Add button and allows switching inbox via modal chips", async () => {
-    render(<Console />);
+  it("allows switching inbox via modal chips, remembers last used inbox, and omits redundant Quick Add button", async () => {
+    const { container } = render(<Console />);
 
-    const quickAddBtn = await screen.findByTestId("quick-add-btn");
-    fireEvent.click(quickAddBtn);
+    const addBtn = await screen.findByTitle("Add tasks to DeepInbox");
+    expect(screen.queryByTestId("quick-add-btn")).not.toBeInTheDocument();
 
-    // Defaults to first inbox when none used yet
+    const brandIcon = container.querySelector(".app-brand-icon");
+    expect(brandIcon).toBeInTheDocument();
+    expect(brandIcon.getAttribute("src")).toContain("/icons/icon-192.png");
+
+    fireEvent.click(addBtn);
+
     expect(screen.getByText("Add tasks to DeepInbox")).toBeInTheDocument();
+    expect(localStorage.getItem("gt3_last_used_inbox")).toBe("101");
 
     // Switch target inbox directly inside the modal via selector chip
     const selector = screen.getByTestId("dialog-inbox-selector");
@@ -466,15 +472,6 @@ describe("Console top bar and inbox buttons", () => {
 
     expect(screen.getByText("Add tasks to PersonalInbox")).toBeInTheDocument();
     expect(localStorage.getItem("gt3_last_used_inbox")).toBe("201");
-
-    // Close and re-open via + Quick Add -> opens directly on PersonalInbox
-    fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
-    await waitFor(() => {
-      expect(screen.queryByText("Add tasks to PersonalInbox")).not.toBeInTheDocument();
-    });
-
-    fireEvent.click(screen.getByTestId("quick-add-btn"));
-    expect(screen.getByText("Add tasks to PersonalInbox")).toBeInTheDocument();
   });
 
   it("renders a sticky top bar containing Refresh and Logout buttons and sets --top-bar-offset", async () => {

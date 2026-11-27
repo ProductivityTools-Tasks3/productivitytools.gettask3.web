@@ -516,13 +516,6 @@ export default function Console() {
     setAddTasksDialogOpen(true);
   };
 
-  const handleQuickAddClick = () => {
-    const resolved = resolveQuickAddInbox(inboxElements, null, lastUsedInboxId);
-    if (resolved) {
-      handleOpenAddTasksDialog(resolved);
-    }
-  };
-
   const handleSwitchDialogInbox = (inboxItem) => {
     if (!inboxItem) return;
     rememberLastUsedInbox(inboxItem.elementId);
@@ -650,21 +643,13 @@ export default function Console() {
         <div className="top-bar sticky-top-bar" data-testid="top-bar">
         <div className="inbox-buttons-container">
           <span className="app-brand" aria-label="GetTask3">
-            <span className="app-brand-badge">T</span>
+            <img
+              src={`${process.env.PUBLIC_URL}/icons/icon-192.png`}
+              alt=""
+              className="app-brand-icon"
+            />
             <span className="app-brand-name">GetTask3</span>
           </span>
-          {inboxElements.length > 0 && (
-            <Button
-              size="small"
-              variant="contained"
-              className="quick-add-btn"
-              data-testid="quick-add-btn"
-              title="Quick add tasks to your last used inbox"
-              onClick={handleQuickAddClick}
-            >
-              + Quick Add
-            </Button>
-          )}
           {inboxElements.map((item) => (
             <ButtonGroup
               key={item.elementId}
