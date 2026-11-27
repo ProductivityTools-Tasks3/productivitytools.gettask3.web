@@ -1,6 +1,12 @@
 import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
 import React, { useEffect, useState } from "react";
+import {
+  MdSave,
+  MdPlayArrow,
+  MdCheckCircleOutline,
+  MdUndo,
+  MdInbox,
+} from "react-icons/md";
 
 import apiService from "../../services/apiService";
 import {
@@ -14,6 +20,22 @@ import {
 } from "@mui/material";
 import PlateEditor from "../PlateEditor";
 import BagCharts from "../BagCharts";
+
+function formatHeaderDate(value) {
+  if (!value) return null;
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (trimmed.startsWith("0001-01-01")) return null;
+    const match = trimmed.match(/^(\d{4}-\d{2}-\d{2})/);
+    if (match) return match[1];
+  }
+  const parsed = new Date(value);
+  if (isNaN(parsed.getTime()) || parsed.getFullYear() <= 1) return null;
+  const y = parsed.getFullYear();
+  const m = String(parsed.getMonth() + 1).padStart(2, "0");
+  const d = String(parsed.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
 
 export default function ItemDetails({ selectedElement, isRoot = false, treeVersion = 0, showDebug = false, onChange, saveNewElement, finishAction, unDoneAction, onBack }) {
   console.log("Selectedelement", selectedElement);
@@ -128,75 +150,106 @@ export default function ItemDetails({ selectedElement, isRoot = false, treeVersi
   console.log(selectedElement);
   const isRootNode = Boolean(isRoot || selectedElement?.type === "User" || selectedElement?.parentId === null);
   const isBagNode = selectedElement?.type === "TaskBag" || selectedElement?.type === "User";
+  const createdDateLabel = formatHeaderDate(selectedElement?.created || selectedElement?.Created);
   if (selectedElement != null) {
     return (
       <div className="itemDetails sticky-inner">
-        <Stack spacing={1} direction="row" alignItems="center" className="itemDetails-actions" flexWrap="wrap">
-          {onBack && (
+        <div className="task-details-card">
+          <div className="task-card-header">
+            <div className="task-card-header-left">
+              {onBack && (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={onBack}
+                  className="back-btn"
+                >
+                  ← Tasks
+                </Button>
+              )}
+
+              {selectedElement?.status && (
+                <span className={`status-badge status-${selectedElement.status.toLowerCase()}`}>
+                  {selectedElement.status}
+                </span>
+              )}
+
+              <FormControlLabel
+                control={<Switch size="small" color="primary" />}
+                label="Bag"
+                className="bag-switch"
+                checked={selectedElement.type === "TaskBag" || selectedElement.type === "User"}
+                onChange={switchChanged}
+              />
+
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={<MdInbox size={14} />}
+                onClick={handleOpenInboxDialog}
+                className="inbox-name-btn"
+              >
+                {selectedElement.inboxName ? selectedElement.inboxName : "Set inbox name"}
+              </Button>
+            </div>
+
+            {createdDateLabel && (
+              <span className="task-card-date" title={`Created: ${createdDateLabel}`}>
+                {createdDateLabel}
+              </span>
+            )}
+          </div>
+
+          <PlateEditor
+            contentChanged={plateChanged}
+            content={initialValue}
+            forceResetContent={initialValue}
+            showDebug={showDebug}
+          />
+
+          <div className="itemDetails-actions" data-testid="item-details-actions">
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              startIcon={<MdSave size={15} />}
+              onClick={updateElement}
+              className="action-btn action-btn-save"
+            >
+              Save
+            </Button>
             <Button
               variant="outlined"
-              onClick={onBack}
-              className="back-btn"
+              size="small"
+              startIcon={<MdPlayArrow size={16} />}
+              disabled={!finishAction}
+              onClick={startElement}
+              className="action-btn action-btn-start"
             >
-              ← Tasks
+              Start
             </Button>
-          )}
-          <Button
-            variant="contained"
-            disabled={!finishAction || isRootNode}
-            onClick={finishAction}
-            className="action-btn"
-          >
-            FINISH
-          </Button>
-          <Button
-            variant="contained"
-            disabled={!unDoneAction}
-            onClick={unDoneAction}
-            className="action-btn"
-          >
-            UNDONE
-          </Button>
-          <Button
-            variant="contained"
-            onClick={updateElement}
-            className="action-btn"
-          >
-            SAVE
-          </Button>
-          <Button
-            variant="contained"
-            disabled={!finishAction}
-            onClick={startElement}
-            className="action-btn"
-          >
-            START
-          </Button>
-
-          {selectedElement?.status && (
-            <span className={`status-badge status-${selectedElement.status.toLowerCase()}`}>
-              {selectedElement.status}
-            </span>
-          )}
-
-          <FormControlLabel
-            control={<Switch color="primary" />}
-            label="Bag"
-            className="bag-switch"
-            checked={selectedElement.type === "TaskBag" || selectedElement.type === "User"}
-            onChange={switchChanged}
-          ></FormControlLabel>
-
-          <Button
-            variant="outlined"
-            onClick={handleOpenInboxDialog}
-            className="inbox-name-btn"
-          >
-            {selectedElement.inboxName ? selectedElement.inboxName : "Set inbox name"}
-          </Button>
-        </Stack>
-
-        <PlateEditor contentChanged={plateChanged} content={initialValue} forceResetContent={initialValue} showDebug={showDebug}></PlateEditor>
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<MdCheckCircleOutline size={15} />}
+              disabled={!finishAction || isRootNode}
+              onClick={finishAction}
+              className="action-btn action-btn-finish"
+            >
+              Finish
+            </Button>
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<MdUndo size={15} />}
+              disabled={!unDoneAction}
+              onClick={unDoneAction}
+              className="action-btn action-btn-undone"
+            >
+              Undone
+            </Button>
+          </div>
+        </div>
 
         {isBagNode && selectedElement.elementId !== null && selectedElement.elementId !== undefined && (
           <BagCharts bagElement={selectedElement} treeVersion={treeVersion} />

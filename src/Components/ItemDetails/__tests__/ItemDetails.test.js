@@ -84,7 +84,7 @@ describe("ItemDetails", () => {
     const handleChange = jest.fn();
     render(<ItemDetails selectedElement={initialTask} onChange={handleChange} />);
 
-    const saveBtn = screen.getByText("SAVE");
+    const saveBtn = screen.getByRole("button", { name: "Save" });
     fireEvent.click(saveBtn);
 
     await waitFor(() => {
@@ -157,7 +157,7 @@ describe("ItemDetails", () => {
       />
     );
 
-    const finishBtn = screen.getByRole("button", { name: "FINISH" });
+    const finishBtn = screen.getByRole("button", { name: "Finish" });
     expect(finishBtn).toBeDisabled();
     fireEvent.click(finishBtn);
     expect(handleFinish).not.toHaveBeenCalled();
@@ -171,7 +171,7 @@ describe("ItemDetails", () => {
       />
     );
 
-    const enabledFinishBtn = screen.getByRole("button", { name: "FINISH" });
+    const enabledFinishBtn = screen.getByRole("button", { name: "Finish" });
     expect(enabledFinishBtn).not.toBeDisabled();
     fireEvent.click(enabledFinishBtn);
     expect(handleFinish).toHaveBeenCalledTimes(1);

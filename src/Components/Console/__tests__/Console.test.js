@@ -239,7 +239,7 @@ describe("Console top bar and inbox buttons", () => {
     await waitFor(() => {
       expect(screen.getByText("2024-01-10")).toBeInTheDocument();
       expect(screen.getByText("2024-04-12")).toBeInTheDocument();
-      expect(screen.getByText("2024-05-18")).toBeInTheDocument();
+      expect(screen.getAllByText("2024-05-18").length).toBeGreaterThanOrEqual(1);
     });
 
     const datesSwitch = screen.getByRole("checkbox", { name: "Dates" });
@@ -255,7 +255,7 @@ describe("Console top bar and inbox buttons", () => {
     expect(datesSwitch).toBeChecked();
     expect(screen.getByText("2024-01-10")).toBeInTheDocument();
     expect(screen.getByText("2024-04-12")).toBeInTheDocument();
-    expect(screen.getByText("2024-05-18")).toBeInTheDocument();
+    expect(screen.getAllByText("2024-05-18").length).toBeGreaterThanOrEqual(1);
   });
 
   it("blocks completing the main root node in both tree checkbox and item details", async () => {
@@ -267,7 +267,7 @@ describe("Console top bar and inbox buttons", () => {
 
     fireEvent.click(rootName);
 
-    const finishBtn = await screen.findByRole("button", { name: "FINISH" });
+    const finishBtn = await screen.findByRole("button", { name: "Finish" });
     expect(finishBtn).toBeDisabled();
 
     fireEvent.click(finishBtn);

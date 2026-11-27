@@ -10,6 +10,15 @@
   box-sizing: border-box;
 }
 
+.task-details-card .plate-editor-wrapper {
+  margin-top: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
 /* HeadingToolbar matching Journal.Web */
 .plate-editor-wrapper .slate-HeadingToolbar,
 .plate-editor-wrapper .plate-heading-toolbar {

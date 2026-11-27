@@ -649,6 +649,10 @@ export default function Console() {
         <SessionBar showDebug={showDebug} onToggleShowDebug={setShowDebug} />
         <div className="top-bar sticky-top-bar" data-testid="top-bar">
         <div className="inbox-buttons-container">
+          <span className="app-brand" aria-label="GetTask3">
+            <span className="app-brand-badge">T</span>
+            <span className="app-brand-name">GetTask3</span>
+          </span>
           {inboxElements.length > 0 && (
             <Button
               size="small"
