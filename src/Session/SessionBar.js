@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Popover from "@mui/material/Popover";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -72,9 +69,9 @@ export default function SessionBar() {
   const renderStatusIcon = (type) => {
     switch (type) {
       case "pending":
-        return <CircularProgress size={10} thickness={5} sx={{ color: "#1976d2", flexShrink: 0 }} />;
+        return <CircularProgress size={10} thickness={5} style={{ color: "#1976d2", flexShrink: 0 }} />;
       case "success":
-        return <MdCheckCircleOutline size={13} color="#2e7d32" style={{ flexShrink: 0 }} />;
+        return <MdCheckCircleOutline size={13} color="#777" style={{ flexShrink: 0 }} />;
       case "error":
         return <MdErrorOutline size={13} color="#d32f2f" style={{ flexShrink: 0 }} />;
       case "warn":
@@ -82,34 +79,20 @@ export default function SessionBar() {
       case "info":
         return <MdInfoOutline size={13} color="#777" style={{ flexShrink: 0 }} />;
       default:
-        return (
-          <Box
-            sx={{
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
-              backgroundColor: "#9e9e9e",
-              flexShrink: 0,
-            }}
-          />
-        );
+        return <span className="session-bar-idle-dot" />;
     }
   };
 
-  const getStatusColor = (type) => {
+  const getStatusClass = (type) => {
     switch (type) {
       case "pending":
-        return "#1565c0";
-      case "success":
-        return "#555";
+        return "status-pending";
       case "error":
-        return "#c62828";
+        return "status-error";
       case "warn":
-        return "#e65100";
-      case "info":
-        return "#777";
+        return "status-warn";
       default:
-        return "#777";
+        return "status-default";
     }
   };
 
@@ -123,156 +106,77 @@ export default function SessionBar() {
   };
 
   return (
-    <Box
-      className="session-debug-bar"
-      data-testid="session-bar"
-      sx={{
-        backgroundColor: "#f5f6f8",
-        borderBottom: "1px solid #e0e0e0",
-        px: 2,
-        py: "3px",
-        minHeight: "24px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        flexWrap: "wrap",
-        gap: "4px 12px",
-        fontSize: "11px",
-        color: "#616161",
-        boxSizing: "border-box",
-      }}
-    >
+    <div className="session-debug-bar" data-testid="session-bar">
       {/* Left: User Session + Online/Offline Status */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, flexShrink: 0, flexWrap: "wrap" }}>
-        <Box
-          sx={{
-            width: 6,
-            height: 6,
-            borderRadius: "50%",
-            backgroundColor: isOnline ? "#4caf50" : "#ed6c02",
-            flexShrink: 0,
-          }}
+      <div className="session-bar-section">
+        <span
+          className={`session-bar-dot ${isOnline ? "is-online" : "is-offline"}`}
+          aria-hidden="true"
         />
-        <Typography sx={{ fontSize: "11px", color: "#666" }}>
+        <span className="session-bar-text">
           Session:{" "}
-          <strong style={{ color: "#444" }}>
+          <strong className="session-bar-strong">
             {user?.email || "Not signed in"}
           </strong>
-        </Typography>
+        </span>
 
-        <Box
-          sx={{
-            width: "1px",
-            height: "12px",
-            backgroundColor: "#d0d0d0",
-            mx: 0.5,
-            flexShrink: 0,
-          }}
-        />
+        <span className="session-bar-divider" aria-hidden="true" />
 
         {isOnline ? (
-          <Box sx={{ display: "inline-flex", alignItems: "center", gap: 0.5, color: "#2e7d32" }}>
+          <span className="session-bar-online">
             <MdCloudDone size={13} />
-            <Typography sx={{ fontSize: "11px", color: "#2e7d32", fontWeight: 600 }}>
-              Online
-            </Typography>
-          </Box>
+            <span>Online</span>
+          </span>
         ) : (
           <Tooltip title="Offline mode — new tasks are queued locally until back online">
-            <Box
-              sx={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 0.5,
-                backgroundColor: "#fff3e0",
-                border: "1px solid #ffb74d",
-                color: "#e65100",
-                px: 0.75,
-                py: "1px",
-                borderRadius: "4px",
-              }}
-            >
+            <span className="session-bar-offline">
               <MdCloudOff size={13} />
-              <Typography sx={{ fontSize: "11px", color: "#e65100", fontWeight: 700 }}>
-                OFFLINE
-              </Typography>
-            </Box>
+              <span>OFFLINE</span>
+            </span>
           </Tooltip>
         )}
-      </Box>
+      </div>
 
       {/* Right: Live Operation Status + Divider + Token Refresh */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, flexShrink: 0, flexWrap: "wrap" }}>
+      <div className="session-bar-section session-bar-right">
         <Tooltip title="Click to view debug history" arrow>
-          <Box
+          <button
+            type="button"
+            className="session-bar-status-btn"
             data-testid="session-bar-status"
             onClick={(e) => setPopoverAnchor(e.currentTarget)}
-            sx={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 0.6,
-              px: 0.5,
-              py: "1px",
-              borderRadius: "3px",
-              cursor: "pointer",
-              maxWidth: { xs: "260px", sm: "420px" },
-              transition: "background-color 0.15s ease",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.05)",
-              },
-            }}
           >
             {renderStatusIcon(current?.type)}
-            <Typography
-              sx={{
-                fontSize: "11px",
-                color: getStatusColor(current?.type),
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
+            <span className={`session-bar-status-text ${getStatusClass(current?.type)}`}>
               {renderStatusText()}
-            </Typography>
-          </Box>
+            </span>
+          </button>
         </Tooltip>
 
         {user && (
           <>
-            <Box
-              sx={{
-                width: "1px",
-                height: "12px",
-                backgroundColor: "#d0d0d0",
-                mx: 0.5,
-                flexShrink: 0,
-              }}
-            />
+            <span className="session-bar-divider" aria-hidden="true" />
 
-            <Typography sx={{ fontSize: "11px", color: "#777" }} data-testid="token-refresh-info">
-              Token refreshed: <span style={{ color: "#444" }}>{formattedTime}</span>
-            </Typography>
+            <span className="session-bar-token-text" data-testid="token-refresh-info">
+              Token refreshed: <span className="session-bar-token-time">{formattedTime}</span>
+            </span>
             <Tooltip title="Force token refresh">
-              <IconButton
-                size="small"
+              <button
+                type="button"
+                className="session-bar-icon-btn"
                 aria-label="Force token refresh"
                 onClick={handleRefresh}
                 disabled={isRefreshing}
-                sx={{
-                  p: "2px",
-                  color: "#777",
-                  "&:hover": { color: "#1976d2" },
-                }}
               >
                 <MdRefresh
-                  size={14}
+                  size={13}
                   className={isRefreshing ? "session-bar-spin" : ""}
                 />
-              </IconButton>
+              </button>
             </Tooltip>
           </>
         )}
-      </Box>
+      </div>
 
       {/* Debug History Popover */}
       <Popover
@@ -288,135 +192,65 @@ export default function SessionBar() {
           horizontal: "right",
         }}
         PaperProps={{
-          sx: {
-            width: "520px",
-            maxWidth: "calc(100vw - 24px)",
-            maxHeight: "380px",
-            borderRadius: "8px",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-            p: 0,
-            display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
-          },
+          className: "session-log-popover",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            px: 2,
-            py: 1,
-            backgroundColor: "#f5f6f8",
-            borderBottom: "1px solid #e0e0e0",
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography sx={{ fontSize: "12px", fontWeight: 600, color: "#333" }}>
-              Debug Activity Log
-            </Typography>
-            <Typography sx={{ fontSize: "11px", color: "#888" }}>
+        <div className="session-log-header">
+          <div className="session-log-header-left">
+            <span className="session-log-title">Debug Activity Log</span>
+            <span className="session-log-count">
               ({history.length} {history.length === 1 ? "entry" : "entries"})
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+            </span>
+          </div>
+          <div className="session-log-header-actions">
             {history.length > 0 && (
-              <IconButton
-                size="small"
+              <button
+                type="button"
+                className="session-log-action-btn"
                 onClick={() => statusService.clearHistory()}
-                sx={{ p: 0.5, color: "#666" }}
                 title="Clear log"
                 aria-label="Clear log"
               >
                 <MdDeleteOutline size={16} />
-              </IconButton>
+              </button>
             )}
-            <IconButton
-              size="small"
+            <button
+              type="button"
+              className="session-log-action-btn"
               onClick={() => setPopoverAnchor(null)}
-              sx={{ p: 0.5, color: "#666" }}
               title="Close"
               aria-label="Close"
             >
               <MdClose size={16} />
-            </IconButton>
-          </Box>
-        </Box>
+            </button>
+          </div>
+        </div>
 
-        <Box
-          sx={{
-            flex: 1,
-            overflowY: "auto",
-            p: 1,
-            display: "flex",
-            flexDirection: "column",
-            gap: 0.5,
-            backgroundColor: "#fafafa",
-          }}
-        >
+        <div className="session-log-body">
           {history.length === 0 ? (
-            <Typography sx={{ fontSize: "12px", color: "#999", p: 2, textAlign: "center" }}>
-              No activity recorded yet
-            </Typography>
+            <div className="session-log-empty">No activity recorded yet</div>
           ) : (
             history.map((entry) => (
-              <Box
-                key={entry.id}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  p: 0.75,
-                  px: 1,
-                  backgroundColor: "#fff",
-                  borderRadius: "4px",
-                  border: "1px solid #eeeeee",
-                  fontSize: "11px",
-                  gap: 1,
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1, minWidth: 0, flex: 1 }}>
+              <div key={entry.id} className="session-log-entry">
+                <div className="session-log-entry-main">
                   {renderStatusIcon(entry.type)}
-                  <Typography
-                    sx={{
-                      fontSize: "11px",
-                      color: "#888",
-                      flexShrink: 0,
-                    }}
-                  >
+                  <span className="session-log-time">
                     {moment(entry.timestamp).format("HH:mm:ss")}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      fontSize: "11px",
-                      color: entry.type === "error" ? "#d32f2f" : "#000000",
-                      wordBreak: "break-word",
-                    }}
+                  </span>
+                  <span
+                    className={`session-log-msg ${entry.type === "error" ? "is-error" : ""}`}
                   >
                     {entry.message}
-                  </Typography>
-                </Box>
+                  </span>
+                </div>
                 {entry.durationMs != null && (
-                  <Typography
-                    sx={{
-                      fontSize: "10px",
-                      color: "#888",
-                      flexShrink: 0,
-                      backgroundColor: "#f0f0f0",
-                      px: 0.5,
-                      py: "1px",
-                      borderRadius: "3px",
-                    }}
-                  >
-                    {entry.durationMs}ms
-                  </Typography>
+                  <span className="session-log-duration">{entry.durationMs}ms</span>
                 )}
-              </Box>
+              </div>
             ))
           )}
-        </Box>
+        </div>
       </Popover>
-    </Box>
+    </div>
   );
 }
