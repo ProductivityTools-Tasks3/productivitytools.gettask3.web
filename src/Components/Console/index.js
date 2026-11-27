@@ -11,6 +11,7 @@ import Switch from "@mui/material/Switch";
 import apiService from "../../services/apiService";
 import { signInWithGoogle, logout } from "../../Session/firebase";
 import { useAuth } from "../../Session/AuthContext";
+import SessionBar from "../../Session/SessionBar";
 
 import StructureTree from "../StructureTree";
 import ItemDetails from "../ItemDetails";
@@ -641,7 +642,9 @@ export default function Console() {
 
   return (
     <div className="console" style={{ "--top-bar-offset": `${topBarHeight}px` }}>
-      <div className="top-bar sticky-top-bar" ref={topBarRef} data-testid="top-bar">
+      <div className="sticky-header-stack" ref={topBarRef}>
+        <SessionBar />
+        <div className="top-bar sticky-top-bar" data-testid="top-bar">
         <div className="inbox-buttons-container">
           {inboxElements.length > 0 && (
             <Button
@@ -734,6 +737,7 @@ export default function Console() {
             Logout
           </Button>
         </div>
+      </div>
       </div>
 
       <div className={`console-layout ${mobileView === "details" ? "show-details" : "show-tree"}`}>

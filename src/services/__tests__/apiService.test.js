@@ -1,15 +1,9 @@
 import axios from "axios";
 import apiService from "../apiService";
+import statusService from "../statusService";
 import { getAuthToken } from "../../Session/firebase";
-import { toast } from "react-toastify";
 
 jest.mock("axios");
-
-jest.mock("react-toastify", () => ({
-  toast: {
-    promise: jest.fn((promise) => promise),
-  },
-}));
 
 jest.mock("../../Session/firebase", () => ({
   auth: {
@@ -22,13 +16,13 @@ jest.mock("../../Session/firebase", () => ({
   waitForAuth: jest.fn(),
 }));
 
-describe("apiService long-running session and token handling", () => {
+describe("apiService long-running session, token handling, and statusService reporting", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    toast.promise.mockImplementation((promise) => promise);
+    statusService.reset();
   });
 
-  it("calls authorized endpoints with the token from getAuthToken", async () => {
+  it("calls authorized endpoints with the token from getAuthToken and reports success to statusService", async () => {
     getAuthToken.mockResolvedValue("valid-fresh-token");
     axios.post.mockResolvedValue({ data: { success: true } });
 
@@ -41,6 +35,22 @@ describe("apiService long-running session and token handling", () => {
       { headers: { Authorization: "Bearer valid-fresh-token" } }
     );
     expect(result).toEqual({ success: true });
+
+    const status = statusService.getState();
+    expect(status.current.type).toBe("success");
+    expect(status.current.message).toBe("Task set to finished on the server");
+    expect(status.current.durationMs).toEqual(expect.any(Number));
+  });
+
+  it("reports error to statusService when an API request fails", async () => {
+    getAuthToken.mockResolvedValue("valid-fresh-token");
+    axios.post.mockRejectedValue(new Error("Server unavailable"));
+
+    await expect(apiService.updateElement(1, 10, "Task", "[]")).rejects.toThrow("Server unavailable");
+
+    const status = statusService.getState();
+    expect(status.current.type).toBe("error");
+    expect(status.current.message).toBe("Server unavailable");
   });
 
   it("automatically force-refreshes token and retries when encountering a 401 response", async () => {
@@ -67,5 +77,9 @@ describe("apiService long-running session and token handling", () => {
       { headers: { Authorization: "Bearer new-refreshed-token" } }
     );
     expect(result).toEqual({ tree: "loaded" });
+
+    const status = statusService.getState();
+    expect(status.current.type).toBe("success");
+    expect(status.current.message).toBe("Task tree received!");
   });
 });
