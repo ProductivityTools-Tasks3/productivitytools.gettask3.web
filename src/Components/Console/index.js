@@ -50,6 +50,31 @@ function getInboxElements(nodeOrList) {
   return result;
 }
 
+function findElement(candidateElement, nodeId) {
+  if (
+    !candidateElement ||
+    candidateElement.elementId === undefined ||
+    candidateElement.elementId === null ||
+    nodeId === undefined ||
+    nodeId === null
+  ) {
+    return null;
+  }
+  const candidateElementId = candidateElement.elementId.toString();
+  if (candidateElementId === nodeId.toString()) {
+    return candidateElement;
+  } else if (Array.isArray(candidateElement.elements)) {
+    for (let i = 0; i < candidateElement.elements.length; i += 1) {
+      const newCandidateElement = candidateElement.elements[i];
+      const result = findElement(newCandidateElement, nodeId);
+      if (result != null) {
+        return result;
+      }
+    }
+  }
+  return null;
+}
+
 function getPathToElement(root, targetId) {
   if (!root || targetId === null || targetId === undefined) return [];
   const targetIdStr = targetId.toString();
@@ -116,6 +141,28 @@ function clearQuickAddParamsFromUrl() {
   }
 }
 
+function parseTaskFromUrl() {
+  if (typeof window === "undefined" || !window.location) return null;
+  const params = new URLSearchParams(window.location.search);
+  if (!params.has("task")) {
+    return null;
+  }
+  const rawTask = params.get("task");
+  return rawTask !== null ? rawTask.trim() : "";
+}
+
+function clearTaskParamFromUrl() {
+  if (typeof window === "undefined" || !window.history?.replaceState) return;
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.delete("task");
+    const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+    window.history.replaceState({}, "", nextUrl);
+  } catch (err) {
+    console.error("Failed to clean task URL param", err);
+  }
+}
+
 export default function Console() {
   const { user, loading: authLoading } = useAuth();
   const [list, setList] = useState([]);
@@ -139,6 +186,7 @@ export default function Console() {
   const pendingFocusInboxIdRef = useRef(null);
   const lastFetchedUidRef = useRef(undefined);
   const pendingUrlQuickAddRef = useRef(parseQuickAddFromUrl());
+  const pendingUrlTaskIdRef = useRef(parseTaskFromUrl());
   const tasksInputRef = useRef(null);
 
   useEffect(() => {
@@ -182,25 +230,6 @@ export default function Console() {
       }
     };
   }, []);
-
-  function findElement(candidateElement, nodeId) {
-    if (!candidateElement || candidateElement.elementId === undefined || candidateElement.elementId === null) {
-      return null;
-    }
-    var candidateElementId = candidateElement.elementId.toString();
-    if (candidateElementId == nodeId) {
-      return candidateElement;
-    } else if (Array.isArray(candidateElement.elements)) {
-      for (var i = 0; i < candidateElement.elements.length; i += 1) {
-        var newCandidateElement = candidateElement.elements[i];
-        var result = findElement(newCandidateElement, nodeId);
-        if (result != null) {
-          return result;
-        }
-      }
-    }
-    return null;
-  }
 
   const applyInboxSelection = (treeRoot, targetId) => {
     const se = findElement(treeRoot, targetId);
@@ -550,6 +579,25 @@ export default function Console() {
       handleOpenAddTasksDialog(targetInbox);
     }
   }, [inboxElements, hasTreeLoaded, lastUsedInboxId]);
+
+  useEffect(() => {
+    const requestedTaskId = pendingUrlTaskIdRef.current;
+    if (requestedTaskId === null || !hasTreeLoaded) return;
+
+    pendingUrlTaskIdRef.current = null;
+    clearTaskParamFromUrl();
+
+    if (!requestedTaskId) return;
+
+    const targetElement = findElement(list, requestedTaskId);
+    if (!targetElement) return;
+
+    const pathIds = getPathToElement(list, requestedTaskId);
+    setExpandedNodes(pathIds);
+    setSelectedElement(targetElement);
+    setNewElement(null);
+    setMobileView("details");
+  }, [hasTreeLoaded, list]);
 
   const handleCloseAddTasksDialog = () => {
     setAddTasksDialogOpen(false);

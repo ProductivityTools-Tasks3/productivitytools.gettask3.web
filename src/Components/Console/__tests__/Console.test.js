@@ -516,4 +516,118 @@ describe("Console top bar and inbox buttons", () => {
     expect(await screen.findByText("Task name")).toBeInTheDocument();
     expect(screen.queryByText("empty")).not.toBeInTheDocument();
   });
+
+  it("deep-links via ?task=<elementId> once tree loads: expands full path, selects task, switches to details view, and clears only task param", async () => {
+    const journalBackLinkUrl =
+      "https://journal.productivitytools.top/List?treeId=12&pageId=34";
+    const treeWithNestedTask = {
+      ...mockTree,
+      elements: [
+        {
+          ...mockTree.elements[0],
+          elements: [
+            {
+              ...mockTree.elements[0].elements[0],
+              elements: [
+                {
+                  elementId: 1011,
+                  parentId: 101,
+                  name: "Journal Created Task",
+                  status: "New",
+                  type: "Task",
+                  inboxName: null,
+                  created: "2024-06-01T08:00:00",
+                  details: JSON.stringify([
+                    { type: "title", children: [{ text: "Journal Created Task" }] },
+                    {
+                      type: "p",
+                      children: [
+                        { text: "Zadanie utworzone w " },
+                        {
+                          type: "a",
+                          url: journalBackLinkUrl,
+                          children: [{ text: "notatce" }],
+                        },
+                        { text: "" },
+                      ],
+                    },
+                  ]),
+                  elements: [],
+                },
+              ],
+            },
+          ],
+        },
+        mockTree.elements[1],
+      ],
+    };
+
+    let resolveTree;
+    apiService.GetTree.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveTree = resolve;
+        })
+    );
+    window.history.pushState({}, "", "/?task=1011&keep=yes#section");
+
+    const { container } = render(<Console />);
+
+    // Waits until hasTreeLoaded before clearing ?task from URL
+    expect(window.location.search).toBe("?task=1011&keep=yes");
+
+    resolveTree(treeWithNestedTask);
+
+    await waitFor(() => {
+      // Full path expanded in tree
+      expect(screen.getByText("Work Folder")).toBeInTheDocument();
+      expect(screen.getByText("Deep Inbox Task")).toBeInTheDocument();
+      expect(screen.getAllByText("Journal Created Task").length).toBeGreaterThanOrEqual(2);
+    });
+
+    // Selected task details rendered with Journal back-link
+    const noteLink = screen.getByRole("link", { name: "notatce" });
+    expect(noteLink).toHaveAttribute("href", journalBackLinkUrl);
+
+    // Selected in tree and mobile view switched to details
+    const selectedTreeNode = container.querySelector('[elementid="1011"]');
+    expect(selectedTreeNode).toHaveClass("Mui-selected");
+    const consoleLayout = container.querySelector(".console-layout");
+    expect(consoleLayout).toHaveClass("show-details");
+    expect(consoleLayout).not.toHaveClass("show-tree");
+
+    // Only `task` query param removed; other params and hash preserved
+    expect(window.location.search).toBe("?keep=yes");
+    expect(window.location.hash).toBe("#section");
+  });
+
+  it("handles non-matching or invalid ?task=<elementId> gracefully after tree loads and clears the param", async () => {
+    let resolveTree;
+    apiService.GetTree.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveTree = resolve;
+        })
+    );
+    window.history.pushState({}, "", "/?task=999999");
+
+    const { container } = render(<Console />);
+
+    // Do not give up before tree loads
+    expect(window.location.search).toBe("?task=999999");
+
+    resolveTree(mockTree);
+
+    await waitFor(() => {
+      expect(screen.getByText("Root")).toBeInTheDocument();
+      expect(window.location.search).toBe("");
+    });
+
+    expect(
+      screen.getByText("Select a task from the tree to view details")
+    ).toBeInTheDocument();
+    const consoleLayout = container.querySelector(".console-layout");
+    expect(consoleLayout).toHaveClass("show-tree");
+    expect(consoleLayout).not.toHaveClass("show-details");
+  });
 });

@@ -1,5 +1,5 @@
 import React from "react";
-import { createPlateUI, StyledElement, withProps } from "@udecode/plate";
+import { createPlateUI, sanitizeUrl, StyledElement, withProps } from "@udecode/plate";
 import { ELEMENT_TITLE } from "./constants";
 import {
   TaskTableElement,
@@ -8,19 +8,41 @@ import {
   TaskTableCellHeaderElement,
 } from "./TableElements";
 
+const ALLOWED_LINK_SCHEMES = ["http", "https", "mailto", "tel"];
+
 const LinkComponent = (props) => {
   const { attributes, children, element } = props;
+  const safeUrl =
+    sanitizeUrl(element?.url, { allowedSchemes: ALLOWED_LINK_SCHEMES }) || undefined;
+
+  const handleClick = (e) => {
+    if (!safeUrl) return;
+    if (e.button !== undefined && e.button !== 0) return;
+    if (e.altKey || e.shiftKey) return;
+
+    const selectionText =
+      typeof window !== "undefined" && typeof window.getSelection === "function"
+        ? window.getSelection()?.toString() || ""
+        : "";
+    if (selectionText.length > 0) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+    if (typeof window !== "undefined" && typeof window.open === "function") {
+      window.open(safeUrl, "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
     <a
       {...attributes}
-      href={element.url}
+      className="plate-link"
+      href={safeUrl}
       target="_blank"
       rel="noopener noreferrer"
-      style={{
-        color: "#1976d2",
-        textDecoration: "underline",
-        cursor: "pointer",
-        wordBreak: "break-word",
+      onClick={handleClick}
+      onMouseOver={(e) => {
+        e.stopPropagation();
       }}
     >
       {children}

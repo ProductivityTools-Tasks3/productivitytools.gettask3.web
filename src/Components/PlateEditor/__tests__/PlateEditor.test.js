@@ -146,4 +146,112 @@ describe("PlateEditor", () => {
 
     expect(screen.getByText("Plate content:")).toBeInTheDocument();
   });
+
+  it("renders Journal back-link ('Zadanie utworzone w notatce') and opens it in a new tab on click", () => {
+    const journalUrl = "https://journal.productivitytools.top/List?treeId=42&pageId=99";
+    const journalTaskValue = [
+      {
+        type: "title",
+        children: [{ text: "Zadanie z notatki" }],
+      },
+      {
+        type: "p",
+        children: [
+          { text: "Zadanie utworzone w " },
+          {
+            type: "a",
+            url: journalUrl,
+            children: [{ text: "notatce" }],
+          },
+          { text: "" },
+        ],
+      },
+    ];
+
+    const openSpy = jest.spyOn(window, "open").mockImplementation(() => null);
+
+    try {
+      render(
+        <PlateEditor
+          content={journalTaskValue}
+          forceResetContent={journalTaskValue}
+          contentChanged={jest.fn()}
+        />
+      );
+
+      expect(screen.getByText("Zadanie z notatki")).toBeInTheDocument();
+      expect(screen.getByText(/Zadanie utworzone w/)).toBeInTheDocument();
+
+      const link = screen.getByRole("link", { name: "notatce" });
+      expect(link).toHaveAttribute("href", journalUrl);
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link).toHaveAttribute("rel", "noopener noreferrer");
+      expect(link).toHaveClass("plate-link");
+
+      // Clicking the rendered text inside the editable link opens the Journal page in a new tab
+      fireEvent.click(screen.getByText("notatce"));
+      expect(openSpy).toHaveBeenCalledTimes(1);
+      expect(openSpy).toHaveBeenCalledWith(journalUrl, "_blank", "noopener,noreferrer");
+
+      // Alt+Click and Shift+Click do not navigate so users can still edit/select text around links
+      fireEvent.click(link, { altKey: true });
+      fireEvent.click(link, { shiftKey: true });
+      expect(openSpy).toHaveBeenCalledTimes(1);
+
+      // Drag-selection over the link does not navigate
+      const getSelectionSpy = jest.spyOn(window, "getSelection").mockReturnValue({
+        toString: () => "notatce",
+      });
+      try {
+        fireEvent.click(link);
+        expect(openSpy).toHaveBeenCalledTimes(1);
+      } finally {
+        getSelectionSpy.mockRestore();
+      }
+    } finally {
+      openSpy.mockRestore();
+    }
+  });
+
+  it("blocks unsafe link schemes such as javascript: from rendering href or opening on click", () => {
+    const unsafeLinkValue = [
+      {
+        type: "title",
+        children: [{ text: "Unsafe link task" }],
+      },
+      {
+        type: "p",
+        children: [
+          { text: "Link: " },
+          {
+            type: "a",
+            url: "javascript:alert(1)",
+            children: [{ text: "bad link" }],
+          },
+          { text: "" },
+        ],
+      },
+    ];
+
+    const openSpy = jest.spyOn(window, "open").mockImplementation(() => null);
+
+    try {
+      const { container } = render(
+        <PlateEditor
+          content={unsafeLinkValue}
+          forceResetContent={unsafeLinkValue}
+          contentChanged={jest.fn()}
+        />
+      );
+
+      const anchor = container.querySelector("a.plate-link");
+      expect(anchor).toBeInTheDocument();
+      expect(anchor).not.toHaveAttribute("href");
+
+      fireEvent.click(anchor);
+      expect(openSpy).not.toHaveBeenCalled();
+    } finally {
+      openSpy.mockRestore();
+    }
+  });
 });

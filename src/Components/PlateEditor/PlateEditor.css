@@ -118,6 +118,22 @@
   margin: 2px 0;
 }
 
+/* Clickable links inside Plate editable area (e.g., Journal back-links) */
+.plate-editor-wrapper a.plate-link {
+  color: #1976d2;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  word-break: break-word;
+  border-radius: 3px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.plate-editor-wrapper a.plate-link:hover {
+  color: #1565c0;
+  background-color: rgba(25, 118, 210, 0.08);
+}
+
 /* Tippy tooltips matching Journal.Web */
 .tippy-box {
   background-color: rgba(44, 62, 80, 0.95) !important;
