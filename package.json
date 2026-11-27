@@ -38,6 +38,8 @@
     "web-vitals": "^2.1.2"
   },
   "scripts": {
+    "postinstall": "node scripts/patch-slate-android.js",
+    "prebuild": "node scripts/patch-slate-android.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

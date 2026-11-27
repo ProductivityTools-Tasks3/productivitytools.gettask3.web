@@ -1,80 +1,128 @@
-/* Plate Editor & Toolbar Styles */
+/* Upgraded Plate Editor & Toolbar Styles (ported from ProductivityTools.Journal.Web) */
 
 .plate-editor-wrapper {
-  margin-top: 6px;
+  margin-top: 8px;
+  background: #ffffff;
+  padding: 12px 16px 16px 16px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
 }
 
-.plate-toolbar-container {
-  display: flex;
-  align-items: center;
-  background: transparent;
-  padding: 2px 0;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
-}
-
-/* Override HeadingToolbar */
-.slate-HeadingToolbar {
+/* HeadingToolbar matching Journal.Web */
+.plate-editor-wrapper .slate-HeadingToolbar,
+.plate-editor-wrapper .plate-heading-toolbar {
   display: flex !important;
   align-items: center !important;
   flex-wrap: wrap !important;
-  background: transparent !important;
-  border: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
+  margin: 0 0 12px 0 !important;
+  padding: 4px 8px !important;
+  min-height: unset !important;
+  border-radius: 6px !important;
+  background: #f8f9fa !important;
+  border: 1px solid #e0e0e0 !important;
   gap: 2px !important;
 }
 
+.plate-toolbar-separator {
+  width: 1px;
+  height: 18px;
+  background-color: #d8dee4;
+  margin: 0 4px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
 /* Toolbar Buttons */
-.slate-ToolbarButton {
+.plate-editor-wrapper .slate-ToolbarButton {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   background: transparent !important;
   border: none !important;
-  border-radius: 2px !important;
-  padding: 2px !important;
+  border-radius: 4px !important;
+  padding: 3px !important;
   margin: 0 1px !important;
   cursor: pointer !important;
-  color: #8c8c8c !important;
-  min-width: 22px !important;
-  height: 22px !important;
+  color: #666666 !important;
+  min-width: 26px !important;
+  height: 26px !important;
   box-sizing: border-box !important;
-  transition: color 0.15s ease, opacity 0.15s ease !important;
+  transition: color 0.15s ease, background-color 0.15s ease !important;
 }
 
-.slate-ToolbarButton:hover {
-  background: transparent !important;
-  color: #444444 !important;
-  opacity: 0.85;
+.plate-editor-wrapper .slate-ToolbarButton:hover {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+  color: #222222 !important;
 }
 
-.slate-ToolbarButton[data-active="true"],
-.slate-ToolbarButton.active {
-  background: transparent !important;
+.plate-editor-wrapper .slate-ToolbarButton[data-active="true"],
+.plate-editor-wrapper .slate-ToolbarButton.active {
+  background-color: rgba(25, 118, 210, 0.1) !important;
   color: #1976d2 !important;
 }
 
-.slate-ToolbarButton svg,
-.slate-ToolbarButton .StyledIconBase {
+.plate-editor-wrapper .slate-ToolbarButton .StyledIconBase {
   width: 17px !important;
   height: 17px !important;
   fill: currentColor !important;
 }
 
-/* Editable content area */
-.plate-editor-wrapper [contenteditable="true"] {
-  outline: none;
-  min-height: 150px;
-  padding: 4px 0;
-  font-family: inherit;
-  font-size: 15px;
-  line-height: 1.5;
+.plate-editor-wrapper .slate-ToolbarButton svg.tabler-stroke-icon {
+  width: 17px !important;
+  height: 17px !important;
+  fill: none !important;
+  stroke: currentColor !important;
 }
 
-/* Hide toolbar on mobile */
-@media (max-width: 767px) {
-  .plate-toolbar-container {
-    display: none !important;
-  }
+/* Editable content area */
+.plate-editor-wrapper .slate-editor,
+.plate-editor-wrapper [contenteditable="true"] {
+  outline: none;
+  min-height: 160px;
+  padding: 4px 2px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+    "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 15px;
+  color: #2c3e50;
+  line-height: 1.6;
+}
+
+.plate-editor-wrapper blockquote {
+  border-left: 3px solid #cbd5e1;
+  margin: 8px 0;
+  padding: 4px 12px;
+  color: #64748b;
+  font-style: italic;
+  background-color: #f8fafc;
+  border-radius: 0 4px 4px 0;
+}
+
+.plate-editor-wrapper ul,
+.plate-editor-wrapper ol {
+  margin: 6px 0;
+  padding-left: 24px;
+}
+
+.plate-editor-wrapper li {
+  margin: 2px 0;
+}
+
+/* Tippy tooltips matching Journal.Web */
+.tippy-box {
+  background-color: rgba(44, 62, 80, 0.95) !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18) !important;
+}
+
+.tippy-content {
+  padding: 5px 10px !important;
+}
+
+.tippy-arrow {
+  color: rgba(44, 62, 80, 0.95) !important;
 }
