@@ -18,11 +18,11 @@ import BagCharts from "../BagCharts";
 export default function ItemDetails({ selectedElement, isRoot = false, treeVersion = 0, showDebug = false, onChange, saveNewElement, finishAction, unDoneAction, onBack }) {
   console.log("Selectedelement", selectedElement);
   const [details, setDetails] = useState(
-    JSON.parse(`[{"type":"title","children":[{"text":"x"}]},{"type":"p","children":[{"text":"empty"}]}]`)
+    JSON.parse(`[{"type":"title","children":[{"text":"Task name"}]},{"type":"p","children":[{"text":""}]}]`)
   );
 
   const [initialValue, setInitialValue] = useState(
-    JSON.parse(`[{"type":"title","children":[{"text":"x"}]},{"type":"p","children":[{"text":"empty"}]}]`)
+    JSON.parse(`[{"type":"title","children":[{"text":"Task name"}]},{"type":"p","children":[{"text":""}]}]`)
   );
 
   const [inboxDialogOpen, setInboxDialogOpen] = useState(false);

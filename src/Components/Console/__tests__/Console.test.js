@@ -506,4 +506,17 @@ describe("Console top bar and inbox buttons", () => {
     fireEvent.click(debugToggle);
     expect(screen.queryByText("Plate content:")).not.toBeInTheDocument();
   });
+
+  it("initializes a new task from context menu with title 'Task name' and empty body", async () => {
+    render(<Console />);
+
+    const rootName = await screen.findByText("Root");
+    fireEvent.contextMenu(rootName);
+
+    const newTaskMenuItem = await screen.findByText(/New task under/i);
+    fireEvent.click(newTaskMenuItem);
+
+    expect(await screen.findByText("Task name")).toBeInTheDocument();
+    expect(screen.queryByText("empty")).not.toBeInTheDocument();
+  });
 });

@@ -414,7 +414,7 @@ export default function Console() {
   function addElement(selectedTreeId) {
     const nowIso = new Date().toISOString();
     let newElement = {
-      name: "New element",
+      name: "Task name",
       type: 2,
       elementId: null,
       parentId: selectedTreeId,
@@ -426,7 +426,7 @@ export default function Console() {
       category: null,
       elements: [],
       tomatoes: [],
-      details: '[{"type":"title","children":[{"text":"x"}]},{"type":"p","children":[{"text":"empty"}]}]',
+      details: '[{"type":"title","children":[{"text":"Task name"}]},{"type":"p","children":[{"text":""}]}]',
     };
 
     setNewElement(newElement);
