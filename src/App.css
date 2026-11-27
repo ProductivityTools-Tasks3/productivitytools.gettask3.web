@@ -362,6 +362,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
   padding: 10px 24px;
   background-color: #ffffff;
   border-bottom: 1px solid #e0e0e0;
@@ -594,6 +596,7 @@
   width: 44%;
   max-width: 44%;
   flex: 0 0 44%;
+  align-self: flex-start;
   background-color: #ffffff;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -605,6 +608,7 @@
 .details-column {
   flex: 1;
   min-width: 0;
+  align-self: stretch;
   box-sizing: border-box;
 }
 
@@ -818,9 +822,9 @@
 /* Sticky Wrapper */
 .sticky-wrapper {
   position: sticky;
-  top: calc(var(--top-bar-offset, 48px) + 16px);
+  top: calc(var(--top-bar-offset, 48px) + 20px);
   width: 100%;
-  max-height: calc(100vh - var(--top-bar-offset, 48px) - 24px);
+  max-height: calc(100vh - var(--top-bar-offset, 48px) - 32px);
   overflow-y: auto;
   box-sizing: border-box;
   padding-bottom: 8px;
