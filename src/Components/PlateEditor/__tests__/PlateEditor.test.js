@@ -79,19 +79,28 @@ describe("PlateEditor", () => {
     expect(screen.getByText("New task body content")).toBeInTheDocument();
   });
 
-  it("toggles debug panel when show debug is clicked", () => {
-    render(
+  it("shows debug panel only when showDebug prop is enabled", () => {
+    const { rerender } = render(
       <PlateEditor
         content={sampleValue}
         forceResetContent={sampleValue}
         contentChanged={jest.fn()}
+        showDebug={false}
       />
     );
 
-    const checkbox = screen.getByRole("checkbox");
+    expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
     expect(screen.queryByText("Plate content:")).not.toBeInTheDocument();
 
-    fireEvent.click(checkbox);
+    rerender(
+      <PlateEditor
+        content={sampleValue}
+        forceResetContent={sampleValue}
+        contentChanged={jest.fn()}
+        showDebug={true}
+      />
+    );
+
     expect(screen.getByText("Plate content:")).toBeInTheDocument();
   });
 });

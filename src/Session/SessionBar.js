@@ -17,7 +17,7 @@ import moment from "moment";
 import { useAuth } from "./AuthContext";
 import statusService from "../services/statusService";
 
-export default function SessionBar() {
+export default function SessionBar({ showDebug = false, onToggleShowDebug }) {
   const { user, tokenRefreshTime, refreshToken } = useAuth();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [statusState, setStatusState] = useState(() => statusService.getState());
@@ -134,6 +134,20 @@ export default function SessionBar() {
               <span>OFFLINE</span>
             </span>
           </Tooltip>
+        )}
+
+        {onToggleShowDebug && (
+          <>
+            <span className="session-bar-divider" aria-hidden="true" />
+            <label className="session-bar-debug-toggle">
+              <input
+                type="checkbox"
+                checked={showDebug}
+                onChange={(e) => onToggleShowDebug(e.target.checked)}
+              />
+              <span>Show debug</span>
+            </label>
+          </>
         )}
       </div>
 

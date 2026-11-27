@@ -123,6 +123,7 @@ export default function Console() {
   const [newElement, setNewElement] = useState(null);
   const [expandedNodes, setExpandedNodes] = useState([]);
   const [showCreatedDate, setShowCreatedDate] = useState(true);
+  const [showDebug, setShowDebug] = useState(false);
   const [treeVersion, setTreeVersion] = useState(0);
   const [isTreeLoading, setIsTreeLoading] = useState(false);
 
@@ -620,6 +621,7 @@ export default function Console() {
           selectedElement={selectedElement}
           isRoot={isRootElement(selectedElement)}
           treeVersion={treeVersion}
+          showDebug={showDebug}
           finishAction={finishItem}
           unDoneAction={unDoneElement}
           onChange={updateElement}
@@ -631,6 +633,7 @@ export default function Console() {
       return (
         <ItemDetails
           selectedElement={newElement}
+          showDebug={showDebug}
           onChange={updateNewElement}
           saveNewElement={saveNewElement}
           isSticky={isSticky}
@@ -643,7 +646,7 @@ export default function Console() {
   return (
     <div className="console" style={{ "--top-bar-offset": `${topBarHeight}px` }}>
       <div className="sticky-header-stack" ref={topBarRef}>
-        <SessionBar />
+        <SessionBar showDebug={showDebug} onToggleShowDebug={setShowDebug} />
         <div className="top-bar sticky-top-bar" data-testid="top-bar">
         <div className="inbox-buttons-container">
           {inboxElements.length > 0 && (

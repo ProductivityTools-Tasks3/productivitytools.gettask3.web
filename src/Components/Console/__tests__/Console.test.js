@@ -488,4 +488,22 @@ describe("Console top bar and inbox buttons", () => {
     const consoleRoot = container.querySelector(".console");
     expect(consoleRoot.style.getPropertyValue("--top-bar-offset")).toBe("48px");
   });
+
+  it("toggles PlateEditor debug panel via Show debug checkbox in the top technical bar", async () => {
+    render(<Console />);
+
+    const rootName = await screen.findByText("Root");
+    fireEvent.click(rootName);
+
+    expect(screen.queryByText("Plate content:")).not.toBeInTheDocument();
+
+    const debugToggle = screen.getByRole("checkbox", { name: "Show debug" });
+    expect(debugToggle.closest(".session-debug-bar")).toBeInTheDocument();
+
+    fireEvent.click(debugToggle);
+    expect(screen.getByText("Plate content:")).toBeInTheDocument();
+
+    fireEvent.click(debugToggle);
+    expect(screen.queryByText("Plate content:")).not.toBeInTheDocument();
+  });
 });

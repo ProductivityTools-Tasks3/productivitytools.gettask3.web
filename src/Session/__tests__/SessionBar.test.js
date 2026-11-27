@@ -61,4 +61,15 @@ describe("SessionBar", () => {
       );
     });
   });
+
+  it("renders Show debug checkbox in the technical bar and notifies parent on toggle", () => {
+    const handleToggleDebug = jest.fn();
+    render(<SessionBar showDebug={false} onToggleShowDebug={handleToggleDebug} />);
+
+    const debugCheckbox = screen.getByRole("checkbox", { name: "Show debug" });
+    expect(debugCheckbox).not.toBeChecked();
+
+    fireEvent.click(debugCheckbox);
+    expect(handleToggleDebug).toHaveBeenCalledWith(true);
+  });
 });

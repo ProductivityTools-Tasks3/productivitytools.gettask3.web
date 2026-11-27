@@ -24,10 +24,10 @@ export const PlateEditor = ({
   forceResetContent,
   contentChanged,
   readOnly = false,
+  showDebug = false,
 }) => {
   const [value, setValue] = useState(content);
   const [resetValue, setResetValue] = useState(content);
-  const [showDebug, setShowDebug] = useState(false);
 
   useEffect(() => {
     setValue(forceResetContent);
@@ -60,15 +60,8 @@ export const PlateEditor = ({
         </Plate>
       </PlateProvider>
 
-      <input
-        type="checkbox"
-        checked={showDebug}
-        onChange={() => setShowDebug(!showDebug)}
-      />
-      <span style={{ color: "lightgray" }}>show debug</span>
-      <br />
       {showDebug && (
-        <div>
+        <div className="plate-debug-panel" data-testid="plate-debug-panel">
           <span>Plate content:</span>
           <br />
           <span>{JSON.stringify(value)}</span>
